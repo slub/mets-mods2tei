@@ -32,7 +32,13 @@ def cli(mets):
 
     #
     # replace skeleton values by real ones
+
+    # main title
     tei.set_main_title(mets.get_main_title())
+
+    # sub titles
+    for sub_title in mets.get_sub_titles():
+        tei.add_sub_title(sub_title)
 
     click.echo(tei.tostring())
 
