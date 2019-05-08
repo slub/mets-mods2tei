@@ -47,3 +47,18 @@ class Tei:
         sub_title = etree.SubElement(title_stmt, "title")
         sub_title.set("type", "sub")
         sub_title.text = string
+
+    def add_author(self, person, typ):
+        """
+        Adds an author to the title statement.
+        """
+        # adjust dummy author
+        title_stmt = self.tree.xpath('//tei:titleStmt', namespaces=ns)[0]
+        author = title_stmt.xpath('tei:author', namespaces=ns)[0]
+        if author.text.strip():
+            author = etree.SubElement(title_stmt, "author")
+        if typ == "personal":
+            pers_name = etree.SubElement(author, "persName")
+        else:
+            pers_name = etree.SubElement(author, "orgName")
+        pers_name.text = " ".join(person[key] for key in person)

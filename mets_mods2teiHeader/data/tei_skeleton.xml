@@ -7,10 +7,6 @@
       <titleStmt>
         <title type="main">[Haupttitel]</title>
         <author>
-          <persName ref="http://d-nb.info/gnd/XXX">
-            <surname>[Familienname des Autors]</surname>
-            <forename>[Vorname des Autors]</forename>
-          </persName>
         </author>
         <respStmt>
           <persName>

@@ -40,6 +40,10 @@ def cli(mets):
     for sub_title in mets.get_sub_titles():
         tei.add_sub_title(sub_title)
 
+    # authors
+    for typ, author in mets.get_authors():
+        tei.add_author(author,typ)
+
     click.echo(tei.tostring())
 
 
