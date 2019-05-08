@@ -35,3 +35,16 @@ Finally, `mets-mods2teiHeader` itself can be installed via `pip`:
 ```console
 (env) $ pip install .
 ```
+
+## Invocation
+Installing `mets-mods2teiHeader` makes the command line tools `mods2teiHeader` available:
+```console
+(env) $ mods2teiHeader --help
+Usage: mods2teiHeader [OPTIONS] METS
+
+  METS: File containing or URL pointing to the METS/MODS XML to be converted
+
+Options:
+  --help  Show this message and exit.
+```
+It reads METS XML via URL or file argument and prints the resulting TEI including the extracted information from the MODS part of the METS.
