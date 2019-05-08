@@ -37,7 +37,7 @@ Finally, `mets-mods2teiHeader` itself can be installed via `pip`:
 ```
 
 ## Invocation
-Installing `mets-mods2teiHeader` makes the command line tools `mods2teiHeader` available:
+Installing `mets-mods2teiHeader` makes the command line tool `mods2teiHeader` available:
 ```console
 (env) $ mods2teiHeader --help
 Usage: mods2teiHeader [OPTIONS] METS
