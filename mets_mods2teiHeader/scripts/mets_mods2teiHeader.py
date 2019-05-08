@@ -6,6 +6,8 @@ import click
 
 from pkg_resources import resource_filename, Requirement
 
+from mets_mods2teiHeader import Mets
+
 @click.command()
 @click.argument('mets', type=click.File('rb'))
 def cli(mets):
@@ -15,6 +17,8 @@ def cli(mets):
 
     #
     # read in METS
+    mets = Mets.read(mets)
+
 
 if __name__ == '__main__':
     cli()
