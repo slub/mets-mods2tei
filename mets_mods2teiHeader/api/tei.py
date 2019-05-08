@@ -24,7 +24,7 @@ class Tei:
         """
         Serializes the TEI object as xml string.
         """
-        return etree.tostring(self.tree, encoding="utf-8", pretty_print=True)
+        return etree.tostring(self.tree, encoding="utf-8")
 
     def get_main_title(self):
         """
@@ -35,7 +35,15 @@ class Tei:
 
     def set_main_title(self, string):
         """
-        Sets the main title of the work represented
-        by the TEI Header.
+        Sets the main title of the title statement.
         """
         self.tree.xpath('//tei:titleStmt/tei:title[@type="main"]', namespaces=ns)[0].text = string
+
+    def add_sub_title(self, string):
+        """
+        Adds a sub title to the title statement.
+        """
+        title_stmt = self.tree.xpath('//tei:titleStmt', namespaces=ns)[0]
+        sub_title = etree.SubElement(title_stmt, "title")
+        sub_title.set("type", "sub")
+        sub_title.text = string

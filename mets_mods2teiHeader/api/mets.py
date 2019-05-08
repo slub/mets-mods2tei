@@ -57,3 +57,12 @@ class Mets:
         # TODO: Check whether the first dmdSec always refers to the volume title,
         # alternatively identify the corresponding dmdSec via <structMap type="Logical" />
         return self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:titleInfo/mods:title", namespaces=ns)[0].text
+
+    def get_sub_titles(self):
+        """
+        Returns the main title of the work represented
+        by the METS instance.
+        """
+        # TODO: Check whether the first dmdSec always refers to the volume title,
+        # alternatively identify the corresponding dmdSec via <structMap type="Logical" />
+        return [text.text for text in self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:titleInfo/mods:subTitle", namespaces=ns)]
