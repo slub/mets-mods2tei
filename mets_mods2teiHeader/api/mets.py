@@ -25,6 +25,7 @@ class Mets:
         self.authors = None
         self.editors = None
         self.places = None
+        self.dates = None
 
     @classmethod
     def read(cls, source):
@@ -88,6 +89,7 @@ class Mets:
                     self.editors.append((typ, person))
                 elif role.text == "aut":
                     self.authors.append((typ, person))
+
         #
         # publication places
         self.places = []
@@ -97,6 +99,15 @@ class Mets:
                 typ = place_term.get("type", default="unspecified")
                 place_ext[typ] = place_term.text
             self.places.append(place_ext)
+
+        #
+        # publication dates
+        self.dates = []
+        for date_issued in self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:originInfo[1]/mods:dateIssued", namespaces=ns):
+            date_ext = {}
+            date_ext[date_issued.get("point", "unspecified")] = date_issued.text
+            self.dates.append(date_ext)
+
 
     def get_main_title(self):
         """
@@ -121,3 +132,9 @@ class Mets:
         Returns the place(s) of publication
         """
         return self.places
+
+    def get_dates(self):
+        """
+        Returns the date(s) of publication
+        """
+        return self.dates
