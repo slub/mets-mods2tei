@@ -56,7 +56,6 @@
           </editionStmt>
           <publicationStmt>
             <publisher><name>[Verlag/Druckerei]</name></publisher>
-            <pubPlace>[Druckort]</pubPlace>
             <date type="publication">[Erscheinungsjahr]</date>
           </publicationStmt>
         </biblFull>

@@ -44,6 +44,10 @@ def cli(mets):
     for typ, author in mets.get_authors():
         tei.add_author(author,typ)
 
+    # places
+    for place in mets.get_places():
+        tei.add_place(place)
+
     click.echo(tei.tostring())
 
 
