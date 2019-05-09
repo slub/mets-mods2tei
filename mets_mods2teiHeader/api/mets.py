@@ -26,6 +26,7 @@ class Mets:
         self.editors = None
         self.places = None
         self.dates = None
+        self.publishers = None
 
     @classmethod
     def read(cls, source):
@@ -108,33 +109,45 @@ class Mets:
             date_ext[date_issued.get("point", "unspecified")] = date_issued.text
             self.dates.append(date_ext)
 
+        #
+        # publication dates
+        self.publishers = []
+        for publisher in self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:originInfo[1]/mods:publisher", namespaces=ns):
+            self.publishers.append(publisher.text)
+
 
     def get_main_title(self):
         """
-        Returns the main title of the work.
+        Return the main title of the work.
         """
         return self.title
 
     def get_sub_titles(self):
         """
-        Returns the main title of the work.
+        Return the main title of the work.
         """
         return self.sub_titles
 
     def get_authors(self):
         """
-        Returns the author of the work.
+        Return the author of the work.
         """
         return self.authors
 
     def get_places(self):
         """
-        Returns the place(s) of publication
+        Return the place(s) of publication
         """
         return self.places
 
     def get_dates(self):
         """
-        Returns the date(s) of publication
+        Return the date(s) of publication
         """
         return self.dates
+
+    def get_publishers(self):
+        """
+        Return the publishers
+        """
+        return self.publishers

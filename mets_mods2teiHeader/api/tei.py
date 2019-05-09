@@ -93,3 +93,13 @@ class Tei:
             pub_date.text = date[key]
             if key != "unspecified":
                 pub_date.set("datingPoint", key)
+
+    def add_publisher(self, publisher):
+        """
+        Adds a publisher to the publication statement.
+        """
+        publication_stmt = self.tree.xpath('//tei:fileDesc/tei:sourceDesc/tei:biblFull/tei:publicationStmt', namespaces=ns)[0]
+        publisher_node = etree.Element("publisher")
+        name = etree.SubElement(publisher_node, "name")
+        name.text = publisher
+        publication_stmt.insert(0, publisher_node)

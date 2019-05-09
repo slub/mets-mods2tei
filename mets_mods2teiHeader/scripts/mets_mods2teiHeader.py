@@ -52,6 +52,10 @@ def cli(mets):
     for date in mets.get_dates():
         tei.add_date(date)
 
+    # publishers
+    for publisher in mets.get_publishers():
+        tei.add_publisher(publisher)
+
     click.echo(tei.tostring())
 
 
