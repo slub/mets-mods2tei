@@ -6,16 +6,8 @@
     <fileDesc>
       <titleStmt>
         <title type="main">[Haupttitel]</title>
-        <author>
-        </author>
         <respStmt>
-          <persName>
-            <surname>[Familienname des Herausgebers]</surname>
-            <forename>[Vorname des Herausgebers]</forename>
-          </persName>
           <resp>
-            <note type="remarkResponsibility">Erstellung der Transkription nach DTA-Richtlinien</note>
-            <date type="importDTA"></date>
           </resp>
         </respStmt>
       </titleStmt>

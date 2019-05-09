@@ -1,6 +1,25 @@
 # mets-mods2teiHeader
 Convert bibliographic meta data in MODS format to TEI headers
 
+## Background
+
+[MODS](http://www.loc.gov/standards/mods/) is the de-facto standard for encoding bibliographic
+meta data in libraries. It is usually included as a separate section into
+[METS](http://www.loc.gov/standards/mets/) XML files.
+
+[TEI](https://tei-c.org/) is the de-facto standard for representing digital text for research
+purposes. It usually includes detailed bibliographic meta data in its
+[header](https://tei-c.org/release/doc/tei-p5-doc/de/html/ref-teiHeader.html).
+
+Converting bibliographic meta data from MODS to `teiHeader` is thus an important step in
+converting digital texts as delivered by libraries into TEI formatted text.
+
+Since both standards contain a considerable amount of degrees of freedom, the conversion uses
+two well-defined subsets. For MODS, this is the
+[*MODS Anwendungsprofil für digitalisierte Medien*](https://dfg-viewer.de/fileadmin/groups/dfgviewer/MODS-Anwendungsprofil_2.3.1.pdf).
+For the TEI Header, the [*DTA base format*](https://github.com/deutschestextarchiv/dtabf) is
+consulted.
+
 ## Installation
 `mets-mods2teiHeader` is implemented in Python 3. In the following, we assume a working Python 3
 (tested versions 3.5 and 3.6) installation.
@@ -13,7 +32,8 @@ $ cd mets-mods2teiHeader
 ```
 
 ### virtualenv
-Using [`virtualenv`](https://virtualenv.pypa.io/en/stable/) is highly recommended, although not strictly necessary for installing `mets-mods2teiHeader`. It may be installed via:
+Using [`virtualenv`](https://virtualenv.pypa.io/en/stable/) is highly recommended, although not strictly
+necessary for installing `mets-mods2teiHeader`. It may be installed via:
 ```console
 $ [sudo] pip install virtualenv
 ```
@@ -48,3 +68,6 @@ Options:
   --help  Show this message and exit.
 ```
 It reads METS XML via URL or file argument and prints the resulting TEI including the extracted information from the MODS part of the METS.
+```console
+(env) $ mods2teiHeader "https://digital.slub-dresden.de/oai/?verb=GetRecord&metadataPrefix=mets&identifier=oai:de:slub-dresden:db:id-453779263"
+```
