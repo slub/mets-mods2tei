@@ -20,6 +20,10 @@ class Mets:
         """
 
         self.tree = None
+        self.title = None
+        self.sub_titles = None
+        self.authors = None
+        self.editors = None
 
     @classmethod
     def read(cls, source):
@@ -48,21 +52,52 @@ class Mets:
         :param str path: Path to a METS document.
         """
         self.tree = etree.parse(path)
+        self.__spur()
+
+    def __spur(self):
+        """
+        Initial interpretation of the METS/MODS file.
+        """
+        # TODO: Check whether the first dmdSec always refers to the volume title,
+        # alternatively identify the corresponding dmdSec via <structMap type="Logical" />
+
+        # main title
+        self.title = self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:titleInfo/mods:title", namespaces=ns)[0].text
+
+        # sub titles
+        self.sub_titles = [text.text for text in self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:titleInfo/mods:subTitle", namespaces=ns)]
+
+        # authors and editors
+        self.authors = []
+        self.editors = []
+        for name in self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:name", namespaces=ns):
+            person = {}
+            typ = name.get("type", default="unspecified")
+            for name_part in name.xpath("mods:namePart", namespaces=ns):
+                person[name_part.get("type", default="unspecified")] = name_part.text
+
+            # either author or editor
+            roles = name.xpath("mods:role/mods:roleTerm", namespaces=ns)
+            for role in roles:
+                if role.text == "edt":
+                    self.editors.append((typ, person))
+                elif role.text == "aut":
+                    self.authors.append((typ, person))
 
     def get_main_title(self):
         """
-        Returns the main title of the work represented
-        by the METS instance.
+        Returns the main title of the work.
         """
-        # TODO: Check whether the first dmdSec always refers to the volume title,
-        # alternatively identify the corresponding dmdSec via <structMap type="Logical" />
-        return self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:titleInfo/mods:title", namespaces=ns)[0].text
+        return self.title
 
     def get_sub_titles(self):
         """
-        Returns the main title of the work represented
-        by the METS instance.
+        Returns the main title of the work.
         """
-        # TODO: Check whether the first dmdSec always refers to the volume title,
-        # alternatively identify the corresponding dmdSec via <structMap type="Logical" />
-        return [text.text for text in self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:titleInfo/mods:subTitle", namespaces=ns)]
+        return self.sub_titles
+
+    def get_authors(self):
+        """
+        Returns the author of the work.
+        """
+        return self.authors
