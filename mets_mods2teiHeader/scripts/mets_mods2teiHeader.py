@@ -48,6 +48,10 @@ def cli(mets):
     for place in mets.get_places():
         tei.add_place(place)
 
+    # dates
+    for date in mets.get_dates():
+        tei.add_date(date)
+
     click.echo(tei.tostring())
 
 

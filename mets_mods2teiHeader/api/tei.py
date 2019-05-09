@@ -81,3 +81,15 @@ class Tei:
                 pub_place.text = place[key]
             elif key == "code":
                 pub_place.set("corresp", place[key])
+
+    def add_date(self, date):
+        """
+        Adds a publication date to the publication statement.
+        """
+        publication_stmt = self.tree.xpath('//tei:fileDesc/tei:sourceDesc/tei:biblFull/tei:publicationStmt', namespaces=ns)[0]
+        for key in date:
+            pub_date = etree.SubElement(publication_stmt, "date")
+            pub_date.set("type", "publication")
+            pub_date.text = date[key]
+            if key != "unspecified":
+                pub_date.set("datingPoint", key)
