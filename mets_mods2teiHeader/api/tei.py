@@ -52,7 +52,6 @@ class Tei:
         """
         Adds an author to the title statement.
         """
-        # adjust dummy author
         title_stmt = self.tree.xpath('//tei:titleStmt', namespaces=ns)[0]
         author = etree.SubElement(title_stmt, "author")
         if typ == "personal":
@@ -70,3 +69,15 @@ class Tei:
         elif typ == "corporate":
             org_name = etree.SubElement(author, "orgName")
             org_name.text = " ".join(person[key] for key in person)
+
+    def add_place(self, place):
+        """
+        Adds a publication place to the publication statement.
+        """
+        publication_stmt = self.tree.xpath('//tei:fileDesc/tei:sourceDesc/tei:biblFull/tei:publicationStmt', namespaces=ns)[0]
+        pub_place = etree.SubElement(publication_stmt, "pubPlace")
+        for key in place:
+            if key == "text":
+                pub_place.text = place[key]
+            elif key == "code":
+                pub_place.set("corresp", place[key])
