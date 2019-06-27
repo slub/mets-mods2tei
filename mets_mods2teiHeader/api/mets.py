@@ -8,6 +8,7 @@ ns = {
      'mets': "http://www.loc.gov/METS/",
      'mods': "http://www.loc.gov/mods/v3",
      'xlink' : "http://www.w3.org/1999/xlink",
+     'dv' : "http://dfg-viewer.de/",
 }
 METS = "{%s}" % ns['mets']
 XLINK = "{%s}" % ns['xlink']
@@ -28,6 +29,7 @@ class Mets:
         self.dates = None
         self.publishers = None
         self.digital_origin = None
+        self.owner_digital = None
 
     @classmethod
     def read(cls, source):
@@ -122,6 +124,10 @@ class Mets:
             self.digital_origin = digital_origin.text
             break
 
+        #
+        # owner of the digital edition
+        self.owner_digital = self.tree.xpath("//mets:amdSec[1]//dv:rights/dv:owner", namespaces=ns)[0].text
+
 
     def get_main_title(self):
         """
@@ -170,3 +176,9 @@ class Mets:
         Return the digital origin
         """
         return self.digital_origin
+
+    def get_owner_digital(self):
+        """
+        Return the owner of the digital edition
+        """
+        return self.owner_digital

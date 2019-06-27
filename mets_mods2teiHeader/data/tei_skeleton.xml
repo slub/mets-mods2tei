@@ -6,37 +6,8 @@
     <fileDesc>
       <titleStmt>
         <title type="main">[Haupttitel]</title>
-        <respStmt>
-          <resp>
-          </resp>
-        </respStmt>
       </titleStmt>
-      <extent>
-        <measure type="images">[Umfang in Bilddateien]</measure>
-        <measure type="tokens">[Umfang in Tokens]</measure>
-        <measure type="types">[Umfang in Types]</measure>
-        <measure type="characters">[Umfang in Zeichen]</measure>
-      </extent>
       <publicationStmt>
-        <publisher xml:id="DTACorpusPublisher">
-          <orgName>Deutsches Textarchiv</orgName>
-          <email>dta@bbaw.de</email>
-          <address>
-            <addrLine>Jägerstr. 22/23, 10117 Berlin</addrLine>
-          </address>
-        </publisher>
-        <pubPlace>Berlin</pubPlace>
-        <date type="publication"></date>
-        <availability>
-          <licence target="http://creativecommons.org/licenses/by-nc/3.0/de/">
-            <p>Distributed under the Creative Commons Attribution-NonCommercial 3.0 Unported License.</p>
-          </licence>
-        </availability>
-        <idno>
-          <idno type="URLWeb">[URL der DTA-Werkpublikation]</idno>
-          <idno type="DTADirName">[Verzeichnisname innerhalb des DTA-Korpus]</idno>
-          <idno type="DTAID">[ID innerhalb des DTA-Korpus]</idno>
-        </idno>
       </publicationStmt>
       <sourceDesc>
         <bibl type="M">[Zitiertitel]</bibl>

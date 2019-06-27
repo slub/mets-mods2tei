@@ -60,6 +60,9 @@ def cli(mets):
     if mets.has_digital_origin():
         tei.add_digital_edition(mets.get_digital_origin())
 
+    # hosting institution
+    tei.set_hoster(mets.get_owner_digital())
+
     click.echo(tei.tostring())
 
 
