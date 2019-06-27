@@ -103,3 +103,12 @@ class Tei:
         name = etree.SubElement(publisher_node, "name")
         name.text = publisher
         publication_stmt.insert(0, publisher_node)
+
+    def add_digital_edition(self, digital_edition):
+        """
+        Adds an edition statement with details on the digital edition.
+        """
+        title_stmt = self.tree.xpath('//tei:titleStmt', namespaces=ns)[0]
+        edition_stmt = etree.SubElement(title_stmt, "editionStmt")
+        edition = etree.SubElement(edition_stmt, "edition")
+        edition.text = digital_edition
