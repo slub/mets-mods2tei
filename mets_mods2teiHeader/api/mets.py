@@ -27,6 +27,7 @@ class Mets:
         self.places = None
         self.dates = None
         self.publishers = None
+        self.digital_origin = None
 
     @classmethod
     def read(cls, source):
@@ -110,10 +111,16 @@ class Mets:
             self.dates.append(date_ext)
 
         #
-        # publication dates
+        # publishers
         self.publishers = []
         for publisher in self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:originInfo[1]/mods:publisher", namespaces=ns):
             self.publishers.append(publisher.text)
+
+        #
+        # digital_origin
+        for digital_origin in self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:physicalDescription[1]/mods:digitalOrigin", namespaces=ns):
+            self.digital_origin = digital_origin.text
+            break
 
 
     def get_main_title(self):
@@ -151,3 +158,15 @@ class Mets:
         Return the publishers
         """
         return self.publishers
+
+    def has_digital_origin(self):
+        """
+        Element "digitalOrigin" present?
+        """
+        return self.digital_origin != None
+
+    def get_digital_origin(self):
+        """
+        Return the digital origin
+        """
+        return self.digital_origin
