@@ -63,6 +63,8 @@ class Tei:
                 elif key == "given":
                     forename = etree.SubElement(pers_name, "forename")
                     forename.text = person[key]
+                elif key == "date" or key == "unspecified":
+                    continue
                 else:
                     add_name = etree.SubElement(pers_name, "addName")
                     add_name.text = person[key]
@@ -112,3 +114,37 @@ class Tei:
         edition_stmt = etree.SubElement(title_stmt, "editionStmt")
         edition = etree.SubElement(edition_stmt, "edition")
         edition.text = digital_edition
+
+    def set_hoster(self, hoster):
+        """
+        Set the publisher of the digital edition
+        """
+        publication_stmt = self.tree.xpath('//tei:publicationStmt', namespaces=ns)[0]
+        publisher = etree.SubElement(publication_stmt, "publisher")
+        publisher.text = hoster
+
+    def set_availability(self, status, licence_text, licence_url):
+        """
+        Set the availability conditions of the digital edition
+        """
+        publication_stmt = self.tree.xpath('//tei:publicationStmt', namespaces=ns)[0]
+        availability = etree.SubElement(publication_stmt, "availability")
+        
+        # an explicit licence has been set
+        if status == "licence" and licence_text != "":
+            licence = etree.SubElement(availability, "licence")
+            licence.text = licence_text
+            if licence_url != "":
+                licence.set("target", licence_url)
+        # public domain
+        elif status == "free":
+            note = etree.SubElement(availability, "p")
+            note.text = "In the public domain"
+            availability.set("status", "free")
+        elif status == "unknown":
+            availability.set("status", "unknown")
+        # use restricted as default
+        else:
+            availability.set("status", "restricted")
+            note = etree.SubElement(availability, "p")
+            note.text = "Available under licence from the publishers."

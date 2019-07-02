@@ -60,6 +60,15 @@ def cli(mets):
     if mets.has_digital_origin():
         tei.add_digital_edition(mets.get_digital_origin())
 
+    # hosting institution
+    tei.set_hoster(mets.get_owner_digital())
+
+    # availability
+    if mets.get_license() != "":
+        tei.set_availability("licence", mets.get_license(), mets.get_license_url())
+    else:
+        tei.set_availability("restricted", mets.get_license(), mets.get_license_url())
+
     click.echo(tei.tostring())
 
 
