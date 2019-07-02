@@ -30,6 +30,8 @@ class Mets:
         self.publishers = None
         self.digital_origin = None
         self.owner_digital = None
+        self.license = None
+        self.license_url = None
 
     @classmethod
     def read(cls, source):
@@ -128,6 +130,24 @@ class Mets:
         # owner of the digital edition
         self.owner_digital = self.tree.xpath("//mets:amdSec[1]//dv:rights/dv:owner", namespaces=ns)[0].text
 
+        #
+        # availability/license
+
+        # common case
+        license_nodes = self.tree.xpath("//mets:amdSec[1]//dv:rights/dv:license", namespaces=ns)
+        if license_nodes != []:
+            self.license = license_nodes[0].text
+            self.license_url = ""
+        # slub case
+        else:
+            license_nodes = self.tree.xpath("////mets:dmdSec[1]//mods:mods/mods:accessCondition[@type='use and reproduction']", namespaces=ns)
+            if license_nodes != []:
+                self.license = license_nodes[0].text
+                self.license_url = license_nodes[0].get("href", "")
+            else:
+                self.license = ""
+                self.license_url = ""
+
 
     def get_main_title(self):
         """
@@ -182,3 +202,15 @@ class Mets:
         Return the owner of the digital edition
         """
         return self.owner_digital
+
+    def get_license(self):
+        """
+        Return the license of the digital edition
+        """
+        return self.license
+
+    def get_license_url(self):
+        """
+        Return the url of the license of the digital edition
+        """
+        return self.license_url

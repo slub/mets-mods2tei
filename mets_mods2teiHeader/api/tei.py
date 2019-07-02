@@ -136,3 +136,15 @@ class Tei:
             licence.text = licence_text
             if licence_url != "":
                 licence.set("target", licence_url)
+        # public domain
+        elif status == "free":
+            note = etree.SubElement(availability, "p")
+            note.text = "In the public domain"
+            availability.set("status", "free")
+        elif status == "unknown":
+            availability.set("status", "unknown")
+        # use restricted as default
+        else:
+            availability.set("status", "restricted")
+            note = etree.SubElement(availability, "p")
+            note.text = "Available under licence from the publishers."
