@@ -1,5 +1,5 @@
 # mets-mods2teiHeader
-Convert bibliographic meta data in MODS format to TEI headers
+Convert bibliographic meta data in METS/MODS format to TEI headers
 
 ## Background
 
@@ -11,14 +11,14 @@ meta data in libraries. It is usually included as a separate section into
 purposes. It usually includes detailed bibliographic meta data in its
 [header](https://tei-c.org/release/doc/tei-p5-doc/de/html/ref-teiHeader.html).
 
-Converting bibliographic meta data from MODS to `teiHeader` is thus an important step in
+Converting bibliographic meta data from METS/MODS to `teiHeader` is thus an important step in
 converting digital texts as delivered by libraries into TEI formatted text.
 
-Since both standards contain a considerable amount of degrees of freedom, the conversion uses
-two well-defined subsets. For MODS, this is the
+Since these standards contain a considerable amount of degrees of freedom, the conversion uses
+well-defined subsets. For MODS, this is the
 [*MODS Anwendungsprofil für digitalisierte Medien*](https://dfg-viewer.de/fileadmin/groups/dfgviewer/MODS-Anwendungsprofil_2.3.1.pdf).
-For the TEI Header, the [*DTA base format*](https://github.com/deutschestextarchiv/dtabf) is
-consulted.
+For METS, the [METS Anwendungsprofil für digitalisierte Medien 2.1](https://www.zvdd.de/fileadmin/AGSDD-Redaktion/METS_Anwendungsprofil_2.1.pdf) is consulted.
+For the TEI Header, the conversion is roughly based on the [*DTA base format*](https://github.com/deutschestextarchiv/dtabf).
 
 ## Installation
 `mets-mods2teiHeader` is implemented in Python 3. In the following, we assume a working Python 3
