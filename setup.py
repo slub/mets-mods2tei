@@ -17,6 +17,7 @@ setup(
     author_email='kay-michael.wuerzner@slub-dresden.de',
     license=license,
     packages=find_packages(exclude=('tests', 'docs')),
+    package_data={'mets_mods2teiHeader' : ['data/tei_skeleton.xml']},
     install_requires=[
     ],
     entry_points={
