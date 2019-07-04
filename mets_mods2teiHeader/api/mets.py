@@ -32,6 +32,8 @@ class Mets:
         self.owner_digital = None
         self.license = None
         self.license_url = None
+        self.encoding_date = None
+        self.encoding_desc = None
 
     @classmethod
     def read(cls, source):
@@ -143,10 +145,18 @@ class Mets:
             license_nodes = self.tree.xpath("////mets:dmdSec[1]//mods:mods/mods:accessCondition[@type='use and reproduction']", namespaces=ns)
             if license_nodes != []:
                 self.license = license_nodes[0].text
-                self.license_url = license_nodes[0].get("href", "")
+                self.license_url = license_nodes[0].get(XLINK + "href", "")
             else:
                 self.license = ""
                 self.license_url = ""
+
+        #
+        # data encoding
+        header_node = self.tree.xpath("//mets:metsHdr", namespaces=ns)[0]
+        self.encoding_date = header_node.get("CREATEDATE")
+        for agent in header_node.xpath("//mets:agent", namespaces=ns):
+            if agent.get("OTHERTYPE") == "SOFTWARE":
+                self.encoding_desc = agent.xpath("//mets:name", namespaces=ns)[0].text
 
 
     def get_main_title(self):
@@ -214,3 +224,15 @@ class Mets:
         Return the url of the license of the digital edition
         """
         return self.license_url
+
+    def get_encoding_date(self):
+        """
+        Return the date of encoding for the digital edition
+        """
+        return self.encoding_date
+
+    def get_encoding_description(self):
+        """
+        Return details on the encoding of the digital edition
+        """
+        return self.encoding_desc

@@ -14,12 +14,6 @@
         <biblFull>
           <titleStmt>
             <title level="m" type="main">[Haupttitel einer Monographie]</title>
-            <author>
-              <persName ref="http://d-nb.info/gnd/XXX">
-                <surname>[Familienname des Autors]</surname>
-                <forename>[Vorname des Autors]</forename>
-              </persName>
-            </author>
           </titleStmt>
           <editionStmt>
             <edition n="1"/>
@@ -45,7 +39,6 @@
       </sourceDesc>
     </fileDesc>
     <encodingDesc>
-      <p>[Hinweise zu den Transkriptions- und Annotationsrichtlinien]</p>
     </encodingDesc>
     <profileDesc>
       <langUsage>

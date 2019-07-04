@@ -4,6 +4,8 @@ from lxml import etree
 
 import os
 
+import copy
+
 from pkg_resources import resource_filename, Requirement
 
 ns = {
@@ -37,23 +39,24 @@ class Tei:
         """
         Sets the main title of the title statement.
         """
-        self.tree.xpath('//tei:titleStmt/tei:title[@type="main"]', namespaces=ns)[0].text = string
+        for main_title in self.tree.xpath('//tei:titleStmt/tei:title[@type="main"]', namespaces=ns):
+            main_title.text = string
 
     def add_sub_title(self, string):
         """
         Adds a sub title to the title statement.
         """
-        title_stmt = self.tree.xpath('//tei:titleStmt', namespaces=ns)[0]
-        sub_title = etree.SubElement(title_stmt, "title")
+        sub_title = etree.Element("title")
         sub_title.set("type", "sub")
         sub_title.text = string
+        for title_stmt in self.tree.xpath('//tei:titleStmt', namespaces=ns):
+            title_stmt.append(copy.deepcopy(sub_title))
 
     def add_author(self, person, typ):
         """
         Adds an author to the title statement.
         """
-        title_stmt = self.tree.xpath('//tei:titleStmt', namespaces=ns)[0]
-        author = etree.SubElement(title_stmt, "author")
+        author = etree.Element("author")
         if typ == "personal":
             pers_name = etree.SubElement(author, "persName")
             for key in person:
@@ -71,6 +74,8 @@ class Tei:
         elif typ == "corporate":
             org_name = etree.SubElement(author, "orgName")
             org_name.text = " ".join(person[key] for key in person)
+        for title_stmt in self.tree.xpath('//tei:titleStmt', namespaces=ns):
+            title_stmt.append(copy.deepcopy(author))
 
     def add_place(self, place):
         """
@@ -148,3 +153,20 @@ class Tei:
             availability.set("status", "restricted")
             note = etree.SubElement(availability, "p")
             note.text = "Available under licence from the publishers."
+
+    def set_encoding_date(self, date):
+        """
+        Set the date of encoding for the digital edition
+        """
+        publication_stmt = self.tree.xpath('//tei:publicationStmt', namespaces=ns)[0]
+        encoding_date = etree.SubElement(publication_stmt, "date")
+        encoding_date.set("type", "publication")
+        encoding_date.text = date
+
+    def set_encoding_description(self, creator):
+        """
+        Sets some details on the encoding of the digital edition
+        """
+        encoding_desc = self.tree.xpath('//tei:encodingDesc', namespaces=ns)[0]
+        encoding_desc_details = etree.SubElement(encoding_desc, "p")
+        encoding_desc_details.text = "Encoded with the help of %s." % creator

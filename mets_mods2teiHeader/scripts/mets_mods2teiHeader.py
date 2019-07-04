@@ -69,6 +69,10 @@ def cli(mets):
     else:
         tei.set_availability("restricted", mets.get_license(), mets.get_license_url())
 
+    # encoding
+    tei.set_encoding_date(mets.get_encoding_date())
+    tei.set_encoding_description(mets.get_encoding_description())
+
     click.echo(tei.tostring())
 
 
