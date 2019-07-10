@@ -34,6 +34,8 @@ class Mets:
         self.license_url = None
         self.encoding_date = None
         self.encoding_desc = None
+        self.owner_manuscript = None
+        self.shelf_locator = None
 
     @classmethod
     def read(cls, source):
@@ -158,6 +160,16 @@ class Mets:
             if agent.get("OTHERTYPE") == "SOFTWARE":
                 self.encoding_desc = agent.xpath("//mets:name", namespaces=ns)[0].text
 
+	#
+	# location of manuscript
+        location = self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:location[1]", namespaces=ns)[0]
+        self.shelf_locator = location.xpath("//mods:shelfLocator", namespaces=ns)[0].text
+        physical_location = location.xpath("//mods:physicalLocation", namespaces=ns)[0]
+        if physical_location.get("displayLabel", default="unspecified") != "unspecified":
+            self.owner_manuscript = physical_location.get("displayLabel")
+        else:
+            self.owner_manuscript = physical_location.text
+
 
     def get_main_title(self):
         """
@@ -236,3 +248,15 @@ class Mets:
         Return details on the encoding of the digital edition
         """
         return self.encoding_desc
+
+    def get_owner_manuscript(self):
+        """
+        Return the owner of the original manuscript
+        """
+        return self.owner_manuscript
+
+    def get_shelf_loator(self):
+        """
+        Return the shelf locator of the original manuscript
+        """
+        return self.shelf_locator

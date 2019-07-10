@@ -73,6 +73,9 @@ def cli(mets):
     tei.set_encoding_date(mets.get_encoding_date())
     tei.set_encoding_description(mets.get_encoding_description())
 
+    # repository
+    tei.set_repository(mets.get_owner_manuscript())
+
     click.echo(tei.tostring())
 
 
