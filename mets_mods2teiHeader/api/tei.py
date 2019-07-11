@@ -178,3 +178,12 @@ class Tei:
         ms_ident = self.tree.xpath('//tei:msDesc/tei:msIdentifier', namespaces=ns)[0]
         repository_node = etree.SubElement(ms_ident, "repository")
         repository_node.text = repository
+
+    def set_shelfmark(self, shelfmark):
+        """
+        Sets the shelf mark of the (original) manuscript
+        """
+        ms_ident_idno = self.tree.xpath('//tei:msDesc/tei:msIdentifier/tei:idno', namespaces=ns)[0]
+        idno = etree.SubElement(ms_ident_idno, "idno")
+        idno.set("type", "shelfmark")
+        idno.text = shelfmark

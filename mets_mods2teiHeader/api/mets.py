@@ -162,13 +162,19 @@ class Mets:
 
 	#
 	# location of manuscript
-        location = self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:location[1]", namespaces=ns)[0]
-        self.shelf_locator = location.xpath("//mods:shelfLocator", namespaces=ns)[0].text
-        physical_location = location.xpath("//mods:physicalLocation", namespaces=ns)[0]
-        if physical_location.get("displayLabel", default="unspecified") != "unspecified":
-            self.owner_manuscript = physical_location.get("displayLabel")
-        else:
-            self.owner_manuscript = physical_location.text
+
+        # location-related elements are optional or conditional
+        location = self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:location[1]", namespaces=ns)
+        if location:
+            shelf_locator = self.shelf_locator = location[0].xpath("//mods:shelfLocator", namespaces=ns)
+            if shelf_locator:
+                self.shelf_locator = shelf_locator[0].text
+            physical_location = location[0].xpath("//mods:physicalLocation", namespaces=ns)
+            if physical_location:
+                if physical_location[0].get("displayLabel", default="unspecified") != "unspecified":
+                    self.owner_manuscript = physical_location[0].get("displayLabel")
+                else:
+                    self.owner_manuscript = physical_location[0].text
 
 
     def get_main_title(self):
@@ -255,7 +261,7 @@ class Mets:
         """
         return self.owner_manuscript
 
-    def get_shelf_loator(self):
+    def get_shelf_locator(self):
         """
         Return the shelf locator of the original manuscript
         """

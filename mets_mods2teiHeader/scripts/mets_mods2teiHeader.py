@@ -74,7 +74,10 @@ def cli(mets):
     tei.set_encoding_description(mets.get_encoding_description())
 
     # repository
-    tei.set_repository(mets.get_owner_manuscript())
+    if mets.get_owner_manuscript():
+        tei.set_repository(mets.get_owner_manuscript())
+    if mets.get_shelf_locator():
+        tei.set_shelfmark(mets.get_shelf_locator())
 
     click.echo(tei.tostring())
 
