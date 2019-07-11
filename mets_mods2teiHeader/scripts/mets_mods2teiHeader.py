@@ -75,9 +75,19 @@ def cli(mets):
 
     # repository
     if mets.get_owner_manuscript():
-        tei.set_repository(mets.get_owner_manuscript())
+        tei.add_repository(mets.get_owner_manuscript())
+
+    # shelf locator
     if mets.get_shelf_locator():
-        tei.set_shelfmark(mets.get_shelf_locator())
+        tei.add_shelfmark(mets.get_shelf_locator())
+
+    # identifiers
+    if mets.get_identifiers():
+        tei.add_identifiers(mets.get_identifiers())
+
+    # type description
+    if mets.get_scripts():
+        tei.set_type_desc('\n'.join(script for script in mets.get_scripts()))
 
     click.echo(tei.tostring())
 

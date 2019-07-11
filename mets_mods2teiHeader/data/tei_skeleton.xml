@@ -24,14 +24,9 @@
         <msDesc>
           <msIdentifier>
             <idno>
-              <idno type="URLCatalogue">[URL Katalogaufnahme]</idno>
-              <idno type="URLImages">[URL Bilddateien]</idno>
             </idno>
           </msIdentifier>
           <physDesc>
-            <typeDesc>
-              <p>[vorrangige Schriftart des zugrundeliegenden Textbandes]</p>
-            </typeDesc>
           </physDesc>
         </msDesc>
       </sourceDesc>
