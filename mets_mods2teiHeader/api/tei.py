@@ -170,3 +170,40 @@ class Tei:
         encoding_desc = self.tree.xpath('//tei:encodingDesc', namespaces=ns)[0]
         encoding_desc_details = etree.SubElement(encoding_desc, "p")
         encoding_desc_details.text = "Encoded with the help of %s." % creator
+
+    def add_repository(self, repository):
+        """
+        Adds the repository of the (original) manuscript
+        """
+        ms_ident = self.tree.xpath('//tei:msDesc/tei:msIdentifier', namespaces=ns)[0]
+        repository_node = etree.SubElement(ms_ident, "repository")
+        repository_node.text = repository
+
+    def add_shelfmark(self, shelfmark):
+        """
+        Adds the shelf mark of the (original) manuscript
+        """
+        ms_ident_idno = self.tree.xpath('//tei:msDesc/tei:msIdentifier/tei:idno', namespaces=ns)[0]
+        idno = etree.SubElement(ms_ident_idno, "idno")
+        idno.set("type", "shelfmark")
+        idno.text = shelfmark
+
+    def add_identifiers(self, identifiers):
+        """
+        Adds the identifiers of the digital edition
+        """
+        ms_ident_idno = self.tree.xpath('//tei:msDesc/tei:msIdentifier/tei:idno', namespaces=ns)[0]
+        for identifier in identifiers:
+            idno = etree.SubElement(ms_ident_idno, "idno")
+            idno.set("type", identifier[0])
+            idno.text = identifier[1]
+
+    def set_type_desc(self, description):
+        """
+        Sets the type description
+        """
+        phys_desc = self.tree.xpath('//tei:msDesc/tei:physDesc', namespaces=ns)[0]
+        type_desc = etree.SubElement(phys_desc, "typeDesc")
+        for line in description.split('\n'):
+            par = etree.SubElement(type_desc, "p")
+            par.text = line

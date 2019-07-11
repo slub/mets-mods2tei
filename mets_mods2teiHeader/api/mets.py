@@ -4,14 +4,38 @@ from lxml import etree
 
 import os
 
+import csv
+
+from pkg_resources import resource_filename, Requirement
+
 ns = {
      'mets': "http://www.loc.gov/METS/",
      'mods': "http://www.loc.gov/mods/v3",
-     'xlink' : "http://www.w3.org/1999/xlink",
-     'dv' : "http://dfg-viewer.de/",
+     'xlink': "http://www.w3.org/1999/xlink",
+     'dv': "http://dfg-viewer.de/",
 }
 METS = "{%s}" % ns['mets']
 XLINK = "{%s}" % ns['xlink']
+
+class Iso15924:
+
+    def __init__(self):
+        """
+        The constructor.
+        """
+        self.map = {}
+        filep = open(os.path.realpath(resource_filename(Requirement.parse("mets_mods2teiHeader"), 'mets_mods2teiHeader/data/iso15924-utf8-20180827.txt')))
+        reader = csv.DictReader(filter(lambda row: row[0]!='#', filep), delimiter=';', quoting=csv.QUOTE_NONE, fieldnames=['code','index','name_eng', 'name_fr', 'alias', 'Age', 'Date'])
+        for row in reader:
+            self.map[row['code']] = row['name_eng']
+        filep.close()
+
+    def get(self, code):
+        """
+        Return the description for the given code
+        :param str: An ISO 15924 code
+        """
+        return self.map.get(code, "Unknown")
 
 class Mets:
 
@@ -21,6 +45,8 @@ class Mets:
         """
 
         self.tree = None
+        self.script_iso = Iso15924()
+
         self.title = None
         self.sub_titles = None
         self.authors = None
@@ -34,6 +60,10 @@ class Mets:
         self.license_url = None
         self.encoding_date = None
         self.encoding_desc = None
+        self.owner_manuscript = None
+        self.shelf_locator = None
+        self.identifiers = None
+        self.scripts = None
 
     @classmethod
     def read(cls, source):
@@ -158,6 +188,38 @@ class Mets:
             if agent.get("OTHERTYPE") == "SOFTWARE":
                 self.encoding_desc = agent.xpath("//mets:name", namespaces=ns)[0].text
 
+	#
+	# location of manuscript
+
+        # location-related elements are optional or conditional
+        location = self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:location[1]", namespaces=ns)
+        if location:
+            shelf_locator = self.shelf_locator = location[0].xpath("//mods:shelfLocator", namespaces=ns)
+            if shelf_locator:
+                self.shelf_locator = shelf_locator[0].text
+            physical_location = location[0].xpath("//mods:physicalLocation", namespaces=ns)
+            if physical_location:
+                if physical_location[0].get("displayLabel", default="unspecified") != "unspecified":
+                    self.owner_manuscript = physical_location[0].get("displayLabel")
+                else:
+                    self.owner_manuscript = physical_location[0].text
+
+        #
+        # identifiers
+        identifiers = self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:identifier", namespaces=ns)
+        self.identifiers = []
+        for identifier in identifiers:
+            self.identifiers.append((identifier.get("type", default="unknown"), identifier.text))
+
+        #
+        # scripts
+        scripts = self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:language/mods:scriptTerm", namespaces=ns)
+        self.scripts = []
+        for script in scripts:
+            self.scripts.append(self.script_iso.get(script.text))
+        if not self.scripts:
+            self.scripts.append(self.script_iso.get('Unknown'))
+
 
     def get_main_title(self):
         """
@@ -236,3 +298,27 @@ class Mets:
         Return details on the encoding of the digital edition
         """
         return self.encoding_desc
+
+    def get_owner_manuscript(self):
+        """
+        Return the owner of the original manuscript
+        """
+        return self.owner_manuscript
+
+    def get_shelf_locator(self):
+        """
+        Return the shelf locator of the original manuscript
+        """
+        return self.shelf_locator
+
+    def get_identifiers(self):
+        """
+        Return the mods identifiers as a attribut-value mapping
+        """
+        return self.identifiers
+
+    def get_scripts(self):
+        """
+        Returns information on the dominant fonts
+        """
+        return self.scripts

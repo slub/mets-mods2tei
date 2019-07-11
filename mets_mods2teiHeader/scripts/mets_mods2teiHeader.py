@@ -73,6 +73,22 @@ def cli(mets):
     tei.set_encoding_date(mets.get_encoding_date())
     tei.set_encoding_description(mets.get_encoding_description())
 
+    # repository
+    if mets.get_owner_manuscript():
+        tei.add_repository(mets.get_owner_manuscript())
+
+    # shelf locator
+    if mets.get_shelf_locator():
+        tei.add_shelfmark(mets.get_shelf_locator())
+
+    # identifiers
+    if mets.get_identifiers():
+        tei.add_identifiers(mets.get_identifiers())
+
+    # type description
+    if mets.get_scripts():
+        tei.set_type_desc('\n'.join(script for script in mets.get_scripts()))
+
     click.echo(tei.tostring())
 
 
