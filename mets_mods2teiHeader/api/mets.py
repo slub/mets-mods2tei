@@ -64,6 +64,7 @@ class Mets:
         self.shelf_locator = None
         self.identifiers = None
         self.scripts = None
+        self.collections = None
 
     @classmethod
     def read(cls, source):
@@ -221,6 +222,16 @@ class Mets:
             self.scripts.append(self.script_iso.get('Unknown'))
 
 
+        #
+        # collections (from relatedItem)
+        collections = self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:relatedItem[@type='series']", namespaces=ns)
+        self.collections = []
+        for collection in collections:
+            title = collection.xpath("//mods:titleinfo/mods:title", namespaces=ns)
+            if title:
+                self.collections.append(title[0].text)
+
+
     def get_main_title(self):
         """
         Return the main title of the work.
@@ -322,3 +333,9 @@ class Mets:
         Returns information on the dominant fonts
         """
         return self.scripts
+
+    def get_collections(self):
+        """
+        Returns the name of the collections of the digital edition
+        """
+        return self.collections
