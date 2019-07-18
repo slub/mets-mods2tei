@@ -6,6 +6,8 @@ import os
 
 import csv
 
+import babel
+
 from pkg_resources import resource_filename, Requirement
 
 ns = {
@@ -65,6 +67,7 @@ class Mets:
         self.identifiers = None
         self.scripts = None
         self.collections = None
+        self.languages = None
 
     @classmethod
     def read(cls, source):
@@ -231,6 +234,15 @@ class Mets:
             if title:
                 self.collections.append(title[0].text)
 
+        #
+        # languages
+        languages = self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:language/mods:languageTerm", namespaces=ns)
+        self.languages = {}
+        for language in languages:
+            self.languages[language.text] = babel.Locale.parse(language.text).get_language_name('de')
+        if not self.languages:
+            self.languages['mis'] = 'Unkodiert'
+
 
     def get_main_title(self):
         """
@@ -339,3 +351,9 @@ class Mets:
         Returns the name of the collections of the digital edition
         """
         return self.collections
+
+    def get_languages(self):
+        """
+        Returns the languages used in the original manuscript
+        """
+        return self.languages

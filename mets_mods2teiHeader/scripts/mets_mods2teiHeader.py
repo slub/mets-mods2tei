@@ -89,6 +89,10 @@ def cli(mets):
     if mets.get_scripts():
         tei.set_type_desc('\n'.join(script for script in mets.get_scripts()))
 
+    # languages
+    for ident_name in mets.get_languages().items():
+        tei.add_language(ident_name)
+
     click.echo(tei.tostring())
 
 

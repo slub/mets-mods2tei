@@ -207,3 +207,12 @@ class Tei:
         for line in description.split('\n'):
             par = etree.SubElement(type_desc, "p")
             par.text = line
+
+    def add_language(self, language):
+        """
+        Add a language of the source document
+        """
+        lang_usage = self.tree.xpath('//tei:profileDesc/tei:langUsage', namespaces=ns)[0]
+        lang = etree.SubElement(lang_usage, "language")
+        lang.set("ident", language[0])
+        lang.text = language[1]
