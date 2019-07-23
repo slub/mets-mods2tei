@@ -50,17 +50,25 @@ $ . env/bin/activate
 ```
 
 ### Python requirements
-`mets-mods2teiHeader` uses various 3rd party Python packages which may best be installed using `pip`:
-```console
-(env) $ pip install -r requirements.txt
-```
-Finally, `mets-mods2teiHeader` itself can be installed via `pip`:
+
+`mets-mods2teiHeader` can be installed via `pip`:
+
 ```console
 (env) $ pip install .
 ```
 
 ## Testing
-`mets-mods2teiHeader` uses `pytest`-based testing. Run the tests via:
+
+`mets-mods2teiHeader` uses `pytest`-based testing.
+
+Install the test requirements:
+
+```console
+(env) pip install -r requirements-test.txt
+```
+
+Run the tests via:
+
 ```console
 (env) $ pytest
 ```
