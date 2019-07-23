@@ -111,6 +111,15 @@ class Tei:
         name.text = publisher
         publication_stmt.insert(0, publisher_node)
 
+    def add_source_edition(self, manuscript_edition):
+        """
+        Adds an edition statement with details on the source manuscript.
+        """
+        bibl_full = self.tree.xpath('//tei:fileDesc/tei:sourceDesc/tei:biblFull', namespaces=ns)[0]
+        edition_stmt = etree.SubElement(bibl_full, "editionStmt")
+        edition = etree.SubElement(edition_stmt, "edition")
+        edition.text = manuscript_edition
+
     def add_digital_edition(self, digital_edition):
         """
         Adds an edition statement with details on the digital edition.

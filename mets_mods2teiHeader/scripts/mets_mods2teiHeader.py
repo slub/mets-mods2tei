@@ -56,6 +56,10 @@ def cli(mets):
     for publisher in mets.get_publishers():
         tei.add_publisher(publisher)
 
+    # manuscript edition
+    if mets.get_edition():
+        tei.add_source_edition(mets.get_edition())
+
     # digital edition
     if mets.has_digital_origin():
         tei.add_digital_edition(mets.get_digital_origin())

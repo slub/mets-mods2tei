@@ -56,6 +56,7 @@ class Mets:
         self.places = None
         self.dates = None
         self.publishers = None
+        self.edition = None
         self.digital_origin = None
         self.owner_digital = None
         self.license = None
@@ -155,6 +156,14 @@ class Mets:
         self.publishers = []
         for publisher in self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:originInfo[1]/mods:publisher", namespaces=ns):
             self.publishers.append(publisher.text)
+
+        #
+        # edition of the manuscript
+        edition = self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:originInfo[1]/mods:edition", namespaces=ns)
+        if edition:
+            self.edition = edition[0].text
+        else:
+            self.edition = ""
 
         #
         # digital_origin
@@ -279,6 +288,12 @@ class Mets:
         Return the publishers
         """
         return self.publishers
+
+    def get_edition(self):
+        """
+        Return the edition of the source manuscript
+        """
+        return self.edition
 
     def has_digital_origin(self):
         """
