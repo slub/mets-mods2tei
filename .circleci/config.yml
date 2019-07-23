@@ -9,14 +9,11 @@ orbs:
 jobs:
   build:
     docker:
-      - image: circleci/python:3.6.1
+      - image: python:3.6
     working_directory: ~/repo
     steps:
       - checkout
-      - run:
-          name: install dependencies
-          command: |
-            pip install -r requirements-test.txt
-            pip install .
+      - run: pip install -r requirements-test.txt
+      - run: pip install .
       - run: make coverage
       - codecov/upload
