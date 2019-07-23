@@ -111,7 +111,7 @@ class Mets:
 
         #
         # sub titles
-        self.sub_titles = [text.text for text in self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:titleInfo/mods:subTitle", namespaces=ns)]
+        self.sub_titles = [text.text.strip() for text in self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:titleInfo/mods:subTitle", namespaces=ns)]
 
         #
         # authors and editors
