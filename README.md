@@ -1,6 +1,6 @@
 # mets-mods2teiHeader
 
-[![Circle CI](https://circleci.com/gh/codecov/example-circleci-orb.png?style=badge)](https://circleci.com/gh/codecov/example-circleci-orb) [![codecov.io](https://codecov.io/github/codecov/example-circleci-orb/coverage.svg?branch=master)](https://codecov.io/github/codecov/example-circleci-orb)
+[![CircleCI](https://circleci.com/gh/wrznr/mets-mods2teiHeader.svg?style=svg)](https://circleci.com/gh/wrznr/mets-mods2teiHeader) [![codecov](https://codecov.io/gh/wrznr/mets-mods2teiHeader/branch/master/graph/badge.svg)](https://codecov.io/gh/wrznr/mets-mods2teiHeader)
 
 Convert bibliographic meta data in METS/MODS format to TEI headers
 
