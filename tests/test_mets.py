@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import os
 import pytest
 import warnings
@@ -32,11 +34,37 @@ def test_constructor():
     mets = Mets()
     assert(mets.tree == None)
 
+def test_reading_local_file(datadir):
+    '''
+    Test reading a local mets file
+    '''
+    f = open(datadir.join('test_mets.xml'))
+    mets = Mets.read(f)
+    assert(mets.tree != None)
 
 def test_loading_local_file(datadir):
     '''
     Test loading a local mets file
     '''
     f = open(datadir.join('test_mets.xml'))
-    mets = Mets.read(f)
+    mets = Mets.fromfile(f)
     assert(mets.tree != None)
+
+def test_data_assignment(subtests, datadir):
+    '''
+    Test the correct assignment of meta data
+    '''
+    f = open(datadir.join('test_mets.xml'))
+    mets = Mets.read(f)
+
+    with subtests.test("Check main title"):
+        assert(mets.get_main_title() == "Geschichte der Mission der evangelischen Brüder unter den Indianern in Nordamerika")
+
+    with subtests.test("Check author(s)"):
+        assert(mets.get_authors() == [('personal', {'family': 'Loskiel', 'given': 'Georg Heinrich'})])
+
+    with subtests.test("Check subtitle(s)"):
+        assert(mets.get_sub_titles() == ['ein Führer für Reisende; mit Kartenbeilagen und Illustrationen in Holzschnitt'])
+
+    with subtests.test("Check place(s)"):
+        assert(mets.get_places() == [{'text': 'Barby'}, {'text': 'Leipzig'}])

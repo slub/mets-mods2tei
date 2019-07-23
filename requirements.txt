@@ -3,3 +3,4 @@ lxml
 babel
 pytest
 pytest-ordering
+pytest-subtests
