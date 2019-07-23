@@ -56,6 +56,13 @@ Finally, `mets-mods2teiHeader` itself can be installed via `pip`:
 (env) $ pip install .
 ```
 
+## Testing
+
+`mets-mods2teiHeader` uses `pytest`-based testing. Run the tests via:
+```console
+(env) $ pytest
+```
+
 ## Invocation
 Installing `mets-mods2teiHeader` makes the command line tool `mods2teiHeader` available:
 ```console
