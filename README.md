@@ -73,6 +73,14 @@ Run the tests via:
 (env) $ pytest
 ```
 
+## Code coverage
+
+Determine code coverage by running
+
+```console
+(env) $ make coverage
+```
+
 ## Invocation
 Installing `mets-mods2teiHeader` makes the command line tool `mods2teiHeader` available:
 ```console
