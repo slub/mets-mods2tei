@@ -65,6 +65,7 @@ ein Führer für Reisende; mit Kartenbeilagen und Illustrationen in Holzschnitt
             <mods:dateOther encoding="w3cdtf" type="order">1789</mods:dateOther>
             <mods:publisher>Brüdergemeinen</mods:publisher>
             <mods:publisher>Kummer</mods:publisher>
+            <mods:edition>3. Aufl.</mods:edition>
           </mods:originInfo>
           <mods:name type="personal">
             <mods:role>

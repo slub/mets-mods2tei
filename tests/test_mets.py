@@ -68,3 +68,6 @@ def test_data_assignment(subtests, datadir):
 
     with subtests.test("Check place(s)"):
         assert(mets.get_places() == [{'text': 'Barby'}, {'text': 'Leipzig'}])
+
+    with subtests.test("Check manuscript edition"):
+        assert(mets.get_edition() == '3. Aufl.')
