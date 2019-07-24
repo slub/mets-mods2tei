@@ -17,4 +17,9 @@ def test_data_assignment(subtests):
 
     with subtests.test("Check main title"):
         tei.set_main_title("Testbuch")
-        assert(tei.get_main_title() == "Testbuch")
+        assert(tei.main_title == "Testbuch")
+
+    with subtests.test("Check extent(s)"):
+        tei.add_extent("32 S.")
+        tei.add_extent("5 Abb.")
+        assert(tei.extents == ["32 S.", "5 Abb."])
