@@ -240,10 +240,10 @@ class Tei:
         Add information on the extent of the source document
         """
         phys_desc = self.tree.xpath('//tei:msDesc/tei:physDesc', namespaces=ns)[0]
-        if phys_desc.xpath('/tei:objectDesc/tei:supportDesc', namespaces=ns) == []:
+        if not phys_desc.xpath('/tei:objectDesc/tei:supportDesc', namespaces=ns):
             obj_desc = etree.SubElement(phys_desc, "%sobjectDesc" % TEI)
             support_desc = etree.SubElement(obj_desc, "%ssupportDesc" % TEI)
         else:
             support_desc = phys_desc.xpath('/tei:objectDesc/tei:supportDesc', namespaces=ns)[0]
-        extent_elem = etree.SubElement(support_desc, "%sextent" % TEI)
+        extent_elem = etree.SubElement(support_desc, "{%s}extent" % TEI)
         extent_elem.text = extent
