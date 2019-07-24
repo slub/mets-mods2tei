@@ -245,5 +245,5 @@ class Tei:
             support_desc = etree.SubElement(obj_desc, "%ssupportDesc" % TEI)
         else:
             support_desc = phys_desc.xpath('/tei:objectDesc/tei:supportDesc', namespaces=ns)[0]
-        extent_elem = etree.SubElement(support_desc, "{%s}extent" % TEI)
+        extent_elem = etree.SubElement(support_desc, "%sextent" % TEI)
         extent_elem.text = extent
