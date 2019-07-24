@@ -69,6 +69,7 @@ class Mets:
         self.scripts = None
         self.collections = None
         self.languages = None
+        self.extents = None
 
     @classmethod
     def read(cls, source):
@@ -252,6 +253,11 @@ class Mets:
         if not self.languages:
             self.languages['mis'] = 'Unkodiert'
 
+        #
+        # extent
+        self.extents = []
+        for extent in self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:physicalDescription[1]/mods:extent", namespaces=ns):
+            self.extents.append(extent.text)
 
     def get_main_title(self):
         """

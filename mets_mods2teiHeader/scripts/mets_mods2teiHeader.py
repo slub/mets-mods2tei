@@ -97,6 +97,10 @@ def cli(mets):
     for ident_name in mets.get_languages().items():
         tei.add_language(ident_name)
 
+    # extents
+    for extent in mets.extents:
+        tei.add_extent(extent)
+
     click.echo(tei.tostring())
 
 

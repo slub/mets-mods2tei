@@ -71,3 +71,6 @@ def test_data_assignment(subtests, datadir):
 
     with subtests.test("Check manuscript edition"):
         assert(mets.get_edition() == '3. Aufl.')
+
+    with subtests.test("Check manuscript extent"):
+        assert(mets.extents == ['[8] Bl., 783 S., [1] Bl.'])
