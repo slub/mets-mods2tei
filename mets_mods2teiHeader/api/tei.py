@@ -225,3 +225,16 @@ class Tei:
         lang = etree.SubElement(lang_usage, "language")
         lang.set("ident", language[0])
         lang.text = language[1]
+
+    def add_extent(self, extent):
+        """
+        Add information on the extent of the source document
+        """
+        phys_desc = self.tree.xpath('//tei:msDesc/tei:physDesc', namespaces=ns)[0]
+        if phys_desc.xpath('/tei:objectDesc/tei:supportDesc', namespaces=ns) == []:
+            obj_desc = etree.SubElement(phys_desc, "objectDesc")
+            support_desc = etree.SubElement(obj_desc, "supportDesc")
+        else:
+            support_desc = phys_desc.xpath('/tei:objectDesc/tei:supportDesc', namespaces=ns)[0]
+        extent_elem = etree.SubElement(support_desc, "extent")
+        extent_elem.text = extent
