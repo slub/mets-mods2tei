@@ -56,6 +56,30 @@ class Tei:
         return authors
 
     @property
+    def dates(self):
+        """
+        Returns information on the publication date(s) of the work represented
+        by the TEI Header.
+        """
+        return [date.text for date in self.tree.xpath('//tei:fileDesc/tei:sourceDesc/tei:biblFull/tei:publicationStmt/tei:date', namespaces=ns)]
+
+    @property
+    def places(self):
+        """
+        Returns information on the publication place(s) of the work represented
+        by the TEI Header.
+        """
+        return ["%s:%s" % (place.get("corresp"), place.text) for place in self.tree.xpath('//tei:fileDesc/tei:sourceDesc/tei:biblFull/tei:publicationStmt/tei:pubPlace', namespaces=ns)]
+
+    @property
+    def publishers(self):
+        """
+        Returns information on the publishers of the work represented
+        by the TEI Header.
+        """
+        return [publisher.text for publisher in self.tree.xpath('//tei:fileDesc/tei:sourceDesc/tei:biblFull/tei:publicationStmt/tei:publisher/tei:name', namespaces=ns)]
+
+    @property
     def extents(self):
         """
         Returns information on the extent of the work represented
@@ -134,7 +158,7 @@ class Tei:
         Adds a publisher to the publication statement.
         """
         publication_stmt = self.tree.xpath('//tei:fileDesc/tei:sourceDesc/tei:biblFull/tei:publicationStmt', namespaces=ns)[0]
-        publisher_node = etree.Element("publisher")
+        publisher_node = etree.Element("%spublisher" % TEI)
         name = etree.SubElement(publisher_node, "%sname" % TEI)
         name.text = publisher
         publication_stmt.insert(0, publisher_node)

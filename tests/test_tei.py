@@ -39,6 +39,18 @@ def test_data_assignment(subtests):
         tei.add_author({'family': 'Mustermann', 'given': 'Max', 'date': '12.10.1956', 'title': 'Dr.'}, "corporate")
         assert(tei.authors == ["Mustermann Max Dr.", "Mustermann Max 12.10.1956 Dr."])
 
+    with subtests.test("Check date(s)"):
+        tei.add_date({"from": "01.01.1823", "to": "25.01.1823"})
+        assert(tei.dates == ["01.01.1823", "25.01.1823"])
+
+    with subtests.test("Check place(s)"):
+        tei.add_place({"text": "Dresden", "code": "01277"})
+        assert(tei.places == ["01277:Dresden"])
+
+    with subtests.test("Check publisher"):
+        tei.add_publisher("Joachim Mustermann")
+        assert(tei.publishers == ["Joachim Mustermann"])
+
     with subtests.test("Check first extent"):
         tei.add_extent("32 S.")
         assert(tei.extents == ["32 S."])
