@@ -37,6 +37,81 @@ class Tei:
         return self.tree.xpath('//tei:titleStmt/tei:title[@type="main"]', namespaces=ns)[0].text
 
     @property
+    def subtitles(self):
+        """
+        Returns information on the subtitle(s) of the work represented
+        by the TEI Header.
+        """
+        return [subtitle.text for subtitle in self.tree.xpath('//tei:fileDesc/tei:titleStmt/tei:title[@type="sub"]', namespaces=ns)]
+
+    @property
+    def authors(self):
+        """
+        Returns information on the author(s) of the work represented
+        by the TEI Header.
+        """
+        authors = []
+        for author in self.tree.xpath('//tei:fileDesc/tei:titleStmt/tei:author', namespaces=ns):
+            authors.append(" ".join(author.xpath('descendant-or-self::*/text()')))
+        return authors
+
+    @property
+    def dates(self):
+        """
+        Returns information on the publication date(s) of the work represented
+        by the TEI Header.
+        """
+        return [date.text for date in self.tree.xpath('//tei:fileDesc/tei:sourceDesc/tei:biblFull/tei:publicationStmt/tei:date', namespaces=ns)]
+
+    @property
+    def places(self):
+        """
+        Returns information on the publication place(s) of the work represented
+        by the TEI Header.
+        """
+        return ["%s:%s" % (place.get("corresp"), place.text) for place in self.tree.xpath('//tei:fileDesc/tei:sourceDesc/tei:biblFull/tei:publicationStmt/tei:pubPlace', namespaces=ns)]
+
+    @property
+    def publishers(self):
+        """
+        Returns information on the publishers of the source work represented
+        by the TEI Header.
+        """
+        return [publisher.text for publisher in self.tree.xpath('//tei:fileDesc/tei:sourceDesc/tei:biblFull/tei:publicationStmt/tei:publisher/tei:name', namespaces=ns)]
+
+    @property
+    def hosters(self):
+        """
+        Returns information on the publishers of the digitalized work represented
+        by the TEI Header.
+        """
+        return [publisher.text for publisher in self.tree.xpath('//tei:fileDesc/tei:publicationStmt/tei:publisher', namespaces=ns)]
+
+    @property
+    def source_editions(self):
+        """
+        Returns information on the editions of the source work represented
+        by the TEI Header.
+        """
+        return [source_edition.text for source_edition in self.tree.xpath('//tei:fileDesc/tei:sourceDesc/tei:biblFull/tei:editionStmt/tei:edition', namespaces=ns)]
+
+    @property
+    def digital_editions(self):
+        """
+        Returns information on the editions of the digitalized work represented
+        by the TEI Header.
+        """
+        return [digital_edition.text for digital_edition in self.tree.xpath('//tei:fileDesc/tei:titleStmt/tei:editionStmt/tei:edition', namespaces=ns)]
+
+    @property
+    def encoding_dates(self):
+        """
+        Returns information on the publishing dates of the digitalized work represented
+        by the TEI Header.
+        """
+        return ["%s:%s" % (encoding_date.get("type"), encoding_date.text) for encoding_date in self.tree.xpath('//tei:fileDesc/tei:publicationStmt/tei:date', namespaces=ns)]
+
+    @property
     def extents(self):
         """
         Returns information on the extent of the work represented
@@ -46,16 +121,16 @@ class Tei:
 
     def set_main_title(self, string):
         """
-        Sets the main title of the title statement.
+        Sets the main title of the title statements.
         """
         for main_title in self.tree.xpath('//tei:titleStmt/tei:title[@type="main"]', namespaces=ns):
             main_title.text = string
 
     def add_sub_title(self, string):
         """
-        Adds a sub title to the title statement.
+        Adds a sub title to the title statements.
         """
-        sub_title = etree.Element("title")
+        sub_title = etree.Element("%stitle" % TEI)
         sub_title.set("type", "sub")
         sub_title.text = string
         for title_stmt in self.tree.xpath('//tei:titleStmt', namespaces=ns):
@@ -63,9 +138,9 @@ class Tei:
 
     def add_author(self, person, typ):
         """
-        Adds an author to the title statement.
+        Adds an author to the title statements.
         """
-        author = etree.Element("author")
+        author = etree.Element("%sauthor" % TEI)
         if typ == "personal":
             pers_name = etree.SubElement(author, "%spersName" % TEI)
             for key in person:
@@ -115,7 +190,7 @@ class Tei:
         Adds a publisher to the publication statement.
         """
         publication_stmt = self.tree.xpath('//tei:fileDesc/tei:sourceDesc/tei:biblFull/tei:publicationStmt', namespaces=ns)[0]
-        publisher_node = etree.Element("publisher")
+        publisher_node = etree.Element("%spublisher" % TEI)
         name = etree.SubElement(publisher_node, "%sname" % TEI)
         name.text = publisher
         publication_stmt.insert(0, publisher_node)
@@ -138,9 +213,9 @@ class Tei:
         edition = etree.SubElement(edition_stmt, "%sedition" % TEI)
         edition.text = digital_edition
 
-    def set_hoster(self, hoster):
+    def add_hoster(self, hoster):
         """
-        Set the publisher of the digital edition
+        Adds a publisher of the digital edition
         """
         publication_stmt = self.tree.xpath('//tei:publicationStmt', namespaces=ns)[0]
         publisher = etree.SubElement(publication_stmt, "%spublisher" % TEI)
@@ -172,9 +247,9 @@ class Tei:
             note = etree.SubElement(availability, "%sp" % TEI)
             note.text = "Available under licence from the publishers."
 
-    def set_encoding_date(self, date):
+    def add_encoding_date(self, date):
         """
-        Set the date of encoding for the digital edition
+        Add the date of encoding for the digital edition
         """
         publication_stmt = self.tree.xpath('//tei:publicationStmt', namespaces=ns)[0]
         encoding_date = etree.SubElement(publication_stmt, "%sdate" % TEI)
