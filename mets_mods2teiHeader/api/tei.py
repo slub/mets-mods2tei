@@ -37,6 +37,25 @@ class Tei:
         return self.tree.xpath('//tei:titleStmt/tei:title[@type="main"]', namespaces=ns)[0].text
 
     @property
+    def subtitles(self):
+        """
+        Returns information on the subtitle(s) of the work represented
+        by the TEI Header.
+        """
+        return [subtitle.text for subtitle in self.tree.xpath('//tei:fileDesc/tei:titleStmt/tei:title[@type="sub"]', namespaces=ns)]
+
+    @property
+    def authors(self):
+        """
+        Returns information on the author(s) of the work represented
+        by the TEI Header.
+        """
+        authors = []
+        for author in self.tree.xpath('//tei:fileDesc/tei:titleStmt/tei:author', namespaces=ns):
+            authors.append(" ".join(author.xpath('descendant-or-self::*/text()')))
+        return authors
+
+    @property
     def extents(self):
         """
         Returns information on the extent of the work represented
@@ -46,16 +65,16 @@ class Tei:
 
     def set_main_title(self, string):
         """
-        Sets the main title of the title statement.
+        Sets the main title of the title statements.
         """
         for main_title in self.tree.xpath('//tei:titleStmt/tei:title[@type="main"]', namespaces=ns):
             main_title.text = string
 
     def add_sub_title(self, string):
         """
-        Adds a sub title to the title statement.
+        Adds a sub title to the title statements.
         """
-        sub_title = etree.Element("title")
+        sub_title = etree.Element("%stitle" % TEI)
         sub_title.set("type", "sub")
         sub_title.text = string
         for title_stmt in self.tree.xpath('//tei:titleStmt', namespaces=ns):
@@ -63,9 +82,9 @@ class Tei:
 
     def add_author(self, person, typ):
         """
-        Adds an author to the title statement.
+        Adds an author to the title statements.
         """
-        author = etree.Element("author")
+        author = etree.Element("%sauthor" % TEI)
         if typ == "personal":
             pers_name = etree.SubElement(author, "%spersName" % TEI)
             for key in person:
