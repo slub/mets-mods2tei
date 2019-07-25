@@ -74,10 +74,42 @@ class Tei:
     @property
     def publishers(self):
         """
-        Returns information on the publishers of the work represented
+        Returns information on the publishers of the source work represented
         by the TEI Header.
         """
         return [publisher.text for publisher in self.tree.xpath('//tei:fileDesc/tei:sourceDesc/tei:biblFull/tei:publicationStmt/tei:publisher/tei:name', namespaces=ns)]
+
+    @property
+    def hosters(self):
+        """
+        Returns information on the publishers of the digitalized work represented
+        by the TEI Header.
+        """
+        return [publisher.text for publisher in self.tree.xpath('//tei:fileDesc/tei:publicationStmt/tei:publisher', namespaces=ns)]
+
+    @property
+    def source_editions(self):
+        """
+        Returns information on the editions of the source work represented
+        by the TEI Header.
+        """
+        return [source_edition.text for source_edition in self.tree.xpath('//tei:fileDesc/tei:sourceDesc/tei:biblFull/tei:editionStmt/tei:edition', namespaces=ns)]
+
+    @property
+    def digital_editions(self):
+        """
+        Returns information on the editions of the digitalized work represented
+        by the TEI Header.
+        """
+        return [digital_edition.text for digital_edition in self.tree.xpath('//tei:fileDesc/tei:titleStmt/tei:editionStmt/tei:edition', namespaces=ns)]
+
+    @property
+    def encoding_dates(self):
+        """
+        Returns information on the publishing dates of the digitalized work represented
+        by the TEI Header.
+        """
+        return ["%s:%s" % (encoding_date.get("type"), encoding_date.text) for encoding_date in self.tree.xpath('//tei:fileDesc/tei:publicationStmt/tei:date', namespaces=ns)]
 
     @property
     def extents(self):
@@ -181,9 +213,9 @@ class Tei:
         edition = etree.SubElement(edition_stmt, "%sedition" % TEI)
         edition.text = digital_edition
 
-    def set_hoster(self, hoster):
+    def add_hoster(self, hoster):
         """
-        Set the publisher of the digital edition
+        Adds a publisher of the digital edition
         """
         publication_stmt = self.tree.xpath('//tei:publicationStmt', namespaces=ns)[0]
         publisher = etree.SubElement(publication_stmt, "%spublisher" % TEI)
@@ -215,9 +247,9 @@ class Tei:
             note = etree.SubElement(availability, "%sp" % TEI)
             note.text = "Available under licence from the publishers."
 
-    def set_encoding_date(self, date):
+    def add_encoding_date(self, date):
         """
-        Set the date of encoding for the digital edition
+        Add the date of encoding for the digital edition
         """
         publication_stmt = self.tree.xpath('//tei:publicationStmt', namespaces=ns)[0]
         encoding_date = etree.SubElement(publication_stmt, "%sdate" % TEI)

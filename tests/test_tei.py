@@ -51,6 +51,22 @@ def test_data_assignment(subtests):
         tei.add_publisher("Joachim Mustermann")
         assert(tei.publishers == ["Joachim Mustermann"])
 
+    with subtests.test("Check source edition"):
+        tei.add_source_edition("18. Aufl.")
+        assert(tei.source_editions == ["18. Aufl."])
+
+    with subtests.test("Check digital edition"):
+        tei.add_digital_edition("reformatted digital")
+        assert(tei.digital_editions == ["reformatted digital"])
+
+    with subtests.test("Check digital publisher"):
+        tei.add_hoster("SLUB")
+        assert(tei.hosters == ["SLUB"])
+
+    with subtests.test("Check encoding date"):
+        tei.add_encoding_date("25.01.2020")
+        assert(tei.encoding_dates == ["publication:25.01.2020"])
+
     with subtests.test("Check first extent"):
         tei.add_extent("32 S.")
         assert(tei.extents == ["32 S."])
