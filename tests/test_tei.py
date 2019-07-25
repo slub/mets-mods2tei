@@ -23,6 +23,10 @@ def test_data_assignment(subtests):
         tei.set_main_title("Testbuch")
         assert(tei.main_title == "Testbuch")
 
+    with subtests.test("Check publication level"):
+        tei.set_publication_level("m")
+        assert(tei.publication_level == "m")
+
     with subtests.test("Check first subtitle"):
         tei.add_sub_title("Untertitel 1")
         assert(tei.subtitles == ["Untertitel 1"])

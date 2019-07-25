@@ -35,6 +35,13 @@ class Tei:
         by the TEI Header.
         """
         return self.tree.xpath('//tei:titleStmt/tei:title[@type="main"]', namespaces=ns)[0].text
+    
+    @property
+    def publication_level(self):
+        """
+        Returns the level of publication ('monographic' vs. 'analytic')
+        """
+        return self.tree.xpath('//tei:sourceDesc/tei:biblFull/tei:titleStmt/tei:title[@type="main"]', namespaces=ns)[0].get("level")
 
     @property
     def subtitles(self):
@@ -125,6 +132,12 @@ class Tei:
         """
         for main_title in self.tree.xpath('//tei:titleStmt/tei:title[@type="main"]', namespaces=ns):
             main_title.text = string
+
+    def set_publication_level(self, level):
+        """
+        Sets the level of publication ('monographic' vs. 'analytic')
+        """
+        self.tree.xpath('//tei:sourceDesc/tei:biblFull/tei:titleStmt/tei:title[@type="main"]', namespaces=ns)[0].set("level", level)
 
     def add_sub_title(self, string):
         """

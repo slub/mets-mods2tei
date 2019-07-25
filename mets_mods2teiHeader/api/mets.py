@@ -108,8 +108,11 @@ class Mets:
         # alternatively identify the corresponding dmdSec via <structMap type="Logical" />
 
         #
-        # main title
-        self.title = self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:titleInfo/mods:title", namespaces=ns)[0].text
+        # main title and manuscript type
+        title = self.tree.xpath('//mets:structMap[@TYPE="LOGICAL"]/mets:div', namespaces=ns)
+        if title:
+            self.title = title[0].get("LABEL")
+            self.type = title[0].get("TYPE")
 
         #
         # sub titles

@@ -36,6 +36,9 @@ def cli(mets):
     # main title
     tei.set_main_title(mets.get_main_title())
 
+    # publication level
+    tei.set_publication_level(mets.type)
+
     # sub titles
     for sub_title in mets.get_sub_titles():
         tei.add_sub_title(sub_title)
