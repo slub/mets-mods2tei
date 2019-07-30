@@ -104,6 +104,9 @@ def cli(mets):
     for extent in mets.extents:
         tei.add_extent(extent)
 
+    # citation
+    tei.compile_bibl()
+
     click.echo(tei.tostring())
 
 
