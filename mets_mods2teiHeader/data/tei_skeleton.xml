@@ -33,9 +33,6 @@
     <profileDesc>
       <langUsage>
       </langUsage>
-      <textClass>
-        <classCode scheme="http://www.deutschestextarchiv.de/doku/klassifikation#DTACorpus">dtae</classCode>
-      </textClass>
     </profileDesc>
   </teiHeader>
   <text>

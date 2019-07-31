@@ -36,6 +36,9 @@ def cli(mets):
     # main title
     tei.set_main_title(mets.get_main_title())
 
+    # publication level
+    tei.set_publication_level(mets.type)
+
     # sub titles
     for sub_title in mets.get_sub_titles():
         tei.add_sub_title(sub_title)
@@ -100,6 +103,13 @@ def cli(mets):
     # extents
     for extent in mets.extents:
         tei.add_extent(extent)
+
+    # collection
+    for collection in mets.collections:
+        tei.add_collection(collection)
+
+    # citation
+    tei.compile_bibl()
 
     click.echo(tei.tostring())
 

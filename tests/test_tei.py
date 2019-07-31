@@ -23,6 +23,10 @@ def test_data_assignment(subtests):
         tei.set_main_title("Testbuch")
         assert(tei.main_title == "Testbuch")
 
+    with subtests.test("Check publication level"):
+        tei.set_publication_level("m")
+        assert(tei.publication_level == "m")
+
     with subtests.test("Check first subtitle"):
         tei.add_sub_title("Untertitel 1")
         assert(tei.subtitles == ["Untertitel 1"])
@@ -33,11 +37,11 @@ def test_data_assignment(subtests):
 
     with subtests.test("Check first author"):
         tei.add_author({'family': 'Mustermann', 'given': 'Max', 'date': '12.10.1956', 'title': 'Dr.'}, "personal")
-        assert(tei.authors == ["Mustermann Max Dr."])
+        assert(tei.authors == ["Mustermann, Max, Dr."])
 
     with subtests.test("Check further author (organisation)"):
         tei.add_author({'family': 'Mustermann', 'given': 'Max', 'date': '12.10.1956', 'title': 'Dr.'}, "corporate")
-        assert(tei.authors == ["Mustermann Max Dr.", "Mustermann Max 12.10.1956 Dr."])
+        assert(tei.authors == ["Mustermann, Max, Dr.", "Mustermann Max 12.10.1956 Dr."])
 
     with subtests.test("Check date(s)"):
         tei.add_date({"from": "01.01.1823", "to": "25.01.1823"})
@@ -74,3 +78,11 @@ def test_data_assignment(subtests):
     with subtests.test("Check further extent"):
         tei.add_extent("5 Abb.")
         assert(tei.extents == ["32 S.", "5 Abb."])
+
+    with subtests.test("Check collections"):
+        tei.add_collection("LDP")
+        assert(tei.collections == ["LDP"])
+
+    with subtests.test("Check bibl"):
+        tei.compile_bibl()
+        assert(tei.bibl.text == "Mustermann, Max, Dr.; Mustermann Max 12.10.1956 Dr.: Testbuch. Dresden, 01.01.1823.")

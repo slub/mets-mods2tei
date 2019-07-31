@@ -74,3 +74,6 @@ def test_data_assignment(subtests, datadir):
 
     with subtests.test("Check manuscript extent"):
         assert(mets.extents == ['[8] Bl., 783 S., [1] Bl.'])
+
+    with subtests.test("Check collections"):
+        assert(mets.collections == ['Drucke des 18. Jahrhunderts', 'Saxonica'])

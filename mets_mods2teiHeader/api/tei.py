@@ -35,6 +35,13 @@ class Tei:
         by the TEI Header.
         """
         return self.tree.xpath('//tei:titleStmt/tei:title[@type="main"]', namespaces=ns)[0].text
+    
+    @property
+    def publication_level(self):
+        """
+        Returns the level of publication ('monographic' vs. 'analytic')
+        """
+        return self.tree.xpath('//tei:sourceDesc/tei:biblFull/tei:titleStmt/tei:title[@type="main"]', namespaces=ns)[0].get("level")
 
     @property
     def subtitles(self):
@@ -52,7 +59,7 @@ class Tei:
         """
         authors = []
         for author in self.tree.xpath('//tei:fileDesc/tei:titleStmt/tei:author', namespaces=ns):
-            authors.append(" ".join(author.xpath('descendant-or-self::*/text()')))
+            authors.append(", ".join(author.xpath('descendant-or-self::*/text()')))
         return authors
 
     @property
@@ -119,12 +126,34 @@ class Tei:
         """
         return [extent.text for extent in self.tree.xpath('//tei:msDesc/tei:physDesc/tei:objectDesc/tei:supportDesc/tei:extent', namespaces=ns)]
 
+    @property
+    def collections(self):
+        """
+        Returns information on the collections of the work represented
+        by the TEI Header.
+        """
+        return [collection.text for collection in self.tree.xpath('//tei:profileDesc/tei:creation', namespaces=ns)]
+
+    @property
+    def bibl(self):
+        """
+        Returns the short citation of the work represented
+        by the TEI Header.
+        """
+        return self.tree.xpath("//tei:fileDesc/tei:sourceDesc/tei:bibl", namespaces=ns)[0]
+
     def set_main_title(self, string):
         """
         Sets the main title of the title statements.
         """
         for main_title in self.tree.xpath('//tei:titleStmt/tei:title[@type="main"]', namespaces=ns):
             main_title.text = string
+
+    def set_publication_level(self, level):
+        """
+        Sets the level of publication ('monographic' vs. 'analytic')
+        """
+        self.tree.xpath('//tei:sourceDesc/tei:biblFull/tei:titleStmt/tei:title[@type="main"]', namespaces=ns)[0].set("level", level)
 
     def add_sub_title(self, string):
         """
@@ -322,3 +351,33 @@ class Tei:
             support_desc = phys_desc.xpath('/tei:objectDesc/tei:supportDesc', namespaces=ns)[0]
         extent_elem = etree.SubElement(support_desc, "%sextent" % TEI)
         extent_elem.text = extent
+
+    def add_collection(self, collection):
+        """
+        Adds a (free-text) collection of the digital document
+        """
+        profile_desc = self.tree.xpath('//tei:profileDesc', namespaces=ns)[0]
+        creation = etree.SubElement(profile_desc, "%screation" % TEI)
+        creation.text = collection
+
+    def compile_bibl(self):
+        """
+        Compile the content of the short citation element 'bibl' based on the current state
+        """
+        if self.publication_level:
+            self.bibl.set("type", self.publication_level)
+        bibl_text = ""
+        if self.authors:
+            bibl_text += "; ".join(self.authors) + ": "
+        elif self.publication_level == "monograph":
+            bibl_text = "[N. N.], "
+        bibl_text += self.main_title + "."
+        if self.places:
+            bibl_text += " " + self.places[0].split(":")[1]
+            if len(self.places) > 1:
+                bibl_text += "u. a."
+        if self.dates:
+            if self.places:
+                bibl_text += ","
+            bibl_text += " " + self.dates[0] + "."
+        self.bibl.text = bibl_text
