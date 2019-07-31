@@ -104,6 +104,10 @@ def cli(mets):
     for extent in mets.extents:
         tei.add_extent(extent)
 
+    # collection
+    for collection in mets.collections:
+        tei.add_collection(collection)
+
     # citation
     tei.compile_bibl()
 

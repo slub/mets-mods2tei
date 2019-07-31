@@ -79,9 +79,9 @@ def test_data_assignment(subtests):
         tei.add_extent("5 Abb.")
         assert(tei.extents == ["32 S.", "5 Abb."])
 
-    with subtests.test("Check series"):
-        tei.add_series("LDP")
-        assert(tei.series == ["LDP"])
+    with subtests.test("Check collections"):
+        tei.add_collection("LDP")
+        assert(tei.collections == ["LDP"])
 
     with subtests.test("Check bibl"):
         tei.compile_bibl()

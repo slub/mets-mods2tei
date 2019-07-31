@@ -70,6 +70,7 @@ class Mets:
         self.collections = None
         self.languages = None
         self.extents = None
+        self.series = None
 
     @classmethod
     def read(cls, source):
@@ -243,7 +244,7 @@ class Mets:
         collections = self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:relatedItem[@type='series']", namespaces=ns)
         self.collections = []
         for collection in collections:
-            title = collection.xpath("//mods:titleinfo/mods:title", namespaces=ns)
+            title = collection.xpath("./mods:titleInfo/mods:title", namespaces=ns)
             if title:
                 self.collections.append(title[0].text)
 

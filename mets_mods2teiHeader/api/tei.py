@@ -127,12 +127,12 @@ class Tei:
         return [extent.text for extent in self.tree.xpath('//tei:msDesc/tei:physDesc/tei:objectDesc/tei:supportDesc/tei:extent', namespaces=ns)]
 
     @property
-    def series(self):
+    def collections(self):
         """
-        Returns information on the series of the work represented
+        Returns information on the collections of the work represented
         by the TEI Header.
         """
-        return [series.text for series in self.tree.xpath('//tei:profileDesc/tei:creation', namespaces=ns)]
+        return [collection.text for collection in self.tree.xpath('//tei:profileDesc/tei:creation', namespaces=ns)]
 
     @property
     def bibl(self):
@@ -352,13 +352,13 @@ class Tei:
         extent_elem = etree.SubElement(support_desc, "%sextent" % TEI)
         extent_elem.text = extent
 
-    def add_series(self, series):
+    def add_collection(self, collection):
         """
-        Adds a (free-text) series of the digital document
+        Adds a (free-text) collection of the digital document
         """
         profile_desc = self.tree.xpath('//tei:profileDesc', namespaces=ns)[0]
         creation = etree.SubElement(profile_desc, "%screation" % TEI)
-        creation.text = series
+        creation.text = collection
 
     def compile_bibl(self):
         """
