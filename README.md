@@ -23,6 +23,8 @@ well-defined subsets. For MODS, this is the
 For METS, the [METS Anwendungsprofil für digitalisierte Medien 2.1](https://www.zvdd.de/fileadmin/AGSDD-Redaktion/METS_Anwendungsprofil_2.1.pdf) is consulted.
 For the TEI Header, the conversion is roughly based on the [*DTA base format*](https://github.com/deutschestextarchiv/dtabf).
 
+`mets-mods2teiHeader` is developed at the [Saxon State and University Library in Dresden](https://www.slub-dresden.de).
+
 ## Installation
 `mets-mods2teiHeader` is implemented in Python 3. In the following, we assume a working Python 3
 (tested versions 3.5 and 3.6) installation.
