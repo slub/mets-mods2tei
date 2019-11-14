@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from lxml import etree
-
 import os
-
 import csv
-
 import babel
+
+from .mods_generateds import parseString as parse_mods
 
 from pkg_resources import resource_filename, Requirement
 
@@ -49,6 +48,7 @@ class Mets:
         self.tree = None
         self.script_iso = Iso15924()
 
+        self.mods = None
         self.title = None
         self.sub_titles = None
         self.authors = None
@@ -105,8 +105,8 @@ class Mets:
         """
         Initial interpretation of the METS/MODS file.
         """
-        # TODO: Check whether the first dmdSec always refers to the volume title,
-        # alternatively identify the corresponding dmdSec via <structMap type="Logical" />
+        
+        self.mods = parse_mods(etree.tostring(self.tree.xpath("//mets:dmdSec[1]//mods:mods", namespaces=ns)[0]))
 
         #
         # main title and manuscript type
@@ -117,25 +117,25 @@ class Mets:
 
         #
         # sub titles
-        self.sub_titles = [text.text.strip() for text in self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:titleInfo/mods:subTitle", namespaces=ns)]
+        self.sub_titles = [sub_title.get_valueOf_().strip() for sub_title in self.mods.get_titleInfo()[0].get_subTitle()]
 
         #
         # authors and editors
         self.authors = []
         self.editors = []
-        for name in self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:name", namespaces=ns):
+        for name in self.mods.get_name():
             person = {}
-            typ = name.get("type", default="unspecified")
-            for name_part in name.xpath("mods:namePart", namespaces=ns):
-                person[name_part.get("type", default="unspecified")] = name_part.text
+            typ = name.get_type()
+            for name_part in name.get_namePart():
+                person[name_part.get_type()] = name_part.get_valueOf_()
 
             # either author or editor
-            roles = name.xpath("mods:role/mods:roleTerm", namespaces=ns)
+            roles = name.get_role()[0].get_roleTerm()
             # TODO: handle the complete set of allowed roles
             for role in roles:
-                if role.text == "edt":
+                if role.get_valueOf_() == "edt":
                     self.editors.append((typ, person))
-                elif role.text == "aut":
+                elif role.get_valueOf_() == "aut":
                     self.authors.append((typ, person))
 
         #
