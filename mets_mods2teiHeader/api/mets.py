@@ -139,42 +139,59 @@ class Mets:
                     self.authors.append((typ, person))
 
         #
-        # publication places
+        # orgin info
+        origin_info = self.mods.get_originInfo()[0]
+
+        # publication place
         self.places = []
-        for place in self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:originInfo[1]/mods:place", namespaces=ns):
+        for place in origin_info.get_place():
             place_ext = {}
-            for place_term in place.xpath("mods:placeTerm", namespaces=ns):
-                typ = place_term.get("type", default="unspecified")
-                place_ext[typ] = place_term.text
+            for place_term in place.get_placeTerm():
+                place_ext[place_term.get_type()] = place_term.get_valueOf_()
             self.places.append(place_ext)
 
-        #
         # publication dates
         self.dates = []
-        for date_issued in self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:originInfo[1]/mods:dateIssued", namespaces=ns):
+        for date_issued in origin_info.get_dateIssued():
             date_ext = {}
-            date_ext[date_issued.get("point", "unspecified")] = date_issued.text
+            date_ext[date_issued.get_point()] = date_issued.get_valueOf_()
             self.dates.append(date_ext)
 
-        #
         # publishers
         self.publishers = []
-        for publisher in self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:originInfo[1]/mods:publisher", namespaces=ns):
-            self.publishers.append(publisher.text)
+        for publisher in origin_info.get_publisher():
+            self.publishers.append(publisher.get_valueOf_())
 
-        #
         # edition of the manuscript
-        edition = self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:originInfo[1]/mods:edition", namespaces=ns)
-        if edition:
-            self.edition = edition[0].text
-        else:
-            self.edition = ""
+        self.edition = origin_info.get_edition()[0].get_valueOf_() if origin_info.get_edition() else ""
 
         #
-        # digital_origin
-        for digital_origin in self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:physicalDescription[1]/mods:digitalOrigin", namespaces=ns):
-            self.digital_origin = digital_origin.text
-            break
+        # languages and scripts
+        languages = self.mods.get_language()
+        
+        self.languages = {}
+        self.scripts = []
+        for language in languages:
+            for language_term in language.get_languageTerm():
+                self.languages[language_term.get_valueOf_()] = babel.Locale.parse(language_term.get_valueOf_()).get_language_name('de')
+            for script_term in language.get_scriptTerm():
+                self.scripts.append(self.script_iso.get(script_term.get_valueOf_()))
+        if not self.languages:
+            self.languages['mis'] = 'Unkodiert'
+        if not self.scripts:
+            self.scripts.append(self.script_iso.get('Unknown'))
+
+        #
+        # physical description
+        physical_description = self.mods.get_physicalDescription()[0]
+
+        # digital origin
+        self.digital_origin = physical_description.get_digitalOrigin()[0] if physical_description.get_digitalOrigin() else ""
+
+        # extent
+        self.extents = []
+        for extent in physical_description.get_extent():
+            self.extents.append(extent.get_valueOf_())
 
         #
         # owner of the digital edition
@@ -229,15 +246,6 @@ class Mets:
         for identifier in identifiers:
             self.identifiers.append((identifier.get("type", default="unknown"), identifier.text))
 
-        #
-        # scripts
-        scripts = self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:language/mods:scriptTerm", namespaces=ns)
-        self.scripts = []
-        for script in scripts:
-            self.scripts.append(self.script_iso.get(script.text))
-        if not self.scripts:
-            self.scripts.append(self.script_iso.get('Unknown'))
-
 
         #
         # collections (from relatedItem)
@@ -247,21 +255,6 @@ class Mets:
             title = collection.xpath("./mods:titleInfo/mods:title", namespaces=ns)
             if title:
                 self.collections.append(title[0].text)
-
-        #
-        # languages
-        languages = self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:language/mods:languageTerm", namespaces=ns)
-        self.languages = {}
-        for language in languages:
-            self.languages[language.text] = babel.Locale.parse(language.text).get_language_name('de')
-        if not self.languages:
-            self.languages['mis'] = 'Unkodiert'
-
-        #
-        # extent
-        self.extents = []
-        for extent in self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:physicalDescription[1]/mods:extent", namespaces=ns):
-            self.extents.append(extent.text)
 
     def get_main_title(self):
         """

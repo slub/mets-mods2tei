@@ -72,6 +72,15 @@ def test_data_assignment(subtests, datadir):
     with subtests.test("Check manuscript edition"):
         assert(mets.get_edition() == '3. Aufl.')
 
+    with subtests.test("Check manuscript language(s)"):
+        assert(mets.get_languages() == {'ger': 'Deutsch'})
+
+    with subtests.test("Check manuscript script(s)"):
+        assert(mets.get_scripts() == ['Latin (Fraktur variant)'])
+
+    with subtests.test("Check manuscript digital origin"):
+        assert(mets.get_digital_origin() == 'reformatted digital')
+
     with subtests.test("Check manuscript extent"):
         assert(mets.extents == ['[8] Bl., 783 S., [1] Bl.'])
 
