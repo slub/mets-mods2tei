@@ -5,6 +5,7 @@ import os
 import csv
 import babel
 
+from .mets_generateds import parse as parse_mets
 from .mods_generateds import parseString as parse_mods
 
 from pkg_resources import resource_filename, Requirement
@@ -48,7 +49,9 @@ class Mets:
         self.tree = None
         self.script_iso = Iso15924()
 
+        self.mets = None
         self.mods = None
+
         self.title = None
         self.sub_titles = None
         self.authors = None
@@ -98,22 +101,23 @@ class Mets:
         Reads in METS from a given file source.
         :param str path: Path to a METS document.
         """
-        self.tree = etree.parse(path)
+        #self.tree = etree.parse(path)
+
+        self.mets = parse_mets(path, silence=True)
+        self.mods = parse_mods(self.mets.get_dmdSec()[0].get_mdWrap().get_xmlData().get_anytypeobjs_()[0])
         self.__spur()
 
     def __spur(self):
         """
         Initial interpretation of the METS/MODS file.
         """
-        
-        self.mods = parse_mods(etree.tostring(self.tree.xpath("//mets:dmdSec[1]//mods:mods", namespaces=ns)[0]))
 
         #
         # main title and manuscript type
-        title = self.tree.xpath('//mets:structMap[@TYPE="LOGICAL"]/mets:div', namespaces=ns)
-        if title:
-            self.title = title[0].get("LABEL")
-            self.type = title[0].get("TYPE")
+        struct_map_logical = list(filter(lambda x: x.get_TYPE() == "LOGICAL", self.mets.get_structMap()))[0]
+        title = struct_map_logical.get_div()
+        self.title = title.get_LABEL()
+        self.type = title.get_TYPE()
 
         #
         # sub titles
@@ -194,67 +198,64 @@ class Mets:
             self.extents.append(extent.get_valueOf_())
 
         #
+        # dv FIXME: replace with generated code as soon as schema is available
+        dv = etree.fromstring(self.mets.get_amdSec()[0].get_rightsMD()[0].get_mdWrap().get_xmlData().get_anytypeobjs_()[0])
+
         # owner of the digital edition
-        self.owner_digital = self.tree.xpath("//mets:amdSec[1]//dv:rights/dv:owner", namespaces=ns)[0].text
+        self.owner_digital = dv.xpath("//dv:owner", namespaces=ns)[0].text
 
-        #
         # availability/license
-
         # common case
-        license_nodes = self.tree.xpath("//mets:amdSec[1]//dv:rights/dv:license", namespaces=ns)
+        self.license = ""
+        self.license_url = ""
+        license_nodes = dv.xpath("//dv:license", namespaces=ns)
         if license_nodes != []:
             self.license = license_nodes[0].text
             self.license_url = ""
         # slub case
         else:
-            license_nodes = self.tree.xpath("////mets:dmdSec[1]//mods:mods/mods:accessCondition[@type='use and reproduction']", namespaces=ns)
-            if license_nodes != []:
-                self.license = license_nodes[0].text
-                self.license_url = license_nodes[0].get(XLINK + "href", "")
-            else:
-                self.license = ""
-                self.license_url = ""
+            license_nodes = self.mods.get_accessCondition()
+            for license_node in license_nodes:
+                if license_node.get_type() == 'use and reproduction':
+                    self.license = license_node.get_valueOf_()
+                    self.license_url = license_node.get_href()
 
         #
-        # data encoding
-        header_node = self.tree.xpath("//mets:metsHdr", namespaces=ns)[0]
-        self.encoding_date = header_node.get("CREATEDATE")
-        for agent in header_node.xpath("//mets:agent", namespaces=ns):
-            if agent.get("OTHERTYPE") == "SOFTWARE":
-                self.encoding_desc = agent.xpath("//mets:name", namespaces=ns)[0].text
+        # metsHdr
+        header = self.mets.get_metsHdr()
+
+        # encoding date
+        self.encoding_date = header.get_CREATEDATE()
+
+        # encoding description
+        self.encoding_desc = list(filter(lambda x: x.get_OTHERTYPE() == "SOFTWARE", header.get_agent()))[0].get_name()
 
 	#
 	# location of manuscript
 
         # location-related elements are optional or conditional
-        location = self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:location[1]", namespaces=ns)
-        if location:
-            shelf_locator = self.shelf_locator = location[0].xpath("//mods:shelfLocator", namespaces=ns)
-            if shelf_locator:
-                self.shelf_locator = shelf_locator[0].text
-            physical_location = location[0].xpath("//mods:physicalLocation", namespaces=ns)
-            if physical_location:
-                if physical_location[0].get("displayLabel", default="unspecified") != "unspecified":
-                    self.owner_manuscript = physical_location[0].get("displayLabel")
-                else:
-                    self.owner_manuscript = physical_location[0].text
+        for location in self.mods.get_location():
+            if location.get_shelfLocator():
+                self.shelf_locator = location.get_shelfLocator()
+            elif location.get_physicalLocation():
+                self.owner_manuscript = location.get_physicalLocation()
 
         #
         # identifiers
-        identifiers = self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:identifier", namespaces=ns)
         self.identifiers = []
+        identifiers = self.mods.get_identifier()
         for identifier in identifiers:
-            self.identifiers.append((identifier.get("type", default="unknown"), identifier.text))
+            self.identifiers.append((identifier.get_type(), identifier.get_valueOf_()))
 
 
         #
         # collections (from relatedItem)
-        collections = self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:relatedItem[@type='series']", namespaces=ns)
         self.collections = []
+        collections = filter(lambda x: x.get_type() == "series", self.mods.get_relatedItem())
         for collection in collections:
-            title = collection.xpath("./mods:titleInfo/mods:title", namespaces=ns)
+            title = collection.get_titleInfo()[0].get_title()
             if title:
-                self.collections.append(title[0].text)
+                self.collections.append(title[0].get_valueOf_())
 
     def get_main_title(self):
         """

@@ -32,7 +32,7 @@ def test_constructor():
     Test the creation of an empty Mets instance
     '''
     mets = Mets()
-    assert(mets.tree is None)
+    assert(mets.mets is None)
 
 def test_reading_local_file(datadir):
     '''
@@ -40,7 +40,7 @@ def test_reading_local_file(datadir):
     '''
     f = open(datadir.join('test_mets.xml'))
     mets = Mets.read(f)
-    assert(mets.tree is not None)
+    assert(mets.mets is not None)
 
 def test_loading_local_file(datadir):
     '''
@@ -48,7 +48,7 @@ def test_loading_local_file(datadir):
     '''
     f = open(datadir.join('test_mets.xml'))
     mets = Mets.fromfile(f)
-    assert(mets.tree is not None)
+    assert(mets.mets is not None)
 
 def test_data_assignment(subtests, datadir):
     '''
