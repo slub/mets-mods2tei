@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from lxml import etree
-
 import os
-
 import csv
-
 import babel
+
+from .mets_generateds import parse as parse_mets
+from .mods_generateds import parseString as parse_mods
 
 from pkg_resources import resource_filename, Requirement
 
@@ -46,8 +46,10 @@ class Mets:
         The constructor.
         """
 
-        self.tree = None
         self.script_iso = Iso15924()
+
+        self.mets = None
+        self.mods = None
 
         self.title = None
         self.sub_titles = None
@@ -98,170 +100,159 @@ class Mets:
         Reads in METS from a given file source.
         :param str path: Path to a METS document.
         """
-        self.tree = etree.parse(path)
+        self.mets = parse_mets(path, silence=True)
+        self.mods = parse_mods(self.mets.get_dmdSec()[0].get_mdWrap().get_xmlData().get_anytypeobjs_()[0])
         self.__spur()
 
     def __spur(self):
         """
         Initial interpretation of the METS/MODS file.
         """
-        # TODO: Check whether the first dmdSec always refers to the volume title,
-        # alternatively identify the corresponding dmdSec via <structMap type="Logical" />
 
         #
         # main title and manuscript type
-        title = self.tree.xpath('//mets:structMap[@TYPE="LOGICAL"]/mets:div', namespaces=ns)
-        if title:
-            self.title = title[0].get("LABEL")
-            self.type = title[0].get("TYPE")
+        struct_map_logical = list(filter(lambda x: x.get_TYPE() == "LOGICAL", self.mets.get_structMap()))[0]
+        title = struct_map_logical.get_div()
+        self.title = title.get_LABEL()
+        self.type = title.get_TYPE()
 
         #
         # sub titles
-        self.sub_titles = [text.text.strip() for text in self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:titleInfo/mods:subTitle", namespaces=ns)]
+        self.sub_titles = [sub_title.get_valueOf_().strip() for sub_title in self.mods.get_titleInfo()[0].get_subTitle()]
 
         #
         # authors and editors
         self.authors = []
         self.editors = []
-        for name in self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:name", namespaces=ns):
+        for name in self.mods.get_name():
             person = {}
-            typ = name.get("type", default="unspecified")
-            for name_part in name.xpath("mods:namePart", namespaces=ns):
-                person[name_part.get("type", default="unspecified")] = name_part.text
+            typ = name.get_type()
+            for name_part in name.get_namePart():
+                person[name_part.get_type()] = name_part.get_valueOf_()
 
             # either author or editor
-            roles = name.xpath("mods:role/mods:roleTerm", namespaces=ns)
+            roles = name.get_role()[0].get_roleTerm()
             # TODO: handle the complete set of allowed roles
             for role in roles:
-                if role.text == "edt":
+                if role.get_valueOf_() == "edt":
                     self.editors.append((typ, person))
-                elif role.text == "aut":
+                elif role.get_valueOf_() == "aut":
                     self.authors.append((typ, person))
 
         #
-        # publication places
+        # orgin info
+        origin_info = self.mods.get_originInfo()[0]
+
+        # publication place
         self.places = []
-        for place in self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:originInfo[1]/mods:place", namespaces=ns):
+        for place in origin_info.get_place():
             place_ext = {}
-            for place_term in place.xpath("mods:placeTerm", namespaces=ns):
-                typ = place_term.get("type", default="unspecified")
-                place_ext[typ] = place_term.text
+            for place_term in place.get_placeTerm():
+                place_ext[place_term.get_type()] = place_term.get_valueOf_()
             self.places.append(place_ext)
 
-        #
         # publication dates
         self.dates = []
-        for date_issued in self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:originInfo[1]/mods:dateIssued", namespaces=ns):
+        for date_issued in origin_info.get_dateIssued():
             date_ext = {}
-            date_ext[date_issued.get("point", "unspecified")] = date_issued.text
+            date_ext[date_issued.get_point()] = date_issued.get_valueOf_()
             self.dates.append(date_ext)
 
-        #
         # publishers
         self.publishers = []
-        for publisher in self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:originInfo[1]/mods:publisher", namespaces=ns):
-            self.publishers.append(publisher.text)
+        for publisher in origin_info.get_publisher():
+            self.publishers.append(publisher.get_valueOf_())
 
-        #
         # edition of the manuscript
-        edition = self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:originInfo[1]/mods:edition", namespaces=ns)
-        if edition:
-            self.edition = edition[0].text
-        else:
-            self.edition = ""
+        self.edition = origin_info.get_edition()[0].get_valueOf_() if origin_info.get_edition() else ""
 
         #
-        # digital_origin
-        for digital_origin in self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:physicalDescription[1]/mods:digitalOrigin", namespaces=ns):
-            self.digital_origin = digital_origin.text
-            break
+        # languages and scripts
+        languages = self.mods.get_language()
+        
+        self.languages = {}
+        self.scripts = []
+        for language in languages:
+            for language_term in language.get_languageTerm():
+                self.languages[language_term.get_valueOf_()] = babel.Locale.parse(language_term.get_valueOf_()).get_language_name('de')
+            for script_term in language.get_scriptTerm():
+                self.scripts.append(self.script_iso.get(script_term.get_valueOf_()))
+        if not self.languages:
+            self.languages['mis'] = 'Unkodiert'
+        if not self.scripts:
+            self.scripts.append(self.script_iso.get('Unknown'))
 
         #
+        # physical description
+        physical_description = self.mods.get_physicalDescription()[0]
+
+        # digital origin
+        self.digital_origin = physical_description.get_digitalOrigin()[0] if physical_description.get_digitalOrigin() else ""
+
+        # extent
+        self.extents = []
+        for extent in physical_description.get_extent():
+            self.extents.append(extent.get_valueOf_())
+
+        #
+        # dv FIXME: replace with generated code as soon as schema is available
+        dv = etree.fromstring(self.mets.get_amdSec()[0].get_rightsMD()[0].get_mdWrap().get_xmlData().get_anytypeobjs_()[0])
+
         # owner of the digital edition
-        self.owner_digital = self.tree.xpath("//mets:amdSec[1]//dv:rights/dv:owner", namespaces=ns)[0].text
+        self.owner_digital = dv.xpath("//dv:owner", namespaces=ns)[0].text
 
-        #
         # availability/license
-
         # common case
-        license_nodes = self.tree.xpath("//mets:amdSec[1]//dv:rights/dv:license", namespaces=ns)
+        self.license = ""
+        self.license_url = ""
+        license_nodes = dv.xpath("//dv:license", namespaces=ns)
         if license_nodes != []:
             self.license = license_nodes[0].text
             self.license_url = ""
         # slub case
         else:
-            license_nodes = self.tree.xpath("////mets:dmdSec[1]//mods:mods/mods:accessCondition[@type='use and reproduction']", namespaces=ns)
-            if license_nodes != []:
-                self.license = license_nodes[0].text
-                self.license_url = license_nodes[0].get(XLINK + "href", "")
-            else:
-                self.license = ""
-                self.license_url = ""
+            license_nodes = self.mods.get_accessCondition()
+            for license_node in license_nodes:
+                if license_node.get_type() == 'use and reproduction':
+                    self.license = license_node.get_valueOf_()
+                    self.license_url = license_node.get_href()
 
         #
-        # data encoding
-        header_node = self.tree.xpath("//mets:metsHdr", namespaces=ns)[0]
-        self.encoding_date = header_node.get("CREATEDATE")
-        for agent in header_node.xpath("//mets:agent", namespaces=ns):
-            if agent.get("OTHERTYPE") == "SOFTWARE":
-                self.encoding_desc = agent.xpath("//mets:name", namespaces=ns)[0].text
+        # metsHdr
+        header = self.mets.get_metsHdr()
+
+        # encoding date
+        self.encoding_date = header.get_CREATEDATE()
+
+        # encoding description
+        self.encoding_desc = list(filter(lambda x: x.get_OTHERTYPE() == "SOFTWARE", header.get_agent()))[0].get_name()
 
 	#
 	# location of manuscript
 
         # location-related elements are optional or conditional
-        location = self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:location[1]", namespaces=ns)
-        if location:
-            shelf_locator = self.shelf_locator = location[0].xpath("//mods:shelfLocator", namespaces=ns)
-            if shelf_locator:
-                self.shelf_locator = shelf_locator[0].text
-            physical_location = location[0].xpath("//mods:physicalLocation", namespaces=ns)
-            if physical_location:
-                if physical_location[0].get("displayLabel", default="unspecified") != "unspecified":
-                    self.owner_manuscript = physical_location[0].get("displayLabel")
-                else:
-                    self.owner_manuscript = physical_location[0].text
+        for location in self.mods.get_location():
+            if location.get_shelfLocator():
+                self.shelf_locator = location.get_shelfLocator()
+            elif location.get_physicalLocation():
+                self.owner_manuscript = location.get_physicalLocation()
 
         #
         # identifiers
-        identifiers = self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:identifier", namespaces=ns)
         self.identifiers = []
+        identifiers = self.mods.get_identifier()
         for identifier in identifiers:
-            self.identifiers.append((identifier.get("type", default="unknown"), identifier.text))
-
-        #
-        # scripts
-        scripts = self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:language/mods:scriptTerm", namespaces=ns)
-        self.scripts = []
-        for script in scripts:
-            self.scripts.append(self.script_iso.get(script.text))
-        if not self.scripts:
-            self.scripts.append(self.script_iso.get('Unknown'))
+            self.identifiers.append((identifier.get_type(), identifier.get_valueOf_()))
 
 
         #
         # collections (from relatedItem)
-        collections = self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:relatedItem[@type='series']", namespaces=ns)
         self.collections = []
+        collections = filter(lambda x: x.get_type() == "series", self.mods.get_relatedItem())
         for collection in collections:
-            title = collection.xpath("./mods:titleInfo/mods:title", namespaces=ns)
+            title = collection.get_titleInfo()[0].get_title()
             if title:
-                self.collections.append(title[0].text)
-
-        #
-        # languages
-        languages = self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:language/mods:languageTerm", namespaces=ns)
-        self.languages = {}
-        for language in languages:
-            self.languages[language.text] = babel.Locale.parse(language.text).get_language_name('de')
-        if not self.languages:
-            self.languages['mis'] = 'Unkodiert'
-
-        #
-        # extent
-        self.extents = []
-        for extent in self.tree.xpath("//mets:dmdSec[1]//mods:mods/mods:physicalDescription[1]/mods:extent", namespaces=ns):
-            self.extents.append(extent.text)
+                self.collections.append(title[0].get_valueOf_())
 
     def get_main_title(self):
         """

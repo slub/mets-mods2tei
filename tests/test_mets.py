@@ -32,7 +32,7 @@ def test_constructor():
     Test the creation of an empty Mets instance
     '''
     mets = Mets()
-    assert(mets.tree is None)
+    assert(mets.mets is None)
 
 def test_reading_local_file(datadir):
     '''
@@ -40,7 +40,7 @@ def test_reading_local_file(datadir):
     '''
     f = open(datadir.join('test_mets.xml'))
     mets = Mets.read(f)
-    assert(mets.tree is not None)
+    assert(mets.mets is not None)
 
 def test_loading_local_file(datadir):
     '''
@@ -48,7 +48,7 @@ def test_loading_local_file(datadir):
     '''
     f = open(datadir.join('test_mets.xml'))
     mets = Mets.fromfile(f)
-    assert(mets.tree is not None)
+    assert(mets.mets is not None)
 
 def test_data_assignment(subtests, datadir):
     '''
@@ -71,6 +71,15 @@ def test_data_assignment(subtests, datadir):
 
     with subtests.test("Check manuscript edition"):
         assert(mets.get_edition() == '3. Aufl.')
+
+    with subtests.test("Check manuscript language(s)"):
+        assert(mets.get_languages() == {'ger': 'Deutsch'})
+
+    with subtests.test("Check manuscript script(s)"):
+        assert(mets.get_scripts() == ['Latin (Fraktur variant)'])
+
+    with subtests.test("Check manuscript digital origin"):
+        assert(mets.get_digital_origin() == 'reformatted digital')
 
     with subtests.test("Check manuscript extent"):
         assert(mets.extents == ['[8] Bl., 783 S., [1] Bl.'])
