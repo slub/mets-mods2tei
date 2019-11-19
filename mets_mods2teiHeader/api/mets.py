@@ -46,7 +46,6 @@ class Mets:
         The constructor.
         """
 
-        self.tree = None
         self.script_iso = Iso15924()
 
         self.mets = None
@@ -101,8 +100,6 @@ class Mets:
         Reads in METS from a given file source.
         :param str path: Path to a METS document.
         """
-        #self.tree = etree.parse(path)
-
         self.mets = parse_mets(path, silence=True)
         self.mods = parse_mods(self.mets.get_dmdSec()[0].get_mdWrap().get_xmlData().get_anytypeobjs_()[0])
         self.__spur()
