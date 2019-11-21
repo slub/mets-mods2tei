@@ -50,6 +50,8 @@ def test_data_assignment(subtests):
     with subtests.test("Check place(s)"):
         tei.add_place({"text": "Dresden", "code": "01277"})
         assert(tei.places == ["01277:Dresden"])
+        tei.add_place({"text": "Leipzig", "code": "04347"})
+        assert(tei.places == ["01277:Dresden", "04347:Leipzig"])
 
     with subtests.test("Check publisher"):
         tei.add_publisher("Joachim Mustermann")
@@ -85,4 +87,4 @@ def test_data_assignment(subtests):
 
     with subtests.test("Check bibl"):
         tei.compile_bibl()
-        assert(tei.bibl.text == "Mustermann, Max, Dr.; Mustermann Max 12.10.1956 Dr.: Testbuch. Dresden, 01.01.1823.")
+        assert(tei.bibl.text == "Mustermann, Max, Dr.; Mustermann Max 12.10.1956 Dr.: Testbuch. Dresden u. a., 01.01.1823.")

@@ -22,16 +22,113 @@ class Tei:
 
         self.tree = etree.parse(os.path.realpath(resource_filename(Requirement.parse("mets_mods2teiHeader"), 'mets_mods2teiHeader/data/tei_skeleton.xml')))
 
+        self.alto_map = {}
+
     def tostring(self):
         """
         Serializes the TEI object as xml string.
         """
         return etree.tostring(self.tree, encoding="utf-8")
 
+    def fill_from_mets(self, mets):
+        """
+        Fill the contents of the TEI object from a METS instance
+        """
+
+        #
+        # replace skeleton values by real ones
+
+        # main title
+        self.set_main_title(mets.get_main_title())
+
+        # publication level
+        self.set_publication_level(mets.type)
+
+        # sub titles
+        for sub_title in mets.get_sub_titles():
+            self.add_sub_title(sub_title)
+
+        # authors
+        for typ, author in mets.get_authors():
+            self.add_author(author,typ)
+
+        # places
+        for place in mets.get_places():
+            self.add_place(place)
+
+        # dates
+        self.add_date(mets.get_dates())
+
+        # publishers
+        for publisher in mets.get_publishers():
+            self.add_publisher(publisher)
+
+        # manuscript edition
+        if mets.get_edition():
+            self.add_source_edition(mets.get_edition())
+
+        # digital edition
+        if mets.has_digital_origin():
+            self.add_digital_edition(mets.get_digital_origin())
+
+        # hosting institution
+        self.add_hoster(mets.get_owner_digital())
+
+        # availability
+        if mets.get_license() != "":
+            self.set_availability("licence", mets.get_license(), mets.get_license_url())
+        else:
+            self.set_availability("restricted", mets.get_license(), mets.get_license_url())
+
+        # encoding
+        self.add_encoding_date(mets.get_encoding_date())
+        self.set_encoding_description(mets.get_encoding_description())
+
+        # repository
+        if mets.get_owner_manuscript():
+            self.add_repository(mets.get_owner_manuscript())
+
+        # shelf locator
+        for shelf_locator in mets.get_shelf_locators():
+            self.add_shelfmark(shelf_locator)
+
+        # identifiers
+        if mets.get_identifiers():
+            self.add_identifiers(mets.get_identifiers())
+
+        # type description
+        if mets.get_scripts():
+            self.set_type_desc('\n'.join(script for script in mets.get_scripts()))
+
+        # languages
+        for ident_name in mets.get_languages().items():
+            self.add_language(ident_name)
+
+        # extents
+        for extent in mets.extents:
+            self.add_extent(extent)
+
+        # collection
+        for collection in mets.collections:
+            self.add_collection(collection)
+
+        #
+        # citation
+        self.compile_bibl()
+
+        #
+        # text part
+
+        # div structure
+        self.add_div_structure(mets.get_div_structure())
+
+        # OCR
+        self.add_ocr_text(mets)
+
     @property
     def main_title(self):
         """
-        Returns the main title of the work represented
+        Return the main title of the work represented
         by the TEI Header.
         """
         return self.tree.xpath('//tei:titleStmt/tei:title[@type="main"]', namespaces=ns)[0].text
@@ -39,14 +136,14 @@ class Tei:
     @property
     def publication_level(self):
         """
-        Returns the level of publication ('monographic' vs. 'analytic')
+        Return the level of publication ('monographic' vs. 'analytic')
         """
         return self.tree.xpath('//tei:sourceDesc/tei:biblFull/tei:titleStmt/tei:title[@type="main"]', namespaces=ns)[0].get("level")
 
     @property
     def subtitles(self):
         """
-        Returns information on the subtitle(s) of the work represented
+        Return information on the subtitle(s) of the work represented
         by the TEI Header.
         """
         return [subtitle.text for subtitle in self.tree.xpath('//tei:fileDesc/tei:titleStmt/tei:title[@type="sub"]', namespaces=ns)]
@@ -54,7 +151,7 @@ class Tei:
     @property
     def authors(self):
         """
-        Returns information on the author(s) of the work represented
+        Return information on the author(s) of the work represented
         by the TEI Header.
         """
         authors = []
@@ -65,7 +162,7 @@ class Tei:
     @property
     def dates(self):
         """
-        Returns information on the publication date(s) of the work represented
+        Return information on the publication date(s) of the work represented
         by the TEI Header.
         """
         return [date.text for date in self.tree.xpath('//tei:fileDesc/tei:sourceDesc/tei:biblFull/tei:publicationStmt/tei:date', namespaces=ns)]
@@ -73,7 +170,7 @@ class Tei:
     @property
     def places(self):
         """
-        Returns information on the publication place(s) of the work represented
+        Return information on the publication place(s) of the work represented
         by the TEI Header.
         """
         return ["%s:%s" % (place.get("corresp"), place.text) for place in self.tree.xpath('//tei:fileDesc/tei:sourceDesc/tei:biblFull/tei:publicationStmt/tei:pubPlace', namespaces=ns)]
@@ -81,7 +178,7 @@ class Tei:
     @property
     def publishers(self):
         """
-        Returns information on the publishers of the source work represented
+        Return information on the publishers of the source work represented
         by the TEI Header.
         """
         return [publisher.text for publisher in self.tree.xpath('//tei:fileDesc/tei:sourceDesc/tei:biblFull/tei:publicationStmt/tei:publisher/tei:name', namespaces=ns)]
@@ -89,7 +186,7 @@ class Tei:
     @property
     def hosters(self):
         """
-        Returns information on the publishers of the digitalized work represented
+        Return information on the publishers of the digitalized work represented
         by the TEI Header.
         """
         return [publisher.text for publisher in self.tree.xpath('//tei:fileDesc/tei:publicationStmt/tei:publisher', namespaces=ns)]
@@ -97,7 +194,7 @@ class Tei:
     @property
     def source_editions(self):
         """
-        Returns information on the editions of the source work represented
+        Return information on the editions of the source work represented
         by the TEI Header.
         """
         return [source_edition.text for source_edition in self.tree.xpath('//tei:fileDesc/tei:sourceDesc/tei:biblFull/tei:editionStmt/tei:edition', namespaces=ns)]
@@ -105,7 +202,7 @@ class Tei:
     @property
     def digital_editions(self):
         """
-        Returns information on the editions of the digitalized work represented
+        Return information on the editions of the digitalized work represented
         by the TEI Header.
         """
         return [digital_edition.text for digital_edition in self.tree.xpath('//tei:fileDesc/tei:titleStmt/tei:editionStmt/tei:edition', namespaces=ns)]
@@ -113,7 +210,7 @@ class Tei:
     @property
     def encoding_dates(self):
         """
-        Returns information on the publishing dates of the digitalized work represented
+        Return information on the publishing dates of the digitalized work represented
         by the TEI Header.
         """
         return ["%s:%s" % (encoding_date.get("type"), encoding_date.text) for encoding_date in self.tree.xpath('//tei:fileDesc/tei:publicationStmt/tei:date', namespaces=ns)]
@@ -121,7 +218,7 @@ class Tei:
     @property
     def extents(self):
         """
-        Returns information on the extent of the work represented
+        Return information on the extent of the work represented
         by the TEI Header.
         """
         return [extent.text for extent in self.tree.xpath('//tei:msDesc/tei:physDesc/tei:objectDesc/tei:supportDesc/tei:extent', namespaces=ns)]
@@ -129,7 +226,7 @@ class Tei:
     @property
     def collections(self):
         """
-        Returns information on the collections of the work represented
+        Return information on the collections of the work represented
         by the TEI Header.
         """
         return [collection.text for collection in self.tree.xpath('//tei:profileDesc/tei:creation', namespaces=ns)]
@@ -137,27 +234,27 @@ class Tei:
     @property
     def bibl(self):
         """
-        Returns the short citation of the work represented
+        Return the short citation of the work represented
         by the TEI Header.
         """
         return self.tree.xpath("//tei:fileDesc/tei:sourceDesc/tei:bibl", namespaces=ns)[0]
 
     def set_main_title(self, string):
         """
-        Sets the main title of the title statements.
+        Set the main title of the title statements.
         """
         for main_title in self.tree.xpath('//tei:titleStmt/tei:title[@type="main"]', namespaces=ns):
             main_title.text = string
 
     def set_publication_level(self, level):
         """
-        Sets the level of publication ('monographic' vs. 'analytic')
+        Set the level of publication ('monographic' vs. 'analytic')
         """
         self.tree.xpath('//tei:sourceDesc/tei:biblFull/tei:titleStmt/tei:title[@type="main"]', namespaces=ns)[0].set("level", level)
 
     def add_sub_title(self, string):
         """
-        Adds a sub title to the title statements.
+        Add a sub title to the title statements.
         """
         sub_title = etree.Element("%stitle" % TEI)
         sub_title.set("type", "sub")
@@ -167,7 +264,7 @@ class Tei:
 
     def add_author(self, person, typ):
         """
-        Adds an author to the title statements.
+        Add an author to the title statements.
         """
         author = etree.Element("%sauthor" % TEI)
         if typ == "personal":
@@ -192,7 +289,7 @@ class Tei:
 
     def add_place(self, place):
         """
-        Adds a publication place to the publication statement.
+        Add a publication place to the publication statement.
         """
         publication_stmt = self.tree.xpath('//tei:fileDesc/tei:sourceDesc/tei:biblFull/tei:publicationStmt', namespaces=ns)[0]
         pub_place = etree.SubElement(publication_stmt, "%spubPlace" % TEI)
@@ -204,7 +301,7 @@ class Tei:
 
     def add_date(self, date):
         """
-        Adds a publication date to the publication statement.
+        Add a publication date to the publication statement.
         """
         publication_stmt = self.tree.xpath('//tei:fileDesc/tei:sourceDesc/tei:biblFull/tei:publicationStmt', namespaces=ns)[0]
         for key in date:
@@ -226,7 +323,7 @@ class Tei:
 
     def add_source_edition(self, manuscript_edition):
         """
-        Adds an edition statement with details on the source manuscript.
+        Add an edition statement with details on the source manuscript.
         """
         bibl_full = self.tree.xpath('//tei:fileDesc/tei:sourceDesc/tei:biblFull', namespaces=ns)[0]
         edition_stmt = etree.SubElement(bibl_full, "%seditionStmt" % TEI)
@@ -235,7 +332,7 @@ class Tei:
 
     def add_digital_edition(self, digital_edition):
         """
-        Adds an edition statement with details on the digital edition.
+        Add an edition statement with details on the digital edition.
         """
         title_stmt = self.tree.xpath('//tei:titleStmt', namespaces=ns)[0]
         edition_stmt = etree.SubElement(title_stmt, "%seditionStmt" % TEI)
@@ -244,7 +341,7 @@ class Tei:
 
     def add_hoster(self, hoster):
         """
-        Adds a publisher of the digital edition
+        Add a publisher of the digital edition
         """
         publication_stmt = self.tree.xpath('//tei:publicationStmt', namespaces=ns)[0]
         publisher = etree.SubElement(publication_stmt, "%spublisher" % TEI)
@@ -287,7 +384,7 @@ class Tei:
 
     def set_encoding_description(self, creator):
         """
-        Sets some details on the encoding of the digital edition
+        Set some details on the encoding of the digital edition
         """
         encoding_desc = self.tree.xpath('//tei:encodingDesc', namespaces=ns)[0]
         encoding_desc_details = etree.SubElement(encoding_desc, "%sp" % TEI)
@@ -303,7 +400,7 @@ class Tei:
 
     def add_shelfmark(self, shelfmark):
         """
-        Adds the shelf mark of the (original) manuscript
+        Add the shelf mark of the (original) manuscript
         """
         ms_ident_idno = self.tree.xpath('//tei:msDesc/tei:msIdentifier/tei:idno', namespaces=ns)[0]
         idno = etree.SubElement(ms_ident_idno, "%sidno" % TEI)
@@ -322,7 +419,7 @@ class Tei:
 
     def set_type_desc(self, description):
         """
-        Sets the type description
+        Set the type description
         """
         phys_desc = self.tree.xpath('//tei:msDesc/tei:physDesc', namespaces=ns)[0]
         type_desc = etree.SubElement(phys_desc, "%stypeDesc" % TEI)
@@ -354,7 +451,7 @@ class Tei:
 
     def add_collection(self, collection):
         """
-        Adds a (free-text) collection of the digital document
+        Add a (free-text) collection of the digital document
         """
         profile_desc = self.tree.xpath('//tei:profileDesc', namespaces=ns)[0]
         creation = etree.SubElement(profile_desc, "%screation" % TEI)
@@ -375,9 +472,81 @@ class Tei:
         if self.places:
             bibl_text += " " + self.places[0].split(":")[1]
             if len(self.places) > 1:
-                bibl_text += "u. a."
+                bibl_text += " u. a."
         if self.dates:
             if self.places:
                 bibl_text += ","
             bibl_text += " " + self.dates[0] + "."
         self.bibl.text = bibl_text
+
+    def add_ocr_text(self, mets):
+        """
+        Add OCR text from FULLTEXT file group to the single divs
+        """
+        # the text-holding elements
+        front = self.tree.xpath('//tei:front', namespaces=ns)
+        body = self.tree.xpath('//tei:body', namespaces=ns)
+        back = self.tree.xpath('//tei:back', namespaces=ns)
+
+        if front:
+            for node in front[0].iterchildren():
+                self.__add_ocr_to_node(node, mets)
+        for node in body[0].iterchildren():
+            self.__add_ocr_to_node(node, mets)
+        if back:
+            for node in back[0].iterchildren():
+                self.__add_ocr_to_node(node, mets)
+
+    def __add_ocr_to_node(self, node, mets):
+        """
+        Add text to a given node and recursively add text to children too (post order!)
+        """
+        
+        for childnode in node.iterchildren():
+            self.__add_ocr_to_node(childnode, mets)
+        altos = mets.get_alto(node.get("id"))
+        for alto in altos:
+            pass
+            #print(etree.tostring(alto))
+
+
+    def add_div_structure(self, div):
+        """
+        Add div elements to the text body according to the given list of divs
+        """
+
+        # div structure has to be added to text
+        text = self.tree.xpath('//tei:text', namespaces=ns)[0]
+
+        # do not add front node to unstructured volumes
+        if div.get_div():
+            front = etree.SubElement(text, "%sfront" % TEI)
+
+        # body must be present
+        body = etree.SubElement(text, "%sbody" % TEI)
+
+        # do not add back node to unstructured volumes
+        if div.get_div():
+            back = etree.SubElement(text, "%sback" % TEI)
+        else:
+            # default div for unstructured volumes
+            body = etree.SubElement(body, "%sdiv" % TEI)
+
+        for sub_div in div.get_div():
+            if sub_div.get_TYPE() == "title_page":
+                self.__add_div(front, sub_div, 1, "titlePage")
+            elif sub_div.get_TYPE() == "chapter" or sub_div.get_TYPE() == "section":
+                self.__add_div(body, sub_div, 1)
+
+    def __add_div(self, insert_node, div, n, tag="div"):
+        """
+        Add div element to a given node and recursively add children too
+        """
+        new_div = etree.SubElement(insert_node, "%s%s" % (TEI, tag))
+        new_div.set("id", div.get_ID())
+        if div.get_LABEL():
+            new_div.set("n", str(n))
+            new_div.set("rend", div.get_LABEL())
+        for sub_div in div.get_div():
+            self.__add_div(new_div, sub_div, n+1)
+
