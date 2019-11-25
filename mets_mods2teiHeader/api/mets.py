@@ -272,9 +272,10 @@ class Mets:
                     phys_struct_map[div.get_ID()] = fulltext_map[fptr.get_FILEID()]
                     break
         for sm_link in self.tree.xpath("//mets:structLink", namespaces=ns)[0].iterchildren():
-            if sm_link.get("%sfrom" % XLINK) not in self.alto_map:
-                self.alto_map[sm_link.get("%sfrom" % XLINK)] = []
-            self.alto_map[sm_link.get("%sfrom" % XLINK)].append(phys_struct_map[sm_link.get("%sto" % XLINK)])
+            if sm_link.get("%sto" % XLINK) in phys_struct_map:
+                if sm_link.get("%sfrom" % XLINK) not in self.alto_map:
+                    self.alto_map[sm_link.get("%sfrom" % XLINK)] = []
+                self.alto_map[sm_link.get("%sfrom" % XLINK)].append(phys_struct_map[sm_link.get("%sto" % XLINK)])
         
 
     def get_main_title(self):

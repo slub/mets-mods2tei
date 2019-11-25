@@ -32,7 +32,7 @@ def cli(mets):
 
     tei.fill_from_mets(mets)
 
-    click.echo(tei.tostring())
+    #click.echo(tei.tostring())
 
 
 if __name__ == '__main__':

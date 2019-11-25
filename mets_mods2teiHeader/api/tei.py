@@ -6,12 +6,17 @@ import os
 
 import copy
 
+from urllib.request import urlopen
 from pkg_resources import resource_filename, Requirement
+
+from .alto import Alto
 
 ns = {
      'tei': "http://www.tei-c.org/ns/1.0",
+     'alto': "http://www.loc.gov/standards/alto/ns-v2#",
 }
 TEI = "{%s}" % ns['tei']
+ALTO = "{%s}" % ns['alto']
 
 class Tei:
 
@@ -504,11 +509,45 @@ class Tei:
         
         for childnode in node.iterchildren():
             self.__add_ocr_to_node(childnode, mets)
-        altos = mets.get_alto(node.get("id"))
-        for alto in altos:
-            pass
-            #print(etree.tostring(alto))
+        alto_links = mets.get_alto(node.get("id"))
+        
+        # a header will always be on the first page of a div
+        first = True
 
+        # iterate over all alto files for a div
+        print(node.get("rend", default=""), str(first))
+        for alto_link in alto_links:
+            # only collect ocr from a file once!
+            if not alto_link in self.alto_map:
+                f = urlopen(alto_link)
+                alto = Alto.read(f)
+                self.alto_map[alto_link] = alto
+
+                pb = etree.SubElement(node, "%spb" % TEI)
+
+                for text_block in alto.get_text_blocks():
+                    p = etree.SubElement(node, "%sp" % TEI)
+                    for line in alto.get_lines_in_text_block(text_block):
+                        lb = etree.SubElement(p, "%slb" % TEI)
+                        line_text = alto.get_text_in_line(line)
+                        if line_text:
+                            lb.tail = line_text
+                            # FIXME: Technically, we only need to index the lines of div-introducing pages
+                            alto.text += line_text
+                            for i in range(0, len(line_text)):
+                                alto.line_index_struct[alto.line_index] = lb
+                                alto.line_index += 1
+            else:
+                alto = self.alto_map[alto_link]
+            # find the most likely position of the label on the page
+            if first:
+                print(alto_link)
+                label = node.get("rend", default="")
+                if len(label) and alto.text and label != "Text":
+                    begin, length = alto.get_best_insert_index(label, True)
+                    print(begin, length)
+                # alter tei
+            first = False
 
     def add_div_structure(self, div):
         """
@@ -546,6 +585,8 @@ class Tei:
         new_div.set("id", div.get_ID())
         if div.get_LABEL():
             new_div.set("n", str(n))
+            #head = etree.SubElement(new_div, "%s%s" % (TEI, "head"))
+            #head.text = div.get_LABEL()
             new_div.set("rend", div.get_LABEL())
         for sub_div in div.get_div():
             self.__add_div(new_div, sub_div, n+1)
