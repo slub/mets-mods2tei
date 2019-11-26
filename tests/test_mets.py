@@ -10,7 +10,7 @@ with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     from distutils import dir_util
 
-from mets_mods2teiHeader import Mets
+from mets_mods2tei import Mets
 
 @pytest.fixture
 def datadir(tmpdir, request):

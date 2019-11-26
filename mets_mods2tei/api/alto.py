@@ -64,17 +64,9 @@ class Alto:
         Reads in ALTO from a given file source.
         :param str path: Path to a ALTO document.
         """
-        self.logger.info("Reading %s", path)
         parser = etree.XMLParser(remove_blank_text=True)
         self.tree = etree.parse(path, parser)
-        self._spur(self.tree, path)
-
-    def _spur(self, tree, path):
-        """
-        Assigns the ALTO-related class members given an XML tree.
-        """
         self.path = path
-        
 
     def get_text_blocks(self):
         """
@@ -104,25 +96,6 @@ class Alto:
                 line_text += " "
         #line_text += "\n"
         return line_text
-
-    def get_next_unmodified_carea(self):
-        """
-        Returns the next available unmodified carea (or None).
-        """
-        try:
-            return self.line_index_struct[self.insert_index].getparent().getparent()
-        except:
-            return None
-
-    def set_carea_as_modified(self, carea):
-        """
-        Set the given carea as modified by adjusting the insert index.
-        :param Element carea: The carea element to set as modified
-        """
-        for i in range(self.insert_index, len(self.line_index_struct)):
-            if self.line_index_struct[self.insert_index].getparent().getparent() != carea:
-                break
-            self.insert_index = i
 
     def __compute_fuzzy_distance(self, text1, text2):
         """

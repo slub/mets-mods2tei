@@ -3,7 +3,7 @@
 from lxml import etree
 
 import os
-
+import logging
 import copy
 
 from urllib.request import urlopen
@@ -25,9 +25,12 @@ class Tei:
         The constructor.
         """
 
-        self.tree = etree.parse(os.path.realpath(resource_filename(Requirement.parse("mets_mods2teiHeader"), 'mets_mods2teiHeader/data/tei_skeleton.xml')))
+        self.tree = etree.parse(os.path.realpath(resource_filename(Requirement.parse("mets_mods2tei"), 'mets_mods2tei/data/tei_skeleton.xml')))
 
         self.alto_map = {}
+
+        # logging
+        self.logger = logging.getLogger(__name__)
 
     def tostring(self):
         """
@@ -35,7 +38,7 @@ class Tei:
         """
         return etree.tostring(self.tree, encoding="utf-8")
 
-    def fill_from_mets(self, mets):
+    def fill_from_mets(self, mets, ocr=True):
         """
         Fill the contents of the TEI object from a METS instance
         """
@@ -128,7 +131,8 @@ class Tei:
         self.add_div_structure(mets.get_div_structure())
 
         # OCR
-        self.add_ocr_text(mets)
+        if ocr:
+            self.add_ocr_text(mets)
 
     @property
     def main_title(self):
@@ -515,7 +519,6 @@ class Tei:
         first = True
 
         # iterate over all alto files for a div
-        print(node.get("rend", default=""), str(first))
         for alto_link in alto_links:
             # only collect ocr from a file once!
             if not alto_link in self.alto_map:
@@ -541,12 +544,47 @@ class Tei:
                 alto = self.alto_map[alto_link]
             # find the most likely position of the label on the page
             if first:
-                print(alto_link)
+                self.logger.debug("Search for '%s' on page '%s'" % (node.get("rend", default=""), str(alto_link)))
                 label = node.get("rend", default="")
                 if len(label) and alto.text and label != "Text":
                     begin, length = alto.get_best_insert_index(label, True)
-                    print(begin, length)
-                # alter tei
+                    lines = []
+                    pars = []
+                    # iterate over all positions in the match and collect the lines and pars they are in
+                    for i in range(begin, begin + length):
+                        line = alto.line_index_struct[i]
+                        if (not lines) or lines[-1] != line:
+                            lines.append(line)
+                            # move all lines of the match to a single paragraph
+                            par = line.getparent()
+                            if not pars:
+                                pars.append(par)
+                            if pars[0] != par:
+                                pars[0].append(line)
+                                if len(par) == 0:
+                                    par.getparent().remove(par)
+
+                    # par → head
+                    # split into head and non-head content
+                    if len(pars[0]) > len(lines):
+                        argument = etree.Element("%sargument" % TEI)
+                        par_pre = etree.SubElement(argument, "%sp" % TEI)
+                        par_post = etree.Element("%sp" % TEI)
+                        status = 0
+                        for line in pars[0]:
+                            if line == lines[0]:
+                                status += 1
+                            if line == lines[-1]:
+                                status += 1
+                            elif status == 0:
+                                par_pre.append(line)
+                            elif status == 2:
+                                par_post.append(line)
+                        if len(par_pre) > 0:
+                            pars[0].getparent().insert(pars[0].getparent().index(pars[0]), argument)
+                        if len(par_post) > 0:
+                            pars[0].getparent().insert(pars[0].getparent().index(pars[0]) + 1, par_post)
+                    pars[0].tag = "%shead" % TEI
             first = False
 
     def add_div_structure(self, div):

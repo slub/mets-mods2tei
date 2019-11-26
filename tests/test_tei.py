@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from mets_mods2teiHeader import Tei
+from mets_mods2tei import Tei
 
 def test_constructor():
     '''

@@ -3,3 +3,4 @@ lxml
 babel
 generateds
 python-Levenshtein
+more-itertools
