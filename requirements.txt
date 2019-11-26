@@ -2,3 +2,4 @@ click
 lxml
 babel
 generateds
+python-Levenshtein
