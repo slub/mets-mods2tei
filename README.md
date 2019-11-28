@@ -15,8 +15,6 @@ are expressed in terms of structural mappings (`structMap` elements).
 purposes. It usually includes detailed bibliographic meta data in its
 [header](https://tei-c.org/release/doc/tei-p5-doc/de/html/ref-teiHeader.html).
 
-Converting .
-
 Since these standards contain a considerable amount of degrees of freedom, the conversion uses
 well-defined subsets. For MODS, this is the
 [*MODS Anwendungsprofil für digitalisierte Medien*](https://dfg-viewer.de/fileadmin/groups/dfgviewer/MODS-Anwendungsprofil_2.3.1.pdf).
