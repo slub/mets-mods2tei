@@ -1,6 +1,6 @@
 [run]
 branch = True
-source = mets_mods2teiHeader
+source = mets_mods2tei
 
 [report]
 exclude_lines =
@@ -11,4 +11,4 @@ exclude_lines =
 ignore_errors = True
 omit =
     tests/*
-    mets_mods2teiHeader/api/*_generateds.py
+    mets_mods2tei/api/*_generateds.py

@@ -5,7 +5,7 @@ import os
 import csv
 import babel
 
-from .mets_generateds import parse as parse_mets
+from .mets_generateds import parseString as parse_mets
 from .mods_generateds import parseString as parse_mods
 
 from pkg_resources import resource_filename, Requirement
@@ -26,7 +26,7 @@ class Iso15924:
         The constructor.
         """
         self.map = {}
-        filep = open(os.path.realpath(resource_filename(Requirement.parse("mets_mods2teiHeader"), 'mets_mods2teiHeader/data/iso15924-utf8-20180827.txt')))
+        filep = open(os.path.realpath(resource_filename(Requirement.parse("mets_mods2tei"), 'mets_mods2tei/data/iso15924-utf8-20180827.txt')))
         reader = csv.DictReader(filter(lambda row: row[0]!='#', filep), delimiter=';', quoting=csv.QUOTE_NONE, fieldnames=['code','index','name_eng', 'name_fr', 'alias', 'Age', 'Date'])
         for row in reader:
             self.map[row['code']] = row['name_eng']
@@ -48,8 +48,11 @@ class Mets:
 
         self.script_iso = Iso15924()
 
+        self.tree = None
         self.mets = None
         self.mods = None
+        self.alto_map = {}
+        self.alto_list = {}
 
         self.title = None
         self.sub_titles = None
@@ -66,7 +69,7 @@ class Mets:
         self.encoding_date = None
         self.encoding_desc = None
         self.owner_manuscript = None
-        self.shelf_locator = None
+        self.shelf_locators = None
         self.identifiers = None
         self.scripts = None
         self.collections = None
@@ -100,8 +103,9 @@ class Mets:
         Reads in METS from a given file source.
         :param str path: Path to a METS document.
         """
-        self.mets = parse_mets(path, silence=True)
-        self.mods = parse_mods(self.mets.get_dmdSec()[0].get_mdWrap().get_xmlData().get_anytypeobjs_()[0])
+        self.tree = etree.parse(path)
+        self.mets = parse_mets(etree.tostring(self.tree.getroot().xpath('//mets:mets', namespaces=ns)[0]), silence=True)
+        self.mods = parse_mods(self.mets.get_dmdSec()[0].get_mdWrap().get_xmlData().get_anytypeobjs_()[0], silence=True)
         self.__spur()
 
     def __spur(self):
@@ -152,11 +156,10 @@ class Mets:
             self.places.append(place_ext)
 
         # publication dates
-        self.dates = []
+        self.dates = {}
         for date_issued in origin_info.get_dateIssued():
-            date_ext = {}
-            date_ext[date_issued.get_point()] = date_issued.get_valueOf_()
-            self.dates.append(date_ext)
+            date_type = date_issued.get_point() if date_issued.get_point() != None else "unspecified"
+            self.dates[date_type] = date_issued.get_valueOf_()
 
         # publishers
         self.publishers = []
@@ -222,7 +225,7 @@ class Mets:
         header = self.mets.get_metsHdr()
 
         # encoding date
-        self.encoding_date = header.get_CREATEDATE()
+        self.encoding_date = header.get_CREATEDATE().isoformat()
 
         # encoding description
         self.encoding_desc = list(filter(lambda x: x.get_OTHERTYPE() == "SOFTWARE", header.get_agent()))[0].get_name()
@@ -231,9 +234,10 @@ class Mets:
 	# location of manuscript
 
         # location-related elements are optional or conditional
+        self.shelf_locators = []
         for location in self.mods.get_location():
             if location.get_shelfLocator():
-                self.shelf_locator = location.get_shelfLocator()
+                self.shelf_locators.extend([shelf_locator.get_valueOf_() for shelf_locator in location.get_shelfLocator()])
             elif location.get_physicalLocation():
                 self.owner_manuscript = location.get_physicalLocation()
 
@@ -253,6 +257,26 @@ class Mets:
             title = collection.get_titleInfo()[0].get_title()
             if title:
                 self.collections.append(title[0].get_valueOf_())
+
+        #
+        # alto map
+        #fulltext_group = list(filter(lambda x: x.get_USE() == 'FULLTEXT', self.mets.get_fileSec().get_fileGrp()))[0]
+        fulltext_group = self.tree.xpath("//mets:fileGrp[@USE='FULLTEXT']", namespaces=ns)[0]
+        fulltext_map = {}
+        for entry in fulltext_group.xpath("./mets:file", namespaces=ns):
+            fulltext_map[entry.get("ID")] = entry.find("./" + METS + "FLocat").get("%shref" % XLINK)
+        phys_struct_map = {}
+        for div in list(filter(lambda x: x.get_TYPE() == 'PHYSICAL', self.mets.get_structMap()))[0].get_div().get_div():
+            for fptr in div.get_fptr():
+                if fptr.get_FILEID() in fulltext_map:
+                    phys_struct_map[div.get_ID()] = fulltext_map[fptr.get_FILEID()]
+                    break
+        for sm_link in self.tree.xpath("//mets:structLink", namespaces=ns)[0].iterchildren():
+            if sm_link.get("%sto" % XLINK) in phys_struct_map:
+                if sm_link.get("%sfrom" % XLINK) not in self.alto_map:
+                    self.alto_map[sm_link.get("%sfrom" % XLINK)] = []
+                self.alto_map[sm_link.get("%sfrom" % XLINK)].append(phys_struct_map[sm_link.get("%sto" % XLINK)])
+        
 
     def get_main_title(self):
         """
@@ -344,11 +368,11 @@ class Mets:
         """
         return self.owner_manuscript
 
-    def get_shelf_locator(self):
+    def get_shelf_locators(self):
         """
-        Return the shelf locator of the original manuscript
+        Return the shelf locators of the original manuscript
         """
-        return self.shelf_locator
+        return self.shelf_locators
 
     def get_identifiers(self):
         """
@@ -373,3 +397,18 @@ class Mets:
         Returns the languages used in the original manuscript
         """
         return self.languages
+
+    def get_div_structure(self):
+        """
+        Return the div structure from the logical struct map
+        """
+        for struct_map in self.mets.get_structMap():
+            if struct_map.get_TYPE() == "LOGICAL":
+                return struct_map.get_div()
+        return []
+
+    def get_alto(self, log_id):
+        """
+        Return the list of ALTO links for a given LOG_ID
+        """
+        return self.alto_map[log_id]

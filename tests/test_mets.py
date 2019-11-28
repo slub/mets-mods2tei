@@ -10,7 +10,7 @@ with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     from distutils import dir_util
 
-from mets_mods2teiHeader import Mets
+from mets_mods2tei import Mets
 
 @pytest.fixture
 def datadir(tmpdir, request):
@@ -86,3 +86,15 @@ def test_data_assignment(subtests, datadir):
 
     with subtests.test("Check collections"):
         assert(mets.collections == ['Drucke des 18. Jahrhunderts', 'Saxonica'])
+
+    with subtests.test("Check publication date(s)"):
+        assert(mets.get_dates() == {'unspecified': '1789'})
+
+    with subtests.test("Check encoding date"):
+        assert(mets.get_encoding_date() == '2018-01-18T13:17:11')
+
+    with subtests.test("Check shelf locator(s)"):
+        assert(mets.get_shelf_locators() == ['Hist.Amer.1497'])
+
+    with subtests.test("Check ALTO linkage"):
+        assert(mets.get_alto('LOG_0002') == ['https://digital.slub-dresden.de/data/kitodo/LoskGesc_497166623/LoskGesc_497166623_ocr/00000005.xml'])

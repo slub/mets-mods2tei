@@ -36,11 +36,5 @@
     </profileDesc>
   </teiHeader>
   <text>
-    <pb facs="#f0001"/>
-    <body>
-      <div>
-        <p></p>
-      </div>
-    </body>
   </text>
 </TEI>

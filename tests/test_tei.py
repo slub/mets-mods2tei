@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from mets_mods2teiHeader import Tei
+from mets_mods2tei import Tei
 
 def test_constructor():
     '''
@@ -50,6 +50,8 @@ def test_data_assignment(subtests):
     with subtests.test("Check place(s)"):
         tei.add_place({"text": "Dresden", "code": "01277"})
         assert(tei.places == ["01277:Dresden"])
+        tei.add_place({"text": "Leipzig", "code": "04347"})
+        assert(tei.places == ["01277:Dresden", "04347:Leipzig"])
 
     with subtests.test("Check publisher"):
         tei.add_publisher("Joachim Mustermann")
@@ -67,9 +69,41 @@ def test_data_assignment(subtests):
         tei.add_hoster("SLUB")
         assert(tei.hosters == ["SLUB"])
 
+    with subtests.test("Check availability"):
+        tei.set_availability("licence", "Public domain", "")
+        assert(tei.availability == "licenced")
+        tei.set_availability("free", "", "")
+        assert(tei.availability == "free")
+        tei.set_availability("unknown", "", "")
+        assert(tei.availability == "unknown")
+        tei.set_availability("foo", "", "")
+        assert(tei.availability == "restricted")
+
+    with subtests.test("Check licence"):
+        tei.set_availability("licence", "Public domain", "")
+        assert(tei.licence == "Public domain")
+
     with subtests.test("Check encoding date"):
         tei.add_encoding_date("25.01.2020")
         assert(tei.encoding_dates == ["publication:25.01.2020"])
+
+    with subtests.test("Check encoding description"):
+        tei.set_encoding_description("Kitodo.Production")
+        assert(tei.encoding_description == "Encoded with the help of Kitodo.Production.")
+
+    with subtests.test("Check repositories"):
+        tei.add_repository("Kitodo.Production")
+        tei.add_repository("Saxonica")
+        assert(tei.repositories == ["Kitodo.Production", "Saxonica"])
+
+    with subtests.test("Check shelfmarks"):
+        tei.add_shelfmark("Foo 25")
+        tei.add_shelfmark("HAL 9000")
+        assert(tei.shelfmarks == ["Foo 25", "HAL 9000"])
+
+    with subtests.test("Check identifiers"):
+        tei.add_identifiers([("Collection", "VD 18")])
+        assert(tei.identifiers == [("Collection", "VD 18")])
 
     with subtests.test("Check first extent"):
         tei.add_extent("32 S.")
@@ -85,4 +119,4 @@ def test_data_assignment(subtests):
 
     with subtests.test("Check bibl"):
         tei.compile_bibl()
-        assert(tei.bibl.text == "Mustermann, Max, Dr.; Mustermann Max 12.10.1956 Dr.: Testbuch. Dresden, 01.01.1823.")
+        assert(tei.bibl.text == "Mustermann, Max, Dr.; Mustermann Max 12.10.1956 Dr.: Testbuch. Dresden u. a., 01.01.1823.")

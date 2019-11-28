@@ -1,21 +1,21 @@
-# mets-mods2teiHeader
+# mets-mods2tei
 
 [![CircleCI](https://circleci.com/gh/slub/mets-mods2teiHeader.svg?style=svg)](https://circleci.com/gh/slub/mets-mods2teiHeader) [![codecov](https://codecov.io/gh/slub/mets-mods2teiHeader/branch/master/graph/badge.svg)](https://codecov.io/gh/slub/mets-mods2teiHeader)
 
-Convert bibliographic meta data in METS/MODS format to TEI headers
+Convert bibliographic meta data in METS/MODS format to TEI headers and optionally serialize linked ALTO-encoded OCR to TEI text.
 
 ## Background
 
 [MODS](http://www.loc.gov/standards/mods/) is the de-facto standard for encoding bibliographic
 meta data in libraries. It is usually included as a separate section into
-[METS](http://www.loc.gov/standards/mets/) XML files.
+[METS](http://www.loc.gov/standards/mets/) XML files. Physical and logical structure of a document
+are expressed in terms of structural mappings (`structMap` elements).
 
 [TEI](https://tei-c.org/) is the de-facto standard for representing digital text for research
 purposes. It usually includes detailed bibliographic meta data in its
 [header](https://tei-c.org/release/doc/tei-p5-doc/de/html/ref-teiHeader.html).
 
-Converting bibliographic meta data from METS/MODS to `teiHeader` is thus an important step in
-converting digital texts as delivered by libraries into TEI formatted text.
+Converting .
 
 Since these standards contain a considerable amount of degrees of freedom, the conversion uses
 well-defined subsets. For MODS, this is the
@@ -23,10 +23,10 @@ well-defined subsets. For MODS, this is the
 For METS, the [METS Anwendungsprofil für digitalisierte Medien 2.1](https://www.zvdd.de/fileadmin/AGSDD-Redaktion/METS_Anwendungsprofil_2.1.pdf) is consulted.
 For the TEI Header, the conversion is roughly based on the [*DTA base format*](https://github.com/deutschestextarchiv/dtabf).
 
-`mets-mods2teiHeader` is developed at the [Saxon State and University Library in Dresden](https://www.slub-dresden.de).
+`mets-mods2tei` is developed at the [Saxon State and University Library in Dresden](https://www.slub-dresden.de).
 
 ## Installation
-`mets-mods2teiHeader` is implemented in Python 3. In the following, we assume a working Python 3
+`mets-mods2tei` is implemented in Python 3. In the following, we assume a working Python 3
 (tested versions 3.5 and 3.6) installation.
 
 ### Clone the repository
@@ -38,7 +38,7 @@ $ cd mets-mods2teiHeader
 
 ### virtualenv
 Using [`virtualenv`](https://virtualenv.pypa.io/en/stable/) is highly recommended, although not strictly
-necessary for installing `mets-mods2teiHeader`. It may be installed via:
+necessary for installing `mets-mods2tei`. It may be installed via:
 ```console
 $ [sudo] pip install virtualenv
 ```
@@ -53,7 +53,7 @@ $ . env/bin/activate
 
 ### Python requirements
 
-`mets-mods2teiHeader` can be installed via `pip`:
+`mets-mods2tei` can be installed via `pip`:
 
 ```console
 (env) $ pip install .
@@ -61,7 +61,7 @@ $ . env/bin/activate
 
 ## Testing
 
-`mets-mods2teiHeader` uses `pytest`-based testing.
+`mets-mods2tei` uses `pytest`-based testing.
 
 Install the test requirements:
 
@@ -84,17 +84,19 @@ Determine code coverage by running
 ```
 
 ## Invocation
-Installing `mets-mods2teiHeader` makes the command line tool `mods2teiHeader` available:
+Installing `mets-mods2tei` makes the command line tool `mm2tei` available:
 ```console
-(env) $ mods2teiHeader --help
-Usage: mods2teiHeader [OPTIONS] METS
+(env) $ mm2tei --help
+Usage: mm2tei [OPTIONS] METS
 
   METS: File containing or URL pointing to the METS/MODS XML to be converted
 
 Options:
-  --help  Show this message and exit.
+  -o, --ocr                       Serialize OCR into resulting TEI
+  -l, --log-level [DEBUG|INFO|WARN|ERROR|OFF]
+  --help                          Show this message and exit.
 ```
 It reads METS XML via URL or file argument and prints the resulting TEI including the extracted information from the MODS part of the METS.
 ```console
-(env) $ mods2teiHeader "https://digital.slub-dresden.de/oai/?verb=GetRecord&metadataPrefix=mets&identifier=oai:de:slub-dresden:db:id-453779263"
+(env) $ mm2tei "https://digital.slub-dresden.de/oai/?verb=GetRecord&metadataPrefix=mets&identifier=oai:de:slub-dresden:db:id-453779263"
 ```
