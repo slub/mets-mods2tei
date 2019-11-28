@@ -201,6 +201,26 @@ class Tei:
         return [publisher.text for publisher in self.tree.xpath('//tei:fileDesc/tei:publicationStmt/tei:publisher', namespaces=ns)]
 
     @property
+    def availability(self):
+        """
+        Return information on the availability status represented
+        by the TEI Header.
+        """
+        return self.tree.xpath('//tei:fileDesc/tei:publicationStmt/tei:availability', namespaces=ns)[0].get("status")
+
+    @property
+    def licence(self):
+        """
+        Return information on the licencing conditions represented
+        by the TEI Header.
+        """
+        licence = self.tree.xpath('//tei:fileDesc/tei:publicationStmt/tei:availability/tei:licence', namespaces=ns)
+        if licence:
+            return licence[0].text
+        else:
+            return ""
+
+    @property
     def source_editions(self):
         """
         Return information on the editions of the source work represented
@@ -223,6 +243,37 @@ class Tei:
         by the TEI Header.
         """
         return ["%s:%s" % (encoding_date.get("type"), encoding_date.text) for encoding_date in self.tree.xpath('//tei:fileDesc/tei:publicationStmt/tei:date', namespaces=ns)]
+
+
+    @property
+    def encoding_description(self):
+        """
+        Return information on the manners of creation of the digitalized work represented
+        by the TEI Header.
+        """
+        return "".join(self.tree.xpath('//tei:encodingDesc', namespaces=ns)[0].itertext()).strip()
+
+    @property
+    def repositories(self):
+        """
+        Return information on the repositories storing the work represented
+        by the TEI Header.
+        """
+        return [repository.text for repository in self.tree.xpath('//tei:msDesc/tei:msIdentifier/tei:repository', namespaces=ns)]
+
+    @property
+    def shelfmarks(self):
+        """
+        Return information on the TEI-Header-represented work's (library) shelfmarks.
+        """
+        return [shelfmark.text for shelfmark in self.tree.xpath('//tei:msDesc/tei:msIdentifier/tei:idno/tei:idno[@type="shelfmark"]', namespaces=ns)]
+
+    @property
+    def identifiers(self):
+        """
+        Return information on the TEI-Header-represented work's (abstract) identifiers.
+        """
+        return [(identifier.get("type", default=""), identifier.text) for identifier in self.tree.xpath('//tei:msDesc/tei:msIdentifier/tei:idno/tei:idno[@type!="shelfmark"]', namespaces=ns)]
 
     @property
     def extents(self):
@@ -361,10 +412,15 @@ class Tei:
         Set the availability conditions of the digital edition
         """
         publication_stmt = self.tree.xpath('//tei:publicationStmt', namespaces=ns)[0]
-        availability = etree.SubElement(publication_stmt, "%savailability" % TEI)
-        
+        availability = publication_stmt.find('%savailability' % TEI)
+        if availability is not None:
+            availability.clear()
+        else:
+            availability = etree.SubElement(publication_stmt, "%savailability" % TEI)
+
         # an explicit licence has been set
         if status == "licence" and licence_text != "":
+            availability.set("status", "licenced")
             licence = etree.SubElement(availability, "%slicence" % TEI)
             licence.text = licence_text
             if licence_url != "":
