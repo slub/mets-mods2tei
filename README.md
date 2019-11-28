@@ -1,6 +1,6 @@
 # mets-mods2tei
 
-[![CircleCI](https://circleci.com/gh/slub/mets-mods2teiHeader.svg?style=svg)](https://circleci.com/gh/slub/mets-mods2teiHeader) [![codecov](https://codecov.io/gh/slub/mets-mods2teiHeader/branch/master/graph/badge.svg)](https://codecov.io/gh/slub/mets-mods2teiHeader)
+[![CircleCI](https://circleci.com/gh/slub/mets-mods2tei.svg?style=svg)](https://circleci.com/gh/slub/mets-mods2tei) [![codecov](https://codecov.io/gh/slub/mets-mods2tei/branch/master/graph/badge.svg)](https://codecov.io/gh/slub/mets-mods2tei)
 
 Convert bibliographic meta data in METS/MODS format to TEI headers and optionally serialize linked ALTO-encoded OCR to TEI text.
 
@@ -25,13 +25,13 @@ For the TEI Header, the conversion is roughly based on the [*DTA base format*](h
 
 ## Installation
 `mets-mods2tei` is implemented in Python 3. In the following, we assume a working Python 3
-(tested versions 3.5 and 3.6) installation.
+(tested versions 3.5, 3.6 and 3.7) installation.
 
 ### Clone the repository
 The first installation step is the cloning of the repository:
 ```console
-$ git clone https://github.com/wrznr/mets-mods2teiHeader.git
-$ cd mets-mods2teiHeader
+$ git clone https://github.com/wrznr/mets-mods2tei.git
+$ cd mets-mods2tei
 ```
 
 ### virtualenv
