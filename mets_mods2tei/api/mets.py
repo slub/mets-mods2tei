@@ -51,8 +51,10 @@ class Mets:
         self.tree = None
         self.mets = None
         self.mods = None
+        self.order_map = {}
+        self.img_map = {}
         self.alto_map = {}
-        self.alto_list = {}
+        self.struct_links = {}
 
         self.title = None
         self.sub_titles = None
@@ -218,7 +220,7 @@ class Mets:
             for license_node in license_nodes:
                 if license_node.get_type() == 'use and reproduction':
                     self.license = license_node.get_valueOf_()
-                    self.license_url = license_node.get_href()
+                    self.license_url = license_node.get_href() if license_node.get_href() else ""
 
         #
         # metsHdr
@@ -259,24 +261,38 @@ class Mets:
                 self.collections.append(title[0].get_valueOf_())
 
         #
-        # alto map
-        #fulltext_group = list(filter(lambda x: x.get_USE() == 'FULLTEXT', self.mets.get_fileSec().get_fileGrp()))[0]
-        fulltext_group = self.tree.xpath("//mets:fileGrp[@USE='FULLTEXT']", namespaces=ns)[0]
+        # file groups
+
+        # fulltext
         fulltext_map = {}
-        for entry in fulltext_group.xpath("./mets:file", namespaces=ns):
-            fulltext_map[entry.get("ID")] = entry.find("./" + METS + "FLocat").get("%shref" % XLINK)
-        phys_struct_map = {}
+        fulltext_group = self.tree.xpath("//mets:fileGrp[@USE='FULLTEXT']", namespaces=ns)
+        if fulltext_group:
+            fulltext_map = {}
+            for entry in fulltext_group[0].xpath("./mets:file", namespaces=ns):
+                fulltext_map[entry.get("ID")] = entry.find("./" + METS + "FLocat").get("%shref" % XLINK)
+
+        # default
+        default_map = {}
+        default_group = self.tree.xpath("//mets:fileGrp[@USE='DEFAULT']", namespaces=ns)
+        if default_group:
+            for entry in default_group[0].xpath("./mets:file", namespaces=ns):
+                default_map[entry.get("ID")] = entry.find("./" + METS + "FLocat").get("%shref" % XLINK)
+
+        # struct map physical
         for div in list(filter(lambda x: x.get_TYPE() == 'PHYSICAL', self.mets.get_structMap()))[0].get_div().get_div():
+            self.order_map[div.get_ID()] = div.get_ORDER()
             for fptr in div.get_fptr():
                 if fptr.get_FILEID() in fulltext_map:
-                    phys_struct_map[div.get_ID()] = fulltext_map[fptr.get_FILEID()]
-                    break
+                    self.alto_map[div.get_ID()] = fulltext_map[fptr.get_FILEID()]
+                elif fptr.get_FILEID() in default_map:
+                    self.img_map[div.get_ID()] = default_map[fptr.get_FILEID()]
+
+        # struct links
         for sm_link in self.tree.xpath("//mets:structLink", namespaces=ns)[0].iterchildren():
-            if sm_link.get("%sto" % XLINK) in phys_struct_map:
-                if sm_link.get("%sfrom" % XLINK) not in self.alto_map:
-                    self.alto_map[sm_link.get("%sfrom" % XLINK)] = []
-                self.alto_map[sm_link.get("%sfrom" % XLINK)].append(phys_struct_map[sm_link.get("%sto" % XLINK)])
-        
+            if sm_link.get("%sto" % XLINK) in self.alto_map:
+                if sm_link.get("%sfrom" % XLINK) not in self.struct_links:
+                    self.struct_links[sm_link.get("%sfrom" % XLINK)] = []
+                self.struct_links[sm_link.get("%sfrom" % XLINK)].append(sm_link.get("%sto" % XLINK))
 
     def get_main_title(self):
         """
@@ -407,8 +423,26 @@ class Mets:
                 return struct_map.get_div()
         return []
 
-    def get_alto(self, log_id):
+    def get_struct_links(self, log_id):
         """
-        Return the list of ALTO links for a given LOG_ID
+        Return the list of physical pages for a logical ID
         """
-        return self.alto_map[log_id]
+        return self.struct_links.get(log_id, [])
+
+    def get_img(self, phys_id):
+        """
+        Return an image link for a given physical ID
+        """
+        return self.img_map.get(phys_id, "")
+
+    def get_alto(self, phys_id):
+        """
+        Return the ALTO link for a given physical ID
+        """
+        return self.alto_map.get(phys_id, "")
+
+    def get_order(self, phys_id):
+        """
+        Return the manually set order for a given physical ID
+        """
+        return self.order_map.get(phys_id, "-1")
