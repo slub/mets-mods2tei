@@ -569,13 +569,14 @@ class Tei:
         
         for childnode in node.iterchildren():
             self.__add_ocr_to_node(childnode, mets)
-        alto_links = mets.get_alto(node.get("id"))
+        struct_links = mets.get_struct_links(node.get("id"))
         
         # a header will always be on the first page of a div
         first = True
 
-        # iterate over all alto files for a div
-        for alto_link in alto_links:
+        # iterate over all struct links for a div
+        for struct_link in struct_links:
+            alto_link = mets.get_alto(struct_link)
             # only collect ocr from a file once!
             if not alto_link in self.alto_map:
                 f = urlopen(alto_link)
@@ -583,6 +584,8 @@ class Tei:
                 self.alto_map[alto_link] = alto
 
                 pb = etree.SubElement(node, "%spb" % TEI)
+                pb.set("facs", "#f{:04d}".format(int(mets.get_order(struct_link))))
+                pb.set("corresp", mets.get_img(struct_link))
 
                 for text_block in alto.get_text_blocks():
                     p = etree.SubElement(node, "%sp" % TEI)
@@ -604,21 +607,7 @@ class Tei:
                 label = node.get("rend", default="")
                 if len(label) and alto.text and label != "Text":
                     begin, length = alto.get_best_insert_index(label, True)
-                    lines = []
-                    pars = []
-                    # iterate over all positions in the match and collect the lines and pars they are in
-                    for i in range(begin, begin + length):
-                        line = alto.line_index_struct[i]
-                        if (not lines) or lines[-1] != line:
-                            lines.append(line)
-                            # move all lines of the match to a single paragraph
-                            par = line.getparent()
-                            if not pars:
-                                pars.append(par)
-                            if pars[0] != par:
-                                pars[0].append(line)
-                                if len(par) == 0:
-                                    par.getparent().remove(par)
+                    pars, lines = alto.collect_text_nodes(begin, length)
 
                     # par → head
                     # split into head and non-head content
@@ -641,6 +630,11 @@ class Tei:
                         if len(par_post) > 0:
                             pars[0].getparent().insert(pars[0].getparent().index(pars[0]) + 1, par_post)
                     pars[0].tag = "%shead" % TEI
+                    # realize correct div assigment in cases where a structure does not start a page
+                    if pars[0].getparent().get("id") != node.get("id"):
+                        self.logger.debug("Replace head for div %s (%s)" % (node.get("id"), node.get("rend")))
+                        for par in reversed(pars[0].getparent()[pars[0].getparent().index(pars[0]):]):
+                            node.insert(0, par)
             first = False
 
     def add_div_structure(self, div):
@@ -664,12 +658,16 @@ class Tei:
         else:
             # default div for unstructured volumes
             body = etree.SubElement(body, "%sdiv" % TEI)
+            body.set("id", div.get_ID())
 
         for sub_div in div.get_div():
             if sub_div.get_TYPE() == "title_page":
                 self.__add_div(front, sub_div, 1, "titlePage")
             elif sub_div.get_TYPE() == "chapter" or sub_div.get_TYPE() == "section":
                 self.__add_div(body, sub_div, 1)
+            else:
+                #FIXME
+                pass
 
     def __add_div(self, insert_node, div, n, tag="div"):
         """

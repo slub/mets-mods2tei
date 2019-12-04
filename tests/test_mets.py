@@ -50,6 +50,22 @@ def test_loading_local_file(datadir):
     mets = Mets.fromfile(f)
     assert(mets.mets is not None)
 
+def test_mappings(subtests, datadir):
+    '''
+    Test the correct interpretation of the structural linking
+    '''
+    f = open(datadir.join('test_mets.xml'))
+    mets = Mets.read(f)
+
+    with subtests.test("Check struct links"):
+        assert(mets.get_struct_links('LOG_0000')[0] == "PHYS_0001")
+
+    with subtests.test("Check ALTO linkage"):
+        assert(mets.get_alto('PHYS_0005') == 'https://digital.slub-dresden.de/data/kitodo/LoskGesc_497166623/LoskGesc_497166623_ocr/00000005.xml')
+
+    with subtests.test("Check IMG linkage"):
+        assert(mets.get_img('PHYS_0005') == 'https://digital.slub-dresden.de/data/kitodo/LoskGesc_497166623/LoskGesc_497166623_tif/jpegs/00000005.tif.medium.jpg')
+
 def test_data_assignment(subtests, datadir):
     '''
     Test the correct assignment of meta data
@@ -95,6 +111,3 @@ def test_data_assignment(subtests, datadir):
 
     with subtests.test("Check shelf locator(s)"):
         assert(mets.get_shelf_locators() == ['Hist.Amer.1497'])
-
-    with subtests.test("Check ALTO linkage"):
-        assert(mets.get_alto('LOG_0002') == ['https://digital.slub-dresden.de/data/kitodo/LoskGesc_497166623/LoskGesc_497166623_ocr/00000005.xml'])

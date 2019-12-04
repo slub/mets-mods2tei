@@ -1,6 +1,6 @@
 click
 lxml
 babel
-generateds
+generateDS
 python-Levenshtein
 more-itertools
