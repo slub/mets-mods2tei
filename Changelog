@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Retrieve ALTO files via a dedicated struct link member of the class Mets
-- Move text retrieal to Alto class
+- Move text retrieval to Alto class
 
 ### Removed
 - Get rid of code artifacts carried over from `tocrify`
