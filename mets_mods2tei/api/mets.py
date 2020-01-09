@@ -124,8 +124,10 @@ class Mets:
 
         #
         # sub titles
-        self.sub_titles = [sub_title.get_valueOf_().strip() for sub_title in self.mods.get_titleInfo()[0].get_subTitle()]
-
+        self.sub_titles = []
+        for title_info in self.mods.get_titleInfo():
+            for sub_title in title_info.get_subTitle():
+                self.sub_titles.append(sub_title.get_valueOf_().strip())
         #
         # authors and editors
         self.authors = []

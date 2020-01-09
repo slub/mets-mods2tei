@@ -645,22 +645,31 @@ class Tei:
         # div structure has to be added to text
         text = self.tree.xpath('//tei:text', namespaces=ns)[0]
 
+        # relevant divs
+        struct_divs = list(filter(lambda x: x.get_ADMID() is None, div.get_div()))
+        amd_divs = list(filter(lambda x: x.get_ADMID() is not None, div.get_div()))
+
         # do not add front node to unstructured volumes
-        if div.get_div():
+        if struct_divs:
             front = etree.SubElement(text, "%sfront" % TEI)
 
         # body must be present
         body = etree.SubElement(text, "%sbody" % TEI)
 
         # do not add back node to unstructured volumes
-        if div.get_div():
+        if struct_divs:
             back = etree.SubElement(text, "%sback" % TEI)
         else:
             # default div for unstructured volumes
             body = etree.SubElement(body, "%sdiv" % TEI)
+            # newspaper case: decent to the deepest div!
+            if amd_divs:
+                div = amd_divs[0]
+                while div.get_div():
+                    div = div.get_div()[0]
             body.set("id", div.get_ID())
 
-        for sub_div in div.get_div():
+        for sub_div in struct_divs:
             if sub_div.get_TYPE() == "title_page":
                 self.__add_div(front, sub_div, 1, "titlePage")
             elif sub_div.get_TYPE() == "chapter" or sub_div.get_TYPE() == "section":
