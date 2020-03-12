@@ -101,9 +101,13 @@ def test_data_assignment(subtests):
         tei.add_shelfmark("HAL 9000")
         assert(tei.shelfmarks == ["Foo 25", "HAL 9000"])
 
-    with subtests.test("Check identifiers"):
-        tei.add_identifiers([("Collection", "VD 18")])
-        assert(tei.identifiers == [("Collection", "VD 18")])
+    with subtests.test("Check VD ID"):
+        tei.add_vd_id("VD18 11413883")
+        assert(tei.vd_id == "VD18 11413883")
+
+    with subtests.test("Check URN"):
+        tei.add_urn("urn:nbn:de:bsz:14-db-id4971666239")
+        assert(tei.urn == "urn:nbn:de:bsz:14-db-id4971666239")
 
     with subtests.test("Check first extent"):
         tei.add_extent("32 S.")

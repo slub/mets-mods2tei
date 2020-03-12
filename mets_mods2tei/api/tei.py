@@ -101,8 +101,10 @@ class Tei:
             self.add_shelfmark(shelf_locator)
 
         # identifiers
-        if mets.get_identifiers():
-            self.add_identifiers(mets.get_identifiers())
+        if mets.get_urn():
+            self.add_urn(mets.get_urn())
+        if mets.get_vd_id():
+            self.add_vd_id(mets.get_vd_id())
 
         # type description
         if mets.get_scripts():
@@ -269,11 +271,26 @@ class Tei:
         return [shelfmark.text for shelfmark in self.tree.xpath('//tei:msDesc/tei:msIdentifier/tei:idno/tei:idno[@type="shelfmark"]', namespaces=ns)]
 
     @property
-    def identifiers(self):
+    def urn(self):
         """
-        Return information on the TEI-Header-represented work's (abstract) identifiers.
+        Return information on the TEI-Header-represented work's URN.
         """
-        return [(identifier.get("type", default=""), identifier.text) for identifier in self.tree.xpath('//tei:msDesc/tei:msIdentifier/tei:idno/tei:idno[@type!="shelfmark"]', namespaces=ns)]
+        urn = self.tree.xpath('//tei:msDesc/tei:msIdentifier/tei:idno/tei:idno[@type="URN"]', namespaces=ns)
+        if urn:
+            return urn[0].text
+        else:
+            return ""
+
+    @property
+    def vd_id(self):
+        """
+        Return information on the TEI-Header-represented work's VD ID.
+        """
+        vd_id = self.tree.xpath('//tei:msDesc/tei:msIdentifier/tei:idno/tei:idno[@type="VD"]', namespaces=ns)
+        if vd_id:
+            return vd_id[0].text
+        else:
+            return ""
 
     @property
     def extents(self):
@@ -457,7 +474,7 @@ class Tei:
 
     def add_repository(self, repository):
         """
-        Adds the repository of the (original) manuscript
+        Add the repository of the (original) manuscript
         """
         ms_ident = self.tree.xpath('//tei:msDesc/tei:msIdentifier', namespaces=ns)[0]
         repository_node = etree.SubElement(ms_ident, "%srepository" % TEI)
@@ -472,15 +489,23 @@ class Tei:
         idno.set("type", "shelfmark")
         idno.text = shelfmark
 
-    def add_identifiers(self, identifiers):
+    def add_urn(self, urn):
         """
-        Adds the identifiers of the digital edition
+        Add the URN of the digital edition
         """
         ms_ident_idno = self.tree.xpath('//tei:msDesc/tei:msIdentifier/tei:idno', namespaces=ns)[0]
-        for identifier in identifiers:
-            idno = etree.SubElement(ms_ident_idno, "%sidno" % TEI)
-            idno.set("type", identifier[0])
-            idno.text = identifier[1]
+        idno = etree.SubElement(ms_ident_idno, "%sidno" % TEI)
+        idno.set("type", "URN")
+        idno.text = urn
+
+    def add_vd_id(self, vd_id):
+        """
+        Add the VD ID of the digital edition
+        """
+        ms_ident_idno = self.tree.xpath('//tei:msDesc/tei:msIdentifier/tei:idno', namespaces=ns)[0]
+        idno = etree.SubElement(ms_ident_idno, "%sidno" % TEI)
+        idno.set("type", "VD")
+        idno.text = vd_id
 
     def set_type_desc(self, description):
         """
