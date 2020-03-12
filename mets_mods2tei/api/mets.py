@@ -72,7 +72,8 @@ class Mets:
         self.encoding_desc = None
         self.owner_manuscript = None
         self.shelf_locators = None
-        self.identifiers = None
+        self.urn = None
+        self.vd_id = None
         self.scripts = None
         self.collections = None
         self.languages = None
@@ -246,12 +247,15 @@ class Mets:
                 self.owner_manuscript = location.get_physicalLocation()
 
         #
-        # identifiers
-        self.identifiers = []
+        # URN and VD ID
+        self.urn = ""
+        self.vd_id = ""
         identifiers = self.mods.get_identifier()
         for identifier in identifiers:
-            self.identifiers.append((identifier.get_type(), identifier.get_valueOf_()))
-
+            if identifier.get_type().lower() == "urn":
+                self.urn = identifier.get_valueOf_()
+            elif identifier.get_type().lower().startswith("vd"):
+                self.vd_id = identifier.get_valueOf_()
 
         #
         # collections (from relatedItem)
@@ -392,11 +396,17 @@ class Mets:
         """
         return self.shelf_locators
 
-    def get_identifiers(self):
+    def get_urn(self):
         """
-        Return the mods identifiers as a attribut-value mapping
+        Return the URN of the digital representation
         """
-        return self.identifiers
+        return self.urn
+
+    def get_vd_id(self):
+        """
+        Return the VD ID of the digital representation
+        """
+        return self.vd_id
 
     def get_scripts(self):
         """

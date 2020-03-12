@@ -111,3 +111,9 @@ def test_data_assignment(subtests, datadir):
 
     with subtests.test("Check shelf locator(s)"):
         assert(mets.get_shelf_locators() == ['Hist.Amer.1497'])
+
+    with subtests.test("Check URN"):
+        assert(mets.get_urn() == 'urn:nbn:de:bsz:14-db-id4971666239')
+
+    with subtests.test("Check VD ID"):
+        assert(mets.get_vd_id() == 'VD18 11413883')
