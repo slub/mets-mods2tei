@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>mets-mods2tei - Talk at SLUB, April 2020</title>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" type="text/css" href="layout.css"/>
+    <link href="https://fonts.googleapis.com/css?family=Istok+Web" rel="stylesheet">
+  </head>
+  <body>
+    <script src="https://remarkjs.com/downloads/remark-0.14.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured" type="text/javascript"></script>
+    <script type="text/javascript">
+      var slideshow = remark.create({
+        sourceUrl: 'content.md',
+        countIncrementalSlides: false
+      });
+      // Setup MathJax
+      MathJax.Hub.Config({
+          tex2jax: {
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+          }
+      });
+      MathJax.Hub.Configured();
+    </script>
+  </body>
+</html>
