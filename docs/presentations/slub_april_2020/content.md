@@ -6,7 +6,7 @@ layout: true
   <table>
     <tr>
       <td style="text-align:right">Sächsische Landesbibliothek – Staats- und Universitätsbibliothek</td>
-      <td>Date</td>
+      <td>29. April 2019</td>
       <td style="text-align:right"><a href="https://www.slub-dresden.de/">www.slub-dresden.de</a></td>
     </tr>
     <tr>
@@ -25,7 +25,7 @@ layout: true
       <td style="text-align:left">Referat 2.5</td>
     </tr>
     <tr>
-      <td style="font-size:8pt"><b>28. April 2019</b></td>
+      <td style="font-size:8pt"><b>29. April 2019</b></td>
     </tr>
     <tr>
       <td style="font-size:8pt">XML/TEI-Fortbildung</td>
@@ -69,10 +69,10 @@ count: false
   + DFG: *Best Practice* für Editionsprojekte
 - Standardformate in Bibliotheken:
   + MODS: bibliothekarische Metadaten
-  + MEDS: Strukturdaten
+  + METS: Strukturdaten
   + ALTO: Volltexte
 - Transformationsszenario zur Erhöhung der **Reichweite**
-- **Herausforderung**: nicht-triviale Abbildung
+- **Herausforderung**: nicht-triviale Abbildung zwischen **Stand-Off-** (METS/ALTO) und **Inline-**Kodierung struktureller Information
 
 ---
 
@@ -80,6 +80,41 @@ class: part-slide
 count: false
 
 # Datengrundlage
+
+---
+
+# Datengrundlage: MODS
+
+- MODS: *Metadata Object Description Schema*
+  + XML-Format zur Kodierung bibliographischer Metadaten
+  + hoher Freiheitsgrad
+  + ausspezifiziert im (MODS-Anwendungsprofil)[]
+- Beispiel:
+```xml
+<mods>
+</mods>
+```
+
+---
+
+# Datengrundlage: METS
+
+- METS: *Metadata Encoding & Transmission Standard*
+  + XML-Format zur Kodierung digitaler Objekte
+  + hoher Freiheitsgrad
+  + ausspezifiziert im (METS-Anwendungsprofil)[]
+  + **Kontainerformat**: enthält bspw. MODS
+- Grundstruktur:
+```xml
+<mets>
+  <metsHdr/>
+  <dmdSec/>
+  <amdSec/>
+  <fileSec/>
+  <structMap/>
+  <structLink/>
+</mets>
+```
 
 ---
 
