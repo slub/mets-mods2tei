@@ -25,10 +25,10 @@ layout: true
       <td style="text-align:left">Referat 2.5</td>
     </tr>
     <tr>
-      <td style="font-size:8pt"><b>Date</b></td>
+      <td style="font-size:8pt"><b>28. April 2019</b></td>
     </tr>
     <tr>
-      <td style="font-size:8pt">Event</td>
+      <td style="font-size:8pt">XML/TEI-Fortbildung</td>
     </tr>
   </table>
 </div>
@@ -38,30 +38,55 @@ layout: true
 class: title-slide
 count: false
 
-# Title
-## Subtitle
+# Automatische Erzeugung von TEI-XML
+## aus SLUB-Bestandsdaten 
 
 ---
 
-# Overview
+# Überblick
 
-- Section 1
-  + Subsection 1
-- Section 2
+- Motivation
+- Datengrundlage
+  + MODS
+  + METS
+  + ALTO
+- Methode
+- Anwendungsperspektive
 
 ---
 
 class: part-slide
 count: false
 
-# Topic 1
+# Motivation
+
+---
+
+# Motivation
+
+- **TEI**: weitverbreiteter Standard in den Text ver- und bearbeitenden Wissenschaften
+  + Anschluss an bestehende Forschungsinfrastrukturen
+  + DFG: *Best Practice* für Editionsprojekte
+- Standardformate in Bibliotheken:
+  + MODS: bibliothekarische Metadaten
+  + MEDS: Strukturdaten
+  + ALTO: Volltexte
+- Transformationsszenario zur Erhöhung der **Reichweite**
+- **Herausforderung**: nicht-triviale Abbildung
+
+---
+
+class: part-slide
+count: false
+
+# Datengrundlage
 
 ---
 
 class: part-slide
 
-# Many thanks for your attention!
+# Vielen Dank für Ihre Aufmerksamkeit!
 
 <center>
-<a href="https://wrznr.github.io/slide-template/">wrznr.github.io/slide-template</a>
+<a href="https://wrznr.github.io/mets-mods2tei/presentations/slub_april_2020/slub_aplril_2020.html">wrznr.github.io/mets-mods2tei</a>
 </center>
