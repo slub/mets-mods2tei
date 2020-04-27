@@ -435,25 +435,23 @@ class Tei:
         else:
             availability = etree.SubElement(publication_stmt, "%savailability" % TEI)
 
+        licence = etree.SubElement(availability, "%slicence" % TEI)
+        if licence_url != "":
+            licence.set("target", licence_url)
         # an explicit licence has been set
         if status == "licence" and licence_text != "":
             availability.set("status", "licenced")
-            licence = etree.SubElement(availability, "%slicence" % TEI)
             licence.text = licence_text
-            if licence_url != "":
-                licence.set("target", licence_url)
         # public domain
         elif status == "free":
-            note = etree.SubElement(availability, "%sp" % TEI)
-            note.text = "In the public domain"
+            licence.text = "In the public domain"
             availability.set("status", "free")
         elif status == "unknown":
             availability.set("status", "unknown")
         # use restricted as default
         else:
             availability.set("status", "restricted")
-            note = etree.SubElement(availability, "%sp" % TEI)
-            note.text = "Available under licence from the publishers."
+            licence.text = "Available under licence from the publishers."
 
     def add_encoding_date(self, date):
         """
