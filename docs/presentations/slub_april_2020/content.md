@@ -109,7 +109,7 @@ count: false
 # Datengrundlage: METS
 
 - METS: *Metadata Encoding & Transmission Standard*
-  + XML-Format zur Kodierung digitaler Objekte
+  + XML-Format zur Repräsentation digitaler Objekte
   + hoher Freiheitsgrad
   + ausspezifiziert im [METS-Anwendungsprofil](https://dfg-viewer.de/fileabmin/groups/dfgviewer/METS-Anwendungsprofil_2.3.1.pdf)
   + **Kontainerformat**: enthält bspw. MODS
@@ -129,6 +129,22 @@ count: false
 # Datengrundlage: ALTO
 
 - ALTO: *Analyzed Layout and Text Object*
+  + XML-Format zur Repräsentation digitaler Volltexte
+  + Text- und Strukturinformation auf **Seitenebene**
+  + Rückbindung ans Digitalisat über **Koordinaten**
+  + von praktisch allen OCR-Programmen unterstützt
+- Beispiel
+
+---
+
+# Datengrundlage: Gegenüberstellung zu TEI
+
+---
+
+class: part-slide
+count: false
+
+# Methode
 
 ---
 
