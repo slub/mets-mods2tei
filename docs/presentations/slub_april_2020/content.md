@@ -149,8 +149,34 @@ count: false
   + *MMA*: pro Seite separiert auf Seitenebene als Sequenz von Absätzen und Zeilen
   + *TEI*: in die Dokumentstruktur integriert als Sequenz von Absätzen und Zeilen
 
-→ einfaches Mapping auf Ebene der bibl. Metadaten möglich, komplexere Aufgabe für Integration von Struktur und Text
+---
 
+class: part-slide
+count: false
+
+# Methode
+
+---
+
+# Methode
+
+- **Ziel**: automatische Transformation von *MMA* nach *TEI*
+- trivial auf der Ebene der bibliographischen Metadaten
+- nicht-trivial auf der Text-Struktur-Ebene
+- **Idee**:
+  + verschachtelte `div`-Ebene als Basis der TEI-Datei
+  + Einfügen des Textes auf Absatzebene
+- **Problem**:
+  + Stuktur und Text in den SLUB-Daten nur auf Seitenebene
+  + i.e. keine Information, **wo** sich die Überschrift auf der Seite befindet
+
+---
+
+# Methode: Illustration *Problem*
+
+---
+
+# Methode: „Lösung“
 
 ---
 
