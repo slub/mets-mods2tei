@@ -139,6 +139,19 @@ count: false
 
 # Datengrundlage: Gegenüberstellung zu TEI
 
+- **bibliographische Metadaten**
+  + *MMA*: separat realisiert im MODS-Teil
+  + *TEI*: quasi separat realisiert im `teiHeader`
+- **Struktur**
+  + *MMA*: Sequenz von `div`-Elementen, getrennt vom Text (Standoff, verknüpft auf Seitenebene)
+  + *TEI*: im Textteil als integrierte Sequenz von verschachtelten `div`-Elementen
+- **Text**
+  + *MMA*: pro Seite separiert auf Seitenebene als Sequenz von Absätzen und Zeilen
+  + *TEI*: in die Dokumentstruktur integriert als Sequenz von Absätzen und Zeilen
+
+→ einfaches Mapping auf Ebene der bibl. Metadaten möglich, komplexere Aufgabe für Integration von Struktur und Text
+
+
 ---
 
 class: part-slide
