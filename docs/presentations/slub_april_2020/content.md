@@ -166,6 +166,17 @@ count: false
 - **Idee**:
   + verschachtelte `div`-Ebene als Basis der TEI-Datei
   + Einfügen des Textes auf Absatzebene
+```xml
+<mets:structMap TYPE="LOGICAL">
+  <mets:div ADMID="AMD" ...>
+    <mets:div LABEL="Vorbericht" TYPE="chapter" />
+    <mets:div LABEL="Kapitel 1" TYPE="chapter">
+      <mets:div LABEL="Abschnitt 1.1" TYPE="chapter" />
+    </mets:div>
+    <mets:div LABEL="Kapitel 2" TYPE="chapter" />
+  </mets:div>
+</mets:structMap>
+```
 - **Problem**:
   + Stuktur und Text in den SLUB-Daten nur auf Seitenebene
   + i.e. keine Information, **wo** sich die Überschrift auf der Seite befindet
