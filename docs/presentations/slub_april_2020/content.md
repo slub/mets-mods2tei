@@ -177,17 +177,18 @@ count: false
   </mets:div>
 </mets:structMap>
 ```
+
+---
+
+# Methode
+
 - **Problem**:
   + Stuktur und Text in den SLUB-Daten nur auf Seitenebene
   + i.e. keine Information, **wo** sich die Überschrift auf der Seite befindet
 
 ---
 
-# Methode: Illustration *Problem*
-
----
-
-# Methode: „Lösung“
+# Methode
 
 ---
 
