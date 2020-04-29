@@ -165,13 +165,13 @@ count: false
   + Einfügen des Textes auf Absatzebene
 ```
 <mets:structMap TYPE="LOGICAL">
-	<mets:div ADMID="AMD" ...>
-        	<mets:div LABEL="Vorbericht" TYPE="chapter" />
-        	<mets:div LABEL="Kapitel 1" TYPE="chapter">
-			<mets:div LABEL="Abschnitt 1.1" TYPE="chapter" />
-		</mets:div>
-		<mets:div LABEL="Kapitel 2" TYPE="chapter" />
-	</mets:div>
+<mets:div ADMID="AMD" ...>
+<mets:div LABEL="Vorbericht" TYPE="chapter" />
+<mets:div LABEL="Kapitel 1" TYPE="chapter">
+<mets:div LABEL="Abschnitt 1.1" TYPE="chapter" />
+</mets:div>
+<mets:div LABEL="Kapitel 2" TYPE="chapter" />
+</mets:div>
 </mets:structMap>
 ```
 
@@ -182,10 +182,10 @@ count: false
 - **Problem**:
   + Stuktur und Text in den SLUB-Daten nur auf Seitenebene
   + i.e. keine Information, **wo** sich die Überschrift auf der Seite befindet
-```
-  <mets:structLink>
-    <mets:smLink xlink:to="PHYS_0001" xlink:from="LOG_0000"/>
-  </mets:structLink>
+```xml
+    <mets:structLink>
+        <mets:smLink xlink:to="PHYS_0001" xlink:from="LOG_0000"/>
+    </mets:structLink>
 ```
 
 ---
