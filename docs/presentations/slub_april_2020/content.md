@@ -87,19 +87,19 @@ count: false
   + hoher Freiheitsgrad
   + ausspezifiziert im [MODS-Anwendungsprofil](https://dfg-viewer.de/fileabmin/groups/dfgviewer/MODS-Anwendungsprofil_2.3.1.pdf)
 - Beispiel:
-```xml
-  <mods>
-    <titleInfo>
-        <title>Dresden und die Sächsische Schweiz</title>
-    </titleInfo>
-    <name type="personal">
-        <role>
-            <roleTerm type="text">creator</roleTerm>
-        </role>
-        <namePart>Gottschalck, Friedrich</namePart>
-    </name>
-  </mods>
-```
+  ```xml
+      <mods>
+          <titleInfo>
+              <title>Dresden und die Sächsische Schweiz</title>
+          </titleInfo>
+          <name type="personal">
+              <role>
+                  <roleTerm type="text">creator</roleTerm>
+              </role>
+              <namePart>Gottschalck, Friedrich</namePart>
+          </name>
+      </mods>
+  ```
 
 ---
 
