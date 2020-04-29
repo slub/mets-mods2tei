@@ -88,7 +88,7 @@ count: false
   + ausspezifiziert im [MODS-Anwendungsprofil](https://dfg-viewer.de/fileabmin/groups/dfgviewer/MODS-Anwendungsprofil_2.3.1.pdf)
 - Beispiel:
 ```xml
-<mods>
+  <mods>
     <titleInfo>
         <title>Dresden und die Sächsische Schweiz</title>
     </titleInfo>
@@ -98,7 +98,7 @@ count: false
         </role>
         <namePart>Gottschalck, Friedrich</namePart>
     </name>
-</mods>
+  </mods>
 ```
 
 ---
