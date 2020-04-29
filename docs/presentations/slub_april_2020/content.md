@@ -163,7 +163,7 @@ count: false
 - **Idee**:
   + verschachtelte `div`-Ebene als Basis der TEI-Datei
   + Einfügen des Textes auf Absatzebene
-```xml
+```
 <mets:structMap TYPE="LOGICAL">
 	<mets:div ADMID="AMD" ...>
         	<mets:div LABEL="Vorbericht" TYPE="chapter" />
