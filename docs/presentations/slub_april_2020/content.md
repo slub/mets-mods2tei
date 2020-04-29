@@ -183,9 +183,9 @@ count: false
   + Stuktur und Text in den SLUB-Daten nur auf Seitenebene
   + i.e. keine Information, **wo** sich die Überschrift auf der Seite befindet
 ```xml
-<mets:structLink>
-	<mets:smLink xlink:to="PHYS_0001" xlink:from="LOG_0000"/>
-</mets:structLink>
+  <mets:structLink>
+    <mets:smLink xlink:to="PHYS_0001" xlink:from="LOG_0000"/>
+  </mets:structLink>
 ```
 
 ---
