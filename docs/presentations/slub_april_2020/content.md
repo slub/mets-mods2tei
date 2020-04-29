@@ -47,9 +47,6 @@ count: false
 
 - Motivation
 - Datengrundlage
-  + MODS
-  + METS
-  + ALTO
 - Methode
 - Anwendungsperspektive
 
@@ -72,7 +69,7 @@ count: false
   + METS: Strukturdaten
   + ALTO: Volltexte
 - Transformationsszenario zur Erhöhung der **Reichweite**
-- **Herausforderung**: nicht-triviale Abbildung zwischen **Stand-Off-** (METS/ALTO) und **Inline-**Kodierung struktureller Information
+- **Herausforderung**: nicht-triviale Abbildung zwischen **Stand-Off-** (METS/ALTO) und **Inline-**Kodierung (TEI) struktureller Information
 
 ---
 
@@ -92,15 +89,15 @@ count: false
 - Beispiel:
 ```xml
 <mods>
-  <titleInfo>
-    <title>Dresden seine Umgebungen und die Sächsische Schweiz</title>
-  </titleInfo>
-  <name type="personal">
-    <role>
-      <roleTerm type="text">creator</roleTerm>
-    </role>
-    <namePart>Gottschalck, Friedrich</namePart>
-  </name>
+    <titleInfo>
+        <title>Dresden und die Sächsische Schweiz</title>
+    </titleInfo>
+    <name type="personal">
+        <role>
+            <roleTerm type="text">creator</roleTerm>
+        </role>
+        <namePart>Gottschalck, Friedrich</namePart>
+    </name>
 </mods>
 ```
 
@@ -116,12 +113,12 @@ count: false
 - Grundstruktur:
 ```xml
 <mets>
-  <metsHdr/>
-  <dmdSec/>
-  <amdSec/>
-  <fileSec/>
-  <structMap/>
-  <structLink/>
+    <metsHdr/>
+    <dmdSec/>
+    <amdSec/>
+    <fileSec/>
+    <structMap/>
+    <structLink/>
 </mets>
 ```
 ---
@@ -168,13 +165,13 @@ count: false
   + Einfügen des Textes auf Absatzebene
 ```xml
 <mets:structMap TYPE="LOGICAL">
-  <mets:div ADMID="AMD" ...>
-    <mets:div LABEL="Vorbericht" TYPE="chapter" />
-    <mets:div LABEL="Kapitel 1" TYPE="chapter">
-      <mets:div LABEL="Abschnitt 1.1" TYPE="chapter" />
+    <mets:div ADMID="AMD" ...>
+        <mets:div LABEL="Vorbericht" TYPE="chapter" />
+        <mets:div LABEL="Kapitel 1" TYPE="chapter">
+            <mets:div LABEL="Abschnitt 1.1" TYPE="chapter" />
+        </mets:div>
+        <mets:div LABEL="Kapitel 2" TYPE="chapter" />
     </mets:div>
-    <mets:div LABEL="Kapitel 2" TYPE="chapter" />
-  </mets:div>
 </mets:structMap>
 ```
 
@@ -185,6 +182,11 @@ count: false
 - **Problem**:
   + Stuktur und Text in den SLUB-Daten nur auf Seitenebene
   + i.e. keine Information, **wo** sich die Überschrift auf der Seite befindet
+```xml
+<mets:structLink>
+    <mets:smLink xlink:to="PHYS_0001" xlink:from="LOG_0000"/>
+</mets:structLink>
+```
 
 ---
 
