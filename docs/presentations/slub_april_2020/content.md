@@ -226,17 +226,34 @@ count: false
         + OCR-Fehler (gehäuft in Überschriften)
         + kurze Überschriften (z.B. Zahlen)
     2. fehlende Label
-        + Verwendung von Platzhaltern wie *Text* oder *Überschrift
+        + Verwendung von Platzhaltern wie *Text* oder *Überschrift*
     3. unvollständige Strukturierung
         + aus Kostengründen häufig nur oberste Ebene strukturiert
         + „triviales“ TEI im Ergebnis
+- **Tests**
+    + *Börsenblatt für den Deutschen Buchhandel*
+        * 27 258 Vorgänge
+        * ca. 10 h Rechendauer
+        * 692 389 240 Tokens (laufende „Wörter“)
+        * 56 192 893 Types (verschiedene „Wörter“)
 
 ---
 
 class: part-slide
 count: false
 
-# Methode
+# Anwendungsperspektive
+
+---
+
+# Anwendungsperspektive
+
+- veröffentlicht als [`mets-mods2tei` auf GitHub](https://github.com/slub/mets-mods2tei)
+- Anwendung auf digitale Sammlungen für Q2/2020 geplant
+    + TEI-XMl als zusätzliches Downloadformat auf Dokumentebene
+    + Teil des Imports in **kitodo.Presentation**
+- Basis für tiefere Erschließung
+- Anschluss an DH-Forschungswerkzeuge wie z.B. [Voyant Tools](https://voyant-tools.org)
 
 ---
 
