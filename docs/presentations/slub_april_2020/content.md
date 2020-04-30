@@ -230,7 +230,7 @@ count: false
     3. unvollständige Strukturierung
         + aus Kostengründen häufig nur oberste Ebene strukturiert
         + „triviales“ TEI im Ergebnis
-- **Tests**
+- **Test**
     + *Börsenblatt für den Deutschen Buchhandel*
         * 27 258 Vorgänge
         * ca. 10 h Rechendauer
@@ -251,9 +251,11 @@ count: false
 - veröffentlicht als [`mets-mods2tei` auf GitHub](https://github.com/slub/mets-mods2tei)
 - Anwendung auf digitale Sammlungen für Q2/2020 geplant
     + TEI-XMl als zusätzliches Downloadformat auf Dokumentebene
-    + Teil des Imports in **kitodo.Presentation**
+    + Teil des Imports in **Kitodo.Presentation**
 - Basis für tiefere Erschließung
+    + für OCR für Handschriften in Vorbereitung!
 - Anschluss an DH-Forschungswerkzeuge wie z.B. [Voyant Tools](https://voyant-tools.org)
+- Sneak Preview: [kaskade.dwds.de/dstar/boersenblatt](http://kaskade.dwds.de/dstar/boersenblatt)
 
 ---
 
