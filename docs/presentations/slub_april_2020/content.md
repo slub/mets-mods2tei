@@ -187,6 +187,11 @@ count: false
           <mets:smLink xlink:to="PHYS_0001" xlink:from="LOG_0000" />
       </mets:structLink>
   ```
+- **„Lösung“**:
+      + *Lokalisierung* des Strukturelements via `LABEL` auf der Seite
+          * Vergleich des zu lokalisierenden Textes `\(t\)` mit allen Positionen `\(i\)` in der OCR `\(O=o_1\ldots o_n\)`
+          * minimaler Editierabstand zwischen `\(t\)` und `\(o_i\ldots o_{i+|t|}\)` als Platzierungskriterium
+          * Inklusion aller Zeilen, die Teile der optimalen OCR-Sequenz enthalten
 
 ---
 
