@@ -160,7 +160,7 @@ count: false
 - **Ziel**: automatische Transformation von *MMA* nach *TEI*
 - trivial auf der Ebene der bibliographischen Metadaten
 - nicht-trivial auf der Text-Struktur-Ebene
-- **Idee**:
+- **Idee**
   + verschachtelte `div`-Ebene als Basis der TEI-Datei
   + Einfügen des Textes auf Absatzebene
   ```xml
@@ -179,7 +179,7 @@ count: false
 
 # Methode
 
-- **Problem**:
+- **Problem**
   + Stuktur und Text in den SLUB-Daten nur auf Seitenebene
   + i.e. keine Information, **wo** sich die Überschrift auf der Seite befindet
   ```xml
@@ -187,7 +187,7 @@ count: false
           <mets:smLink xlink:to="PHYS_0001" xlink:from="LOG_0000" />
       </mets:structLink>
   ```
-- **„Lösung“**:
+- **„Lösung“**
       + *Lokalisierung* des Strukturelements via `LABEL` auf der Seite
       + Vergleich des zu lokalisierenden Textes `\(t\)` mit allen Positionen `\(i\)` in der OCR `\(O=o_1\ldots o_n\)`
       + minimaler Editierabstand zwischen `\(t\)` und `\(o_i\ldots o_{i+|t|}\)` als Platzierungskriterium
@@ -212,10 +212,24 @@ count: false
           <String CONTENT="Dcr" />
           <SP />
           <String CONTENT="Vulkan" />
-          <SP />
-          <String CONTENT="Niragongo" />
       ...
 ```
+
+---
+
+# Methode
+
+- **Fallstricke**
+    1. Textvergleich
+        + stillschweigende Normalisierung (ſ → s, th → t etc.)
+        + Übernahme des Inhaltsverzeichnisses (zusätzliche Nummerierung, Groß-/Kleinschreibung)
+        + OCR-Fehler (gehäuft in Überschriften)
+        + kurze Überschriften (z.B. Zahlen)
+    2. fehlende Label
+        + Verwendung von Platzhaltern wie *Text* oder *Überschrift
+    3. unvollständige Strukturierung
+        + aus Kostengründen häufig nur oberste Ebene strukturiert
+        + „triviales“ TEI im Ergebnis
 
 ---
 
