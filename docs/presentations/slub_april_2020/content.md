@@ -189,13 +189,33 @@ count: false
   ```
 - **„Lösung“**:
       + *Lokalisierung* des Strukturelements via `LABEL` auf der Seite
-          * Vergleich des zu lokalisierenden Textes `\(t\)` mit allen Positionen `\(i\)` in der OCR `\(O=o_1\ldots o_n\)`
-          * minimaler Editierabstand zwischen `\(t\)` und `\(o_i\ldots o_{i+|t|}\)` als Platzierungskriterium
-          * Inklusion aller Zeilen, die Teile der optimalen OCR-Sequenz enthalten
+      + Vergleich des zu lokalisierenden Textes `\(t\)` mit allen Positionen `\(i\)` in der OCR `\(O=o_1\ldots o_n\)`
+      + minimaler Editierabstand zwischen `\(t\)` und `\(o_i\ldots o_{i+|t|}\)` als Platzierungskriterium
+      + Inklusion aller Zeilen, die Teile der optimalen OCR-Sequenz enthalten
 
 ---
 
 # Methode
+
+<img src="img/heading_ex.jpg" width="250px" />
+  
+```xml
+  <div TYPE="section"
+       LABEL="3. Der Vulkan Niragongo in Nordwest-Ruanda" />
+```
+```xml
+  <TextBlock>
+      <TextLine>
+          <String CONTENT="2" />
+      </TextLine>
+      <TextLine>
+          <String CONTENT="Dcr" />
+          <SP />
+          <String CONTENT="Vulkan" />
+          <SP />
+          <String CONTENT="Niragongo" />
+      ...
+```
 
 ---
 
