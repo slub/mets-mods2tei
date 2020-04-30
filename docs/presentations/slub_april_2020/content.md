@@ -111,16 +111,16 @@ count: false
   + ausspezifiziert im [METS-Anwendungsprofil](https://dfg-viewer.de/fileabmin/groups/dfgviewer/METS-Anwendungsprofil_2.3.1.pdf)
   + **Kontainerformat**: enthält bspw. MODS
 - Grundstruktur:
-```xml
-<mets>
-    <metsHdr/>
-    <dmdSec/>
-    <amdSec/>
-    <fileSec/>
-    <structMap/>
-    <structLink/>
-</mets>
-```
+  ```xml
+      <mets>
+          <metsHdr/>
+          <dmdSec/>
+          <amdSec/>
+          <fileSec/>
+          <structMap/>
+          <structLink/>
+      </mets>
+  ```
 ---
 
 # Datengrundlage: ALTO
@@ -163,17 +163,17 @@ count: false
 - **Idee**:
   + verschachtelte `div`-Ebene als Basis der TEI-Datei
   + Einfügen des Textes auf Absatzebene
-```
-<mets:structMap TYPE="LOGICAL">
-<mets:div ADMID="AMD" ...>
-<mets:div LABEL="Vorbericht" TYPE="chapter" />
-<mets:div LABEL="Kapitel 1" TYPE="chapter">
-<mets:div LABEL="Abschnitt 1.1" TYPE="chapter" />
-</mets:div>
-<mets:div LABEL="Kapitel 2" TYPE="chapter" />
-</mets:div>
-</mets:structMap>
-```
+  ```xml
+    <mets:structMap TYPE="LOGICAL">
+        <mets:div ADMID="AMD" ...>
+            <mets:div LABEL="Vorbericht" TYPE="chapter" />
+            <mets:div LABEL="Kapitel 1" TYPE="chapter">
+                <mets:div LABEL="Abschnitt 1.1" TYPE="chapter" />
+            </mets:div>
+            <mets:div LABEL="Kapitel 2" TYPE="chapter" />
+        </mets:div>
+    </mets:structMap>
+  ```
 
 ---
 
@@ -182,11 +182,11 @@ count: false
 - **Problem**:
   + Stuktur und Text in den SLUB-Daten nur auf Seitenebene
   + i.e. keine Information, **wo** sich die Überschrift auf der Seite befindet
-```xml
-    <mets:structLink>
-        <mets:smLink xlink:to="PHYS_0001" xlink:from="LOG_0000" />
-    </mets:structLink>
-```
+  ```xml
+      <mets:structLink>
+          <mets:smLink xlink:to="PHYS_0001" xlink:from="LOG_0000" />
+      </mets:structLink>
+  ```
 
 ---
 
