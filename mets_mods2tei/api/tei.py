@@ -7,6 +7,7 @@ import logging
 import copy
 
 from urllib.request import urlopen
+from urllib.parse import urlparse
 from pkg_resources import resource_filename, Requirement
 
 from .alto import Alto
@@ -602,7 +603,15 @@ class Tei:
             alto_link = mets.get_alto(struct_link)
             # only collect ocr from a file once!
             if not alto_link in self.alto_map:
-                f = urlopen(alto_link)
+                try:
+                    sections = urlparse(alto_link)
+                except:
+                    continue
+                if sections.scheme and sections.netloc:
+                    f = urlopen(alto_link)
+                elif sections.path:
+                    f = open(alto_link)
+
                 alto = Alto.read(f)
                 self.alto_map[alto_link] = alto
 
@@ -611,6 +620,7 @@ class Tei:
                 pb.set("corresp", mets.get_img(struct_link))
 
                 for text_block in alto.get_text_blocks():
+                    self.logger.debug("HERE")
                     p = etree.SubElement(node, "%sp" % TEI)
                     for line in alto.get_lines_in_text_block(text_block):
                         lb = etree.SubElement(p, "%slb" % TEI)

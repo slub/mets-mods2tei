@@ -55,6 +55,7 @@ class Mets:
         self.img_map = {}
         self.alto_map = {}
         self.struct_links = {}
+        self.fulltext_group_name = 'FULLTEXT'
 
         self.title = None
         self.sub_titles = None
@@ -87,21 +88,21 @@ class Mets:
         :param source: METS (file) source.
         """
         if hasattr(source, 'read'):
-            return cls.fromfile(source)
+            return cls.from_file(source)
         if os.path.exists(source):
-            return cls.fromfile(source)
+            return cls.from_file(source)
 
     @classmethod
-    def fromfile(cls, path):
+    def from_file(cls, path):
         """
         Reads in METS from a given file source.
         :param str path: Path to a METS document.
         """
         i = cls()
-        i.__fromfile(path)
+        i.fromfile(path)
         return i
 
-    def __fromfile(self, path):
+    def fromfile(self, path):
         """
         Reads in METS from a given file source.
         :param str path: Path to a METS document.
@@ -271,7 +272,7 @@ class Mets:
 
         # fulltext
         fulltext_map = {}
-        fulltext_group = self.tree.xpath("//mets:fileGrp[@USE='FULLTEXT']", namespaces=ns)
+        fulltext_group = self.tree.xpath("//mets:fileGrp[@USE='%s']" % self.fulltext_group_name, namespaces=ns)
         if fulltext_group:
             fulltext_map = {}
             for entry in fulltext_group[0].xpath("./mets:file", namespaces=ns):
@@ -299,6 +300,18 @@ class Mets:
                 if sm_link.get("%sfrom" % XLINK) not in self.struct_links:
                     self.struct_links[sm_link.get("%sfrom" % XLINK)] = []
                 self.struct_links[sm_link.get("%sfrom" % XLINK)].append(sm_link.get("%sto" % XLINK))
+
+    @property
+    def fulltext_group_name(self):
+        """
+        Return the currently configured full-text-related
+        file group use attribute.
+        """
+        return self.__fulltext_group_name
+
+    @fulltext_group_name.setter
+    def fulltext_group_name(self, fulltext_use):
+        self.__fulltext_group_name = fulltext_use
 
     def get_main_title(self):
         """

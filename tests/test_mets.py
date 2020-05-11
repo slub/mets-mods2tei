@@ -47,8 +47,31 @@ def test_loading_local_file(datadir):
     Test loading a local mets file
     '''
     f = open(datadir.join('test_mets.xml'))
-    mets = Mets.fromfile(f)
+    mets = Mets.from_file(f)
     assert(mets.mets is not None)
+
+def test_intermediate_file_loading(datadir):
+    '''
+    Test loading a local mets file
+    '''
+    f = open(datadir.join('test_mets.xml'))
+    mets = Mets()
+    mets.fromfile(f)
+    assert(mets.mets is not None)
+
+def test_fulltext_group_name(subtests, datadir):
+    '''
+    Test getting and setting the full text group name
+    '''
+    f = open(datadir.join('test_mets.xml'))
+    mets = Mets.read(f)
+
+    with subtests.test("Check getter"):
+        assert(mets.fulltext_group_name == "FULLTEXT")
+
+    with subtests.test("Check setter"):
+        mets.fulltext_group_name = "TEXT"
+        assert(mets.fulltext_group_name == "TEXT")
 
 def test_mappings(subtests, datadir):
     '''
