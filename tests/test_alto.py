@@ -38,32 +38,32 @@ def test_reading_local_file(datadir):
     '''
     Test reading a local alto file
     '''
-    f = open(datadir.join('test_alto.xml'))
-    alto = Alto.read(f)
+    with open(datadir.join('test_alto.xml'), 'rb') as f:
+        alto = Alto.read(f)
     assert(alto.tree is not None)
 
 def test_loading_local_file(datadir):
     '''
     Test loading a local alto file
     '''
-    f = open(datadir.join('test_alto.xml'))
-    alto = Alto.fromfile(f)
+    with open(datadir.join('test_alto.xml'), 'rb') as f:
+        alto = Alto.read(f)
     assert(alto.tree is not None)
 
 def test_text_block_extraction(datadir):
     '''
     Test the extraction of text blocks
     '''
-    f = open(datadir.join('test_alto.xml'))
-    alto = Alto.fromfile(f)
+    with open(datadir.join('test_alto.xml'), 'rb') as f:
+        alto = Alto.read(f)
     assert(len(list(alto.get_text_blocks())) == 1)
 
 def test_text_line_extraction(datadir):
     '''
     Test the extraction of text lines
     '''
-    f = open(datadir.join('test_alto.xml'))
-    alto = Alto.fromfile(f)
+    with open(datadir.join('test_alto.xml'), 'rb') as f:
+        alto = Alto.read(f)
     text_block = list(alto.get_text_blocks())[0]
     assert(len(list(alto.get_lines_in_text_block(text_block))) == 26)
 
@@ -71,8 +71,8 @@ def test_text_line_text_extraction(datadir):
     '''
     Test the extraction of text from text lines
     '''
-    f = open(datadir.join('test_alto.xml'))
-    alto = Alto.fromfile(f)
+    with open(datadir.join('test_alto.xml'), 'rb') as f:
+        alto = Alto.read(f)
     text_block = list(alto.get_text_blocks())[0]
     text_line = list(alto.get_lines_in_text_block(text_block))[0]
     assert(alto.get_text_in_line(text_line) == "Vorbericht.")
