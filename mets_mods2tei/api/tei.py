@@ -616,7 +616,7 @@ class Tei:
                     mod_link = alto_link
                 self.logger.debug(mod_link)
 
-                with closing(urlopen(alto_link)) as f:
+                with closing(urlopen(mod_link)) as f:
                     alto = Alto.read(f)
 
                 # save original link!
