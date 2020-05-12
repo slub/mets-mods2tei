@@ -26,11 +26,10 @@ class Iso15924:
         The constructor.
         """
         self.map = {}
-        filep = open(os.path.realpath(resource_filename(Requirement.parse("mets_mods2tei"), 'mets_mods2tei/data/iso15924-utf8-20180827.txt')))
-        reader = csv.DictReader(filter(lambda row: row[0]!='#', filep), delimiter=';', quoting=csv.QUOTE_NONE, fieldnames=['code','index','name_eng', 'name_fr', 'alias', 'Age', 'Date'])
-        for row in reader:
-            self.map[row['code']] = row['name_eng']
-        filep.close()
+        with open(os.path.realpath(resource_filename(Requirement.parse("mets_mods2tei"), 'mets_mods2tei/data/iso15924-utf8-20180827.txt'))) as filep:
+            reader = csv.DictReader(filter(lambda row: row[0]!='#', filep), delimiter=';', quoting=csv.QUOTE_NONE, fieldnames=['code','index','name_eng', 'name_fr', 'alias', 'Age', 'Date'])
+            for row in reader:
+                self.map[row['code']] = row['name_eng']
 
     def get(self, code):
         """

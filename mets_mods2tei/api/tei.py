@@ -6,6 +6,7 @@ import os
 import logging
 import copy
 
+from contextlib import closing
 from urllib.request import urlopen
 from urllib.parse import urlparse
 from pkg_resources import resource_filename, Requirement
@@ -607,12 +608,18 @@ class Tei:
                     sections = urlparse(alto_link)
                 except:
                     continue
-                if sections.scheme and sections.netloc:
-                    f = urlopen(alto_link)
-                elif sections.path:
-                    f = open(alto_link)
 
-                alto = Alto.read(f)
+                # use urlopen for both paths and URLs
+                if not sections.scheme:
+                    mod_link = 'file:' + alto_link
+                else:
+                    mod_link = alto_link
+                self.logger.debug(mod_link)
+
+                with closing(urlopen(alto_link)) as f:
+                    alto = Alto.read(f)
+
+                # save original link!
                 self.alto_map[alto_link] = alto
 
                 pb = etree.SubElement(node, "%spb" % TEI)
@@ -620,7 +627,6 @@ class Tei:
                 pb.set("corresp", mets.get_img(struct_link))
 
                 for text_block in alto.get_text_blocks():
-                    self.logger.debug("HERE")
                     p = etree.SubElement(node, "%sp" % TEI)
                     for line in alto.get_lines_in_text_block(text_block):
                         lb = etree.SubElement(p, "%slb" % TEI)

@@ -14,7 +14,7 @@ ns = {
 XLINK = "{%s}" % ns['xlink']
 ALTO = "{%s}" % ns['alto']
 
-norm_alto_ns_re = re.compile("alto/ns-v.#")
+norm_alto_ns_re = re.compile(rb'alto/ns-v.#')
 
 class Alto:
 
@@ -50,7 +50,8 @@ class Alto:
         if hasattr(source, 'read'):
             return cls.fromfile(source)
         if os.path.exists(source):
-            return cls.fromfile(open(source))
+            with open(source, 'rb') as f:
+                return cls.fromfile(f)
 
     @classmethod
     def fromfile(cls, path):
@@ -68,7 +69,7 @@ class Alto:
         :param str path: Path to a ALTO document.
         """
         parser = etree.XMLParser(remove_blank_text=True)
-        self.tree = etree.XML(bytes(norm_alto_ns_re.sub("alto/ns-v4#", path.read()), "utf-8"), parser)
+        self.tree = etree.XML(norm_alto_ns_re.sub(b"alto/ns-v4#", path.read()), parser)
         self.path = path
 
     def get_text_blocks(self):
