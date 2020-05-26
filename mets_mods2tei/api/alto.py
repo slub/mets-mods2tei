@@ -4,14 +4,17 @@ from lxml import etree
 
 import os
 import logging
+import re
 import Levenshtein
 
 ns = {
      'xlink' : "http://www.w3.org/1999/xlink",
-     'alto': "http://www.loc.gov/standards/alto/ns-v2#",
+     'alto': "http://www.loc.gov/standards/alto/ns-v4#",
 }
 XLINK = "{%s}" % ns['xlink']
 ALTO = "{%s}" % ns['alto']
+
+norm_alto_ns_re = re.compile(rb'alto/ns-v.#')
 
 class Alto:
 
@@ -47,7 +50,8 @@ class Alto:
         if hasattr(source, 'read'):
             return cls.fromfile(source)
         if os.path.exists(source):
-            return cls.fromfile(source)
+            with open(source, 'rb') as f:
+                return cls.fromfile(f)
 
     @classmethod
     def fromfile(cls, path):
@@ -65,7 +69,7 @@ class Alto:
         :param str path: Path to a ALTO document.
         """
         parser = etree.XMLParser(remove_blank_text=True)
-        self.tree = etree.parse(path, parser)
+        self.tree = etree.XML(norm_alto_ns_re.sub(b"alto/ns-v4#", path.read()), parser)
         self.path = path
 
     def get_text_blocks(self):
@@ -88,14 +92,7 @@ class Alto:
         Returns the ALTO-encoded text .
         :param Element line: The line to extract the text from.
         """
-        line_text = ""
-        for element in line.xpath("./alto:String|./alto:SP", namespaces=ns):
-            if element.tag == "%sString" % ALTO:
-                line_text += element.get("CONTENT")
-            elif element.tag == "%sSP" % ALTO:
-                line_text += " "
-        #line_text += "\n"
-        return line_text
+        return " ".join(element.get("CONTENT") for element in line.xpath("./alto:String", namespaces=ns))
 
     def __compute_fuzzy_distance(self, text1, text2):
         """

@@ -4,17 +4,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.1.1] - 2020-05-11
 ### Added
 - Treat nested AMD-type (non-logical) divs in logical struct map (i.e.
 newspaper case)
+- Make full text file group selectable by user
+- Allow for file entries (in addition to URLs) in METS
+- Add special treatment for URNs and VD IDs
+- Add poor man's namespace versioning handling
 
 ### Changed
 - Make extraction of subtitles conditional on their presence
+- Use "licence" for all types of licences (even unknown ones)
+
+### Fixed
+- https://github.com/slub/mets-mods2tei/issues/28
+- https://github.com/slub/mets-mods2tei/issues/37
+- https://github.com/slub/mets-mods2tei/issues/39
+- https://github.com/slub/mets-mods2tei/issues/41
 
 ## [0.1.0] - 2019-12-04
 ### Added
-- Correctly Place structures which are not on top of a page
+- Correctly place structures which are not on top of a page
 - Set `corresp` and `facs` attributes of `pb` elements
 - Store links to `DEFAULT` images in METS
 - Tests for new functionality

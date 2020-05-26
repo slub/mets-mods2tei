@@ -6,7 +6,9 @@ import os
 import logging
 import copy
 
+from contextlib import closing
 from urllib.request import urlopen
+from urllib.parse import urlparse
 from pkg_resources import resource_filename, Requirement
 
 from .alto import Alto
@@ -602,8 +604,22 @@ class Tei:
             alto_link = mets.get_alto(struct_link)
             # only collect ocr from a file once!
             if not alto_link in self.alto_map:
-                f = urlopen(alto_link)
-                alto = Alto.read(f)
+                try:
+                    sections = urlparse(alto_link)
+                except:
+                    continue
+
+                # use urlopen for both paths and URLs
+                if not sections.scheme:
+                    mod_link = 'file:' + alto_link
+                else:
+                    mod_link = alto_link
+                self.logger.debug(mod_link)
+
+                with closing(urlopen(mod_link)) as f:
+                    alto = Alto.read(f)
+
+                # save original link!
                 self.alto_map[alto_link] = alto
 
                 pb = etree.SubElement(node, "%spb" % TEI)

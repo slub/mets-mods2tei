@@ -12,8 +12,9 @@ from mets_mods2tei import Tei
 @click.command()
 @click.argument('mets', required=True)
 @click.option('-o', '--ocr', is_flag=True, default=False, help="Serialize OCR into resulting TEI")
+@click.option('-T', '--text-group', default="FULLTEXT", help="File group which contains the full text")
 @click.option('-l', '--log-level', type=click.Choice(['DEBUG', 'INFO', 'WARN', 'ERROR', 'OFF']), default='WARN')
-def cli(mets, ocr, log_level):
+def cli(mets, ocr, text_group, log_level):
     """ METS: File containing or URL pointing to the METS/MODS XML to be converted """
 
     #
@@ -29,7 +30,9 @@ def cli(mets, ocr, log_level):
 
     #
     # read in METS
-    mets = Mets.read(f)
+    mets = Mets()
+    mets.fulltext_group_name = text_group
+    mets.fromfile(f)
 
     #
     # create TEI (from skeleton)
