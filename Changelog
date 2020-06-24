@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Added tests for TEI API
-- Evaluate texts from all struct types
+- Evaluate texts from all struct types but `binding` and `colour_checker`
 - Add `front`, `body` and `back` per default
 
 ### Fixed

@@ -699,7 +699,9 @@ class Tei:
         entry_point = front
 
         for sub_div in div.get_div():
-            if sub_div.get_TYPE() == "title_page":
+            if sub_div.get_TYPE() == "binding" or sub_div.get_TYPE() == "colour_checker":
+                continue
+            elif sub_div.get_TYPE() == "title_page":
                 self.__add_div(entry_point, sub_div, 1, "titlePage")
             else:
                 entry_point = body
