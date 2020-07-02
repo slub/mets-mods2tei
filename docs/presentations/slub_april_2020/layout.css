@@ -1,0 +1,159 @@
+* { font-family:'Bitter',serif }
+
+a { color:#00afc8; text-decoration:none; font-family:monospace }
+
+blockquote  > p { padding:0 1em; color:#6a737d; border-left:0.25em solid #dfe2e5; font-size:1.5rem }
+
+code, code * { font-family:monospace; font-size:1.3rem; background:#f6f8fa }
+
+img { max-width:90% }
+.img-orig img { max-width:initial !important }
+.img-fit img { max-width:70% }
+
+li { line-height:1.5em; font-size:1.7rem }
+
+p { line-height:1.25em; font-size:1.8rem; margin-block-end: auto }
+
+pre { margin:0; padding:.5em; background:#f6f8fa }
+
+table { margin:auto; width:100% }
+thead { background:#eee }
+/*tbody tr:nth-child(even) { background:#f3f3f3 }*/
+
+ul > li > ul > li { font-size:1.4rem }
+ul > li > ol > li { font-size:1.4rem }
+ol > li > ul > li { font-size:1.4rem }
+
+ul > li > ul > li > ul > li { font-size:1.1rem }
+ul > li > ol > li > ul > li { font-size:1.1rem }
+
+.center { text-align:center }
+.diasys { color:#595; font-weight:bold }
+.smaller { font-size:1.2em }
+.yellow { color:#d3d300 }
+.red { color:#c00 }
+.green { color:#0f0 }
+
+.remark-slide-content h1 { font-size:2.5rem; margin-top:0; color:#cc0000;  font-family: 'Open Sans', sans-serif }
+.remark-slide-content h2 { font-size:2.5rem }
+.remark-slide-content { padding:1em 1em }
+
+.remark-code-line { line-height:1.3em }
+
+.remark-slide-number { bottom:15px; right:70px; font-size:8pt }
+
+.title-slide h1 { text-align:left; margin-top:80px; font-family: 'Open Sans', sans-serif }
+.title-slide h2 { font-size:2rem; color:#000; text-align:left; margin-top:30px; font-family: 'Open Sans', sans-serif }
+.title-slide .remark-slide-number { display:none }
+
+.part-slide h1 { text-align:center; margin-top:80px; font-family: 'Open Sans', sans-serif }
+.part-slide h2 { font-size:2rem; color:#000; text-align:center; margin-top:30px; font-family: 'Open Sans', sans-serif }
+.part-slide .remark-slide-number { display:none }
+
+.my-header {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  height: 70px;
+  width: 100%
+}
+
+.my-footer {
+  background-image: url("img/slub_logo_wo.svg");
+  background-repeat: no-repeat;
+  background-position: 0px 10px;
+  background-size: 10%;
+  border-top: 1px solid #222;
+  position: absolute;
+  bottom: 0px;
+  left: 30px;
+  height: 50px;
+  width: 90%;
+  font-family: 'Open Sans', sans-serif
+}
+
+.my-footer td {
+  font-size: 8pt;
+  color: #222;
+  padding:0px 10px;
+  font-family: 'Open Sans', sans-serif
+}
+
+.my-footer a { color:#cc0000; text-decoration:none; font-family: 'Open Sans', sans-serif }
+.my-footer thead { background:#fff }
+.my-footer tbody tr:nth-child(even) { background:transparent }
+
+.title-slide .my-header {
+  background-image: url("img/slub_logo.svg");
+  background-repeat: no-repeat;
+  background-position: 10px 10px;
+  background-size: 20%;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  height: 70px;
+  width: 100%
+}
+
+.title-slide .my-footer {
+  display: none
+}
+
+:not(.title-slide) > .my-title-footer {
+  display: none
+}
+
+.title-slide .my-title-footer {
+  background-image: url(img/bg.png);
+  background-position: 0px 0px;
+  border-top: 0px solid #222;
+  background-size: 100%;
+  position: absolute;
+  height: 370px;
+  width: 100%;
+  bottom: 0px;
+  left: 0px;
+  font-family: 'Open Sans', sans-serif;
+}
+.title-slide .my-title-footer a { color:#fff; text-decoration:none; font-family: 'Open Sans', sans-serif }
+
+.title-slide .my-title-footer td {
+  font-size: 12pt;
+  color: #fff;
+  padding:0px 10px;
+  font-family: 'Open Sans', sans-serif
+}
+
+/*.title-slide .my-title-footer tbody { background: transparent }*/
+
+.cols{
+  display: flex;
+}
+
+.eighty{
+  flex: 80%;
+}
+
+.seventy{
+  flex: 70%;
+}
+
+.sixty{
+  flex: 60%;
+}
+
+.fifty{
+  flex: 50%;
+}
+
+.fourty{
+  flex: 40%;
+}
+
+.thirty{
+  flex: 30%;
+}
+
+.twenty{
+  flex: 20%;
+}
