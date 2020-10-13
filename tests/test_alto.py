@@ -76,3 +76,11 @@ def test_text_line_text_extraction(datadir):
     text_block = list(alto.get_text_blocks())[0]
     text_line = list(alto.get_lines_in_text_block(text_block))[0]
     assert(alto.get_text_in_line(text_line) == "Vorbericht.")
+
+def test_index_assingment(datadir):
+    '''
+    Test the identifcation of the most likely insertion index
+    '''
+    with open(datadir.join('test_alto.xml'), 'rb') as f:
+        alto = Alto.read(f)
+        assert(alto.get_best_insert_index("Vorbericht") == (0,0))
