@@ -7,11 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Added tests for TEI API
+- Added tests for insertion index identification
 - Evaluate texts from all struct types but `binding` and `colour_checker`
 - Add `front`, `body` and `back` per default
 
 ### Fixed
 - https://github.com/slub/mets-mods2tei/issues/43
+- https://github.com/slub/mets-mods2tei/issues/47
 
 ## [0.1.1] - 2020-05-11
 ### Added

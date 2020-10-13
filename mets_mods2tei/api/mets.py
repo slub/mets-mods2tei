@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from lxml import etree
+
 import os
+import logging
 import csv
 import babel
 
@@ -79,6 +81,9 @@ class Mets:
         self.languages = None
         self.extents = None
         self.series = None
+
+        # logging
+        self.logger = logging.getLogger(__name__)
 
     @classmethod
     def read(cls, source):
@@ -182,7 +187,11 @@ class Mets:
         self.scripts = []
         for language in languages:
             for language_term in language.get_languageTerm():
-                self.languages[language_term.get_valueOf_()] = babel.Locale.parse(language_term.get_valueOf_()).get_language_name('de')
+                try:
+                    self.languages[language_term.get_valueOf_()] = babel.Locale.parse(language_term.get_valueOf_()).get_language_name('de')
+                except babel.core.UnknownLocaleError as err:
+                    self.logger.error("{0}. Falling back to 'Unbekannt'".format(err))
+                    self.languages[language_term.get_valueOf_()] = "Unbekannt"
             for script_term in language.get_scriptTerm():
                 self.scripts.append(self.script_iso.get(script_term.get_valueOf_()))
         if not self.languages:
