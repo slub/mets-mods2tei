@@ -1,6 +1,6 @@
 # mets-mods2tei
 
-[![CircleCI](https://circleci.com/gh/slub/mets-mods2tei.svg?style=svg)](https://circleci.com/gh/slub/mets-mods2tei) [![codecov](https://codecov.io/gh/slub/mets-mods2teiHeader/branch/master/graph/badge.svg)](https://codecov.io/gh/slub/mets-mods2tei)
+[![CircleCI](https://circleci.com/gh/slub/mets-mods2tei.svg?style=svg)](https://circleci.com/gh/slub/mets-mods2tei) [![codecov](https://codecov.io/gh/slub/mets-mods2tei/branch/master/graph/badge.svg)](https://codecov.io/gh/slub/mets-mods2tei)
 
 Convert bibliographic meta data in METS/MODS format to TEI headers and optionally serialize linked ALTO-encoded OCR to TEI text.
 
