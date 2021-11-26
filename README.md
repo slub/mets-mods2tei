@@ -24,67 +24,84 @@ For the TEI Header, the conversion is roughly based on the [*DTA base format*](h
 `mets-mods2tei` is developed at the [Saxon State and University Library in Dresden](https://www.slub-dresden.de).
 
 ## Installation
+
 `mets-mods2tei` is implemented in Python 3. In the following, we assume a working Python 3
 (tested versions 3.5, 3.6 and 3.7) installation.
 
-### Clone the repository
-The first installation step is the cloning of the repository:
-```console
-$ git clone https://github.com/wrznr/mets-mods2tei.git
-$ cd mets-mods2tei
-```
+### Setup Python
 
-### virtualenv
-Using [`virtualenv`](https://virtualenv.pypa.io/en/stable/) is highly recommended, although not strictly
-necessary for installing `mets-mods2tei`. It may be installed via:
-```console
-$ [sudo] pip install virtualenv
-```
-Create a virtual environement in a subdirectory of your choice (e.g. `env`) using
-```console
-$ virtualenv -p python3 env
-```
-and activate it.
-```console
-$ . env/bin/activate
-```
+Using [virtual environments](https://packaging.python.org/tutorials/installing-packages/#creating-virtual-environments) is highly recommended,
+although not strictly necessary for installing `mets-mods2tei`.
 
-### Python requirements
+To create a virtual environement in a subdirectory of your choice (e.g. `env`), run
 
-`mets-mods2tei` can be installed via `pip`:
+    python3 -m venv env
 
-```console
-(env) $ pip install .
-```
+(once) and then activate it (each time you open the shell) via
+
+    . env/bin/activate
+
+Depending on how old the packages are which your base system provides,
+you might have to update pip first:
+
+    pip install -U pip setuptools
+
+### Get Python package
+
+`mets-mods2tei` can be installed via `pip3` directly.
+You can install from either the repository sources or the
+prebuilt distribution on PyPI:
+
+#### From repository
+
+If you have an active virtual environment, do
+
+    pip install mets-mods2tei
+
+Otherwise, try
+
+    pip3 install --user mets-mods2tei
+
+#### From source
+
+Get the repository:
+
+    git clone https://github.com/slub/mets-mods2tei.git
+    cd mets-mods2tei
+
+If you have an active virtual environment, do
+
+    pip install .
+
+Otherwise, try
+
+    pip3 install --user .
 
 ## Testing
 
 `mets-mods2tei` uses `pytest`-based testing.
 
-Install the test requirements:
+To install the prerequisites for testing, (in your venv), do
 
-```console
-(env) pip install -r requirements-test.txt
-```
+    pip install -r requirements-test.txt
 
-Run the tests via:
+(once) and then run the tests via:
 
-```console
-(env) $ pytest
-```
+    pytest
 
 ## Code coverage
 
 Determine code coverage by running
 
-```console
-(env) $ make coverage
-```
+    make coverage
 
 ## Invocation
-Installing `mets-mods2tei` makes the command line tool `mm2tei` available:
-```console
-(env) $ mm2tei --help
+
+Installing `mets-mods2tei` makes the command-line tool `mm2tei` available:
+
+    mm2tei --help
+
+```
 Usage: mm2tei [OPTIONS] METS
 
   METS: File containing or URL pointing to the METS/MODS XML to be converted
@@ -94,7 +111,11 @@ Options:
   -l, --log-level [DEBUG|INFO|WARN|ERROR|OFF]
   --help                          Show this message and exit.
 ```
-It reads METS XML via URL or file argument and prints the resulting TEI including the extracted information from the MODS part of the METS.
-```console
-(env) $ mm2tei "https://digital.slub-dresden.de/oai/?verb=GetRecord&metadataPrefix=mets&identifier=oai:de:slub-dresden:db:id-453779263"
-```
+
+It reads METS XML via URL or file argument and prints the resulting TEI
+including the extracted information from the MODS part of the METS.
+
+Example:
+
+    mm2tei "https://digital.slub-dresden.de/oai/?verb=GetRecord&metadataPrefix=mets&identifier=oai:de:slub-dresden:db:id-453779263"
+
