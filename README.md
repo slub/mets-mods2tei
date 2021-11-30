@@ -108,11 +108,12 @@ Usage: mm2tei [OPTIONS] METS
 
 Options:
   -o, --ocr                       Serialize OCR into resulting TEI
+  -T, --text-group TEXT           File group which contains the full text
   -l, --log-level [DEBUG|INFO|WARN|ERROR|OFF]
   --help                          Show this message and exit.
 ```
 
-It reads METS XML via URL or file argument and prints the resulting TEI
+It reads METS XML via URL or file argument and prints the resulting TEI,
 including the extracted information from the MODS part of the METS.
 
 Example:
