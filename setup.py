@@ -10,10 +10,22 @@ setup(
     long_description_content_type="text/markdown",
     author='Kay-Michael Würzner',
     author_email='kay-michael.wuerzner@slub-dresden.de',
-    license = open('LICENSE').read(),
+    license_files=('LICENSE',),
     packages=find_packages(exclude=('tests', 'docs')),
     package_data={'mets_mods2tei' : ['data/tei_skeleton.xml', 'data/iso15924-utf8-20180827.txt']},
     install_requires=open('requirements.txt').read().split('\n'),
+    python_requires=">=3.5",
+    classifiers=[
+        'Development Status :: 5 - Production/Stable',
+        'Environment :: Console',
+        'Intended Audience :: Developers',
+        'Intended Audience :: Education',
+        'Intended Audience :: Information Technology',
+        'Intended Audience :: Science/Research',
+        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+        'Programming Language :: Python',
+        'Topic :: Text Processing :: Markup :: XML',
+    ],  
     entry_points={
           'console_scripts': [
               'mm2tei=mets_mods2tei.scripts.mets_mods2tei:cli',
