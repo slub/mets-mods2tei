@@ -1,19 +1,54 @@
 # Python CircleCI 2.1 configuration file
 # for mets-mods2tei
 #
-# Check https://circleci.com/docs/2.1/language-python/ for more details
+# Check https://circleci.com/docs/2.0/language-python/ for more details
 #
 version: 2.1
 orbs:
   codecov: codecov/codecov@1.0.5
 jobs:
-  build:
+  test:
+    parameters:
+      version:
+        type: string
     docker:
-      - image: python:3.6
+      - image: circleci/python:<< parameters.version >>
     working_directory: ~/repo
     steps:
       - checkout
-      - run: pip install -r requirements-test.txt
-      - run: pip install .
+      - run: make deps deps-test
+      - run: make install
+      - run: make test
       - run: make coverage
       - codecov/upload
+  pypi:
+    docker:
+      - image: circleci/python:3.6
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: make install
+      - run: python setup.py sdist
+      - run: |
+          pip install cibuildwheel
+          cibuildwheel --output-dir dist
+      - store_artifacts:
+          path: dist/
+          destination: artifacts
+    # later: upload to PyPI...
+
+workflows:
+  version: 2
+  test-all:
+    jobs:
+      - test:
+          matrix:
+            parameters:
+              version: [3.5.10, 3.6.15, 3.7.12, 3.8.12, 3.9.9]
+  deploy:
+    jobs:
+      - pypi:
+          filters:
+            branches:
+              only: master
