@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 
+import sys
 import os
 import logging
 import click
@@ -19,7 +20,7 @@ def cli(mets, ocr, text_group, log_level):
 
     #
     # logging level
-    logging.basicConfig(level=logging.getLevelName(log_level))
+    logging.basicConfig(level=logging.getLevelName(log_level), stream=sys.stderr)
     
     #
     # interpret mets argument

@@ -118,5 +118,5 @@ including the extracted information from the MODS part of the METS.
 
 Example:
 
-    mm2tei "https://digital.slub-dresden.de/oai/?verb=GetRecord&metadataPrefix=mets&identifier=oai:de:slub-dresden:db:id-453779263"
+    mm2tei "https://digital.slub-dresden.de/oai/?verb=GetRecord&metadataPrefix=mets&identifier=oai:de:slub-dresden:db:id-453779263" > tei.xml
 
