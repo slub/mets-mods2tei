@@ -92,7 +92,11 @@ class Alto:
         Returns the ALTO-encoded text .
         :param Element line: The line to extract the text from.
         """
-        return " ".join(element.get("CONTENT") for element in line.xpath("./alto:String", namespaces=ns))
+        text = " ".join(element.get("CONTENT") for element in line.xpath("./alto:String", namespaces=ns))
+        hyp = line.find("alto:HYP", namespaces=ns)
+        if hyp is not None:
+            text += hyp.get("CONTENT")
+        return text
 
     def __compute_fuzzy_distance(self, text1, text2):
         """
