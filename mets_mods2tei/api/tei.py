@@ -462,15 +462,17 @@ class Tei:
         publication_stmt = self.tree.xpath('//tei:publicationStmt', namespaces=ns)[0]
         encoding_date = etree.SubElement(publication_stmt, "%sdate" % TEI)
         encoding_date.set("type", "publication")
-        encoding_date.text = date
+        if date:
+            encoding_date.text = date
 
     def set_encoding_description(self, creator):
         """
         Set some details on the encoding of the digital edition
         """
         encoding_desc = self.tree.xpath('//tei:encodingDesc', namespaces=ns)[0]
-        encoding_desc_details = etree.SubElement(encoding_desc, "%sp" % TEI)
-        encoding_desc_details.text = "Encoded with the help of %s." % creator
+        if creator:
+            encoding_desc_details = etree.SubElement(encoding_desc, "%sp" % TEI)
+            encoding_desc_details.text = "Encoded with the help of %s." % creator
 
     def add_repository(self, repository):
         """

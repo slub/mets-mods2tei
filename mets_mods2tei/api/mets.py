@@ -237,12 +237,26 @@ class Mets:
         #
         # metsHdr
         header = self.mets.get_metsHdr()
-
-        # encoding date
-        self.encoding_date = header.get_CREATEDATE().isoformat()
-
-        # encoding description
-        self.encoding_desc = list(filter(lambda x: x.get_OTHERTYPE() == "SOFTWARE", header.get_agent()))[0].get_name()
+        if header:
+            # encoding date
+            self.encoding_date = header.get_CREATEDATE()
+            # encoding description
+            self.encoding_desc = [agent.get_name()
+                                  for agent in header.get_agent()
+                                  if agent.get_TYPE() == "OTHER" and agent.get_OTHERTYPE() == "SOFTWARE"]
+        else:
+            self.encoding_date = None
+            self.encoding_desc = None
+        
+        if self.encoding_date:
+            self.encoding_date = self.encoding_date.isoformat()
+        else:
+            self.logger.error("Found no @CREATEDATE for publicationStmt/date")
+        if self.encoding_desc:
+            self.encoding_desc = self.encoding_desc[0] # or -1?
+            # what about agent.get_OTHERROLE() and agent.get_note()?
+        else:
+            self.logger.error("Found no mets:agent for encodingDesc")
 
 	#
 	# location of manuscript
