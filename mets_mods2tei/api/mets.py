@@ -145,7 +145,7 @@ class Mets:
                 person[name_part.get_type()] = name_part.get_valueOf_()
 
             # either author or editor
-            roles = name.get_role()[0].get_roleTerm()
+            roles = name.get_role()[0].get_roleTerm() if name.get_role() else []
             # TODO: handle the complete set of allowed roles
             for role in roles:
                 if role.get_valueOf_() == "edt":
