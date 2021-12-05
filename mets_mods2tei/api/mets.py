@@ -220,16 +220,20 @@ class Mets:
 
         #
         # dv FIXME: replace with generated code as soon as schema is available
-        dv = etree.fromstring(self.mets.get_amdSec()[0].get_rightsMD()[0].get_mdWrap().get_xmlData().get_anytypeobjs_()[0])
+        amdsec = self.mets.get_amdSec()
+        if amdsec and amdsec[0].get_rightsMD():
+            dv = etree.fromstring(amdsec[0].get_rightsMD()[0].get_mdWrap().get_xmlData().get_anytypeobjs_()[0])
+        else:
+            dv = []
 
         # owner of the digital edition
-        self.owner_digital = dv.xpath("//dv:owner", namespaces=ns)[0].text
+        self.owner_digital = dv.xpath("//dv:owner", namespaces=ns)[0].text if dv else ""
 
         # availability/license
         # common case
         self.license = ""
         self.license_url = ""
-        license_nodes = dv.xpath("//dv:license", namespaces=ns)
+        license_nodes = dv.xpath("//dv:license", namespaces=ns) if dv else []
         if license_nodes != []:
             self.license = license_nodes[0].text
             self.license_url = ""
