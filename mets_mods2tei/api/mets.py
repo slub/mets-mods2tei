@@ -52,6 +52,7 @@ class Mets:
         self.tree = None
         self.mets = None
         self.mods = None
+        self.page_map = {}
         self.order_map = {}
         self.img_map = {}
         self.alto_map = {}
@@ -319,8 +320,10 @@ class Mets:
                 default_map[entry.get("ID")] = entry.find("./" + METS + "FLocat").get("%shref" % XLINK)
 
         # struct map physical
-        for div in list(filter(lambda x: x.get_TYPE() == 'PHYSICAL', self.mets.get_structMap()))[0].get_div().get_div():
-            self.order_map[div.get_ID()] = div.get_ORDER()
+        for div in self.get_page_structure().get_div():
+            self.page_map[div.get_ID()] = div
+            if div.get_ORDER():
+                self.order_map[div.get_ID()] = div.get_ORDER()
             for fptr in div.get_fptr():
                 if fptr.get_FILEID() in fulltext_map:
                     self.alto_map[div.get_ID()] = fulltext_map[fptr.get_FILEID()]
@@ -471,6 +474,15 @@ class Mets:
         Returns the languages used in the original manuscript
         """
         return self.languages
+
+    def get_page_structure(self):
+        """
+        Return the div structure from the physical struct map
+        """
+        for struct_map in self.mets.get_structMap():
+            if struct_map.get_TYPE() == "PHYSICAL":
+                return struct_map.get_div()
+        return None
 
     def get_div_structure(self):
         """
