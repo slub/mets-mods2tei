@@ -123,10 +123,9 @@ class Mets:
 
         #
         # main title and manuscript type
-        struct_map_logical = list(filter(lambda x: x.get_TYPE() == "LOGICAL", self.mets.get_structMap()))[0]
-        title = struct_map_logical.get_div()
-        self.title = title.get_LABEL()
-        self.type = title.get_TYPE()
+        div = self.get_div_structure()
+        self.title = div.get_LABEL() if div else ""
+        self.type = div.get_TYPE() if div else ""
 
         #
         # sub titles
