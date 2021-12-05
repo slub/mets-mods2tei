@@ -331,7 +331,8 @@ class Mets:
                     self.img_map[div.get_ID()] = default_map[fptr.get_FILEID()]
 
         # struct links
-        for sm_link in self.tree.xpath("//mets:structLink", namespaces=ns)[0].iterchildren():
+        structlinks = self.tree.xpath("//mets:structLink/*", namespaces=ns)
+        for sm_link in structlinks:
             if sm_link.get("%sto" % XLINK) in self.alto_map:
                 if sm_link.get("%sfrom" % XLINK) not in self.struct_links:
                     self.struct_links[sm_link.get("%sfrom" % XLINK)] = []
