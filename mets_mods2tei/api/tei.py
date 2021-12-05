@@ -132,7 +132,18 @@ class Tei:
         # text part
 
         # div structure
-        self.add_div_structure(mets.get_div_structure())
+        div = mets.get_div_structure()
+        if div is not None:
+            self.logger.info("Found logical structMap for %s", div.get_TYPE())
+            self.add_div_structure(div)
+        elif any(mets.alto_map):
+            self.logger.warning("Found no logical structMap div, falling back to physical")
+            pages = mets.alto_map.keys()
+            if any(mets.order_map.values()):
+                pages = sorted(pages, key=mets.get_order)
+            self.add_div_structure(None, map(mets.page_map.get, pages))
+        else:
+            self.logger.error("Found no logical or physical structMap div")
 
         # OCR
         if ocr:
@@ -597,6 +608,9 @@ class Tei:
         for childnode in node.iterchildren():
             self.__add_ocr_to_node(childnode, mets)
         struct_links = mets.get_struct_links(node.get("id"))
+        if not struct_links and node.get("id") in mets.page_map:
+            # already physical
+            struct_links = [node.get("id")]
         
         # a header will always be on the first page of a div
         first = True
@@ -678,15 +692,23 @@ class Tei:
                             node.insert(0, par)
             first = False
 
-    def add_div_structure(self, div):
+    def add_div_structure(self, div, pages=None):
         """
-        Add div elements to the text body according to the given list of divs
+        Add logical div elements to the text font/body/back according to the given div hierarchy
         """
 
         # div structure has to be added to text
         text = self.tree.xpath('//tei:text', namespaces=ns)[0]
+        front = etree.SubElement(text, "%sfront" % TEI)
+        body = etree.SubElement(text, "%sbody" % TEI)
+        back = etree.SubElement(text, "%sback" % TEI)
 
-        # decent to the deepest AMD
+        if pages:
+            for page in pages:
+                self.__add_div(body, page, 1)
+            return
+
+        # descend to the deepest AMD
         while div.get_ADMID() is None:
             div = div.get_div()[0]
         start_div = div.get_div()[0]
@@ -694,10 +716,6 @@ class Tei:
             div = start_div
             start_div = start_div.get_div()[0]
         
-        front = etree.SubElement(text, "%sfront" % TEI)
-        body = etree.SubElement(text, "%sbody" % TEI)
-        back = etree.SubElement(text, "%sback" % TEI)
-
         entry_point = front
 
         for sub_div in div.get_div():

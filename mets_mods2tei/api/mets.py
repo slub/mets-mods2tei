@@ -492,7 +492,7 @@ class Mets:
         for struct_map in self.mets.get_structMap():
             if struct_map.get_TYPE() == "LOGICAL":
                 return struct_map.get_div()
-        return []
+        return None
 
     def get_struct_links(self, log_id):
         """
