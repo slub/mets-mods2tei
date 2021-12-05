@@ -724,8 +724,48 @@ class Tei:
             elif sub_div.get_TYPE() == "title_page":
                 self.__add_div(entry_point, sub_div, 1, "titlePage")
             else:
+                # FIXME: if title_page gets preceded by figure/preface/contents/..., they *all* will end up in body
                 entry_point = body
                 self.__add_div(entry_point, sub_div, 1)
+            # FIXME: add more structural mappings from METS-Anwendungsprofil (DFG Strukturdatenset) to TEI-P5 tagset (DTAbf)
+            # ...for example:
+            # contents → contents
+            # corrigenda → corrigenda
+            # dedication → dedication
+            # index → index
+            # imprint → imprint
+            # ? → imprimatur
+            # priviledges? → copyright
+            # provenance → ?
+            # ? → appendix
+            # ? → advertisement
+            # preface → preface
+            # ? → postface
+            # chapter → chapter
+            # letter → letter
+            # verse → poem
+            # ? → diaryEntry
+            # ? → recipe
+            # ? → scene
+            # ? → act
+            # ? → frontispiece
+            # ? → bibliography
+            # list_illustrations? → figures
+            # ? → abbreviations
+            # ? → edition
+            # cover → ?
+            # cover_front → ?
+            # cover_back → ?
+            # table → ?
+            # manuscript → ?
+            # illustration → ?
+            # section → ?
+            # article → ?
+            # issue → ?
+            # day → ?
+            # month → ?
+            # volume → ?
+            # year → ?
 
     def __add_div(self, insert_node, div, n, tag="div"):
         """
