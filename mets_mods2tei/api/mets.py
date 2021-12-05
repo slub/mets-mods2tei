@@ -154,29 +154,34 @@ class Mets:
 
         #
         # orgin info
-        origin_info = self.mods.get_originInfo()[0]
+        origin_info = self.mods.get_originInfo()
 
         # publication place
         self.places = []
-        for place in origin_info.get_place():
-            place_ext = {}
-            for place_term in place.get_placeTerm():
-                place_ext[place_term.get_type()] = place_term.get_valueOf_()
-            self.places.append(place_ext)
+        if origin_info:
+            for place in origin_info[0].get_place():
+                place_ext = {}
+                for place_term in place.get_placeTerm():
+                    place_ext[place_term.get_type()] = place_term.get_valueOf_()
+                self.places.append(place_ext)
 
         # publication dates
         self.dates = {}
-        for date_issued in origin_info.get_dateIssued():
-            date_type = date_issued.get_point() if date_issued.get_point() != None else "unspecified"
-            self.dates[date_type] = date_issued.get_valueOf_()
+        if origin_info:
+            for date_issued in origin_info[0].get_dateIssued():
+                date_type = date_issued.get_point() if date_issued.get_point() != None else "unspecified"
+                self.dates[date_type] = date_issued.get_valueOf_()
 
         # publishers
         self.publishers = []
-        for publisher in origin_info.get_publisher():
-            self.publishers.append(publisher.get_valueOf_())
+        if origin_info:
+            for publisher in origin_info[0].get_publisher():
+                self.publishers.append(publisher.get_valueOf_())
 
         # edition of the manuscript
-        self.edition = origin_info.get_edition()[0].get_valueOf_() if origin_info.get_edition() else ""
+        self.edition = ""
+        if origin_info and origin_info[0].get_edition():
+            self.edition = origin_info[0].get_edition()[0].get_valueOf_()
 
         #
         # languages and scripts
