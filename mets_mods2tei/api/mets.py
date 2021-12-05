@@ -205,15 +205,18 @@ class Mets:
 
         #
         # physical description
-        physical_description = self.mods.get_physicalDescription()[0]
+        physical_description = self.mods.get_physicalDescription()
 
         # digital origin
-        self.digital_origin = physical_description.get_digitalOrigin()[0] if physical_description.get_digitalOrigin() else ""
+        self.digital_origin = ""
+        if physical_description and physical_description[0].get_digitalOrigin():
+            self.digital_origin = physical_description[0].get_digitalOrigin()[0]
 
         # extent
         self.extents = []
-        for extent in physical_description.get_extent():
-            self.extents.append(extent.get_valueOf_())
+        if physical_description:
+            for extent in physical_description[0].get_extent():
+                self.extents.append(extent.get_valueOf_())
 
         #
         # dv FIXME: replace with generated code as soon as schema is available
