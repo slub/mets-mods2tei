@@ -5,11 +5,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- tests for TEI API
+- tests for insertion index identification
+- more logging
+- CLI param for output file
+- CLI param for image fileGrp
+
 ### Changed
-- Added tests for TEI API
-- Added tests for insertion index identification
 - Add `front`, `body` and `back` per default
 - Log to stderr instead of stdout
+- Differentiate between (physical) image nr and (logical) page nr
 
 ### Fixed
 - Evaluate texts from all struct types but `binding` and `colour_checker`, #43
