@@ -8,31 +8,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Added tests for TEI API
 - Added tests for insertion index identification
-- Evaluate texts from all struct types but `binding` and `colour_checker`
 - Add `front`, `body` and `back` per default
+- Log to stderr instead of stdout
 
 ### Fixed
-- https://github.com/slub/mets-mods2tei/issues/43
-- https://github.com/slub/mets-mods2tei/issues/47
+- Evaluate texts from all struct types but `binding` and `colour_checker`, #43
+- Handle errors during language code expansion, and fallback to `Unbekannt`, #47
+- Add ALTO `HYP` text content if available, #52
+- Allow empty logical structMap and structLink, fallback to physical, or empty, #57
+- Allow partial dmdSec (MODS) or amdSec, fallback to empty, #46, #51
 
 ## [0.1.1] - 2020-05-11
 ### Added
-- Treat nested AMD-type (non-logical) divs in logical struct map (i.e.
-newspaper case)
 - Make full text file group selectable by user
-- Allow for file entries (in addition to URLs) in METS
-- Add special treatment for URNs and VD IDs
 - Add poor man's namespace versioning handling
 
 ### Changed
 - Make extraction of subtitles conditional on their presence
-- Use "licence" for all types of licences (even unknown ones)
+- Use "licence" for all types of licences (even unknown ones), #39
 
 ### Fixed
-- https://github.com/slub/mets-mods2tei/issues/28
-- https://github.com/slub/mets-mods2tei/issues/37
-- https://github.com/slub/mets-mods2tei/issues/39
-- https://github.com/slub/mets-mods2tei/issues/41
+- Handle nested `@ADMID="AMD"` divs in logical `structMap` (i.e. newspaper case), #43
+- Allow for local path entries (in addition to URLs) in METS, #41
+- Add special treatment for URNs and VD IDs, #37
 
 ## [0.1.0] - 2019-12-04
 ### Added
@@ -40,13 +38,16 @@ newspaper case)
 - Set `corresp` and `facs` attributes of `pb` elements
 - Store links to `DEFAULT` images in METS
 - Tests for new functionality
+- Add Changelog file, #28
 
 ### Changed
-- Retrieve ALTO files via a dedicated struct link member of the class Mets
-- Move text retrieval to Alto class
+- Retrieve ALTO files via a dedicated struct link member of the class `Mets`
+- Move text retrieval to `Alto` class
 
 ### Removed
 - Get rid of code artifacts carried over from `tocrify`
 
-### Fixed
-- https://github.com/slub/mets-mods2tei/issues/28
+<!-- link-labels -->
+[unreleased]: ../../compare/v0.1.1...master
+[0.1.1]: ../../compare/v0.1.0...v0.1.1
+[0.1.0]: ../../compare/v1.0...v0.1.0
