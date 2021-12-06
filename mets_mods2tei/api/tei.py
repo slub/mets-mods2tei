@@ -639,7 +639,14 @@ class Tei:
                 self.alto_map[alto_link] = alto
 
                 pb = etree.SubElement(node, "%spb" % TEI)
-                pb.set("facs", "#f{:04d}".format(int(mets.get_order(struct_link))))
+                try:
+                    pagenum = list(mets.page_map.keys()).index(struct_link)
+                    pb.set("facs", "#f{:04d}".format(pagenum + 1))
+                except ValueError:
+                    self.logger.warning("cannot determine image number for '%s'", struct_link)
+                pagenum = mets.get_orderlabel(struct_link) or mets.get_order(struct_link)
+                if pagenum:
+                    pb.set("n", str(pagenum))
                 pb.set("corresp", mets.get_img(struct_link))
 
                 for text_block in alto.get_text_blocks():

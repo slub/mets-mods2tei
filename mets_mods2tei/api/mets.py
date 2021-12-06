@@ -54,6 +54,7 @@ class Mets:
         self.mods = None
         self.page_map = {}
         self.order_map = {}
+        self.orderlabel_map = {}
         self.img_map = {}
         self.alto_map = {}
         self.struct_links = {}
@@ -324,6 +325,8 @@ class Mets:
             self.page_map[div.get_ID()] = div
             if div.get_ORDER():
                 self.order_map[div.get_ID()] = div.get_ORDER()
+            if div.get_ORDERLABEL():
+                self.orderlabel_map[div.get_ID()] = div.get_ORDERLABEL()
             for fptr in div.get_fptr():
                 if fptr.get_FILEID() in fulltext_map:
                     self.alto_map[div.get_ID()] = fulltext_map[fptr.get_FILEID()]
@@ -514,6 +517,12 @@ class Mets:
 
     def get_order(self, phys_id):
         """
-        Return the manually set order for a given physical ID
+        Return the logical (manually set) page number for a given physical ID
         """
-        return self.order_map.get(phys_id, "-1")
+        return self.order_map.get(phys_id, "0")
+
+    def get_orderlabel(self, phys_id):
+        """
+        Return the logical (manually set) page label for a given physical ID
+        """
+        return self.orderlabel_map.get(phys_id, "")
