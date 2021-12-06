@@ -59,6 +59,7 @@ class Mets:
         self.alto_map = {}
         self.struct_links = {}
         self.fulltext_group_name = 'FULLTEXT'
+        self.image_group_name = 'DEFAULT'
 
         self.title = None
         self.sub_titles = None
@@ -315,7 +316,7 @@ class Mets:
 
         # default
         default_map = {}
-        default_group = self.tree.xpath("//mets:fileGrp[@USE='DEFAULT']", namespaces=ns)
+        default_group = self.tree.xpath("//mets:fileGrp[@USE='%s']" % self.image_group_name, namespaces=ns)
         if default_group:
             for entry in default_group[0].xpath("./mets:file", namespaces=ns):
                 default_map[entry.get("ID")] = entry.find("./" + METS + "FLocat").get("%shref" % XLINK)
