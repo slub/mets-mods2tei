@@ -106,11 +106,22 @@ Usage: mm2tei [OPTIONS] METS
 
   METS: File containing or URL pointing to the METS/MODS XML to be converted
 
+  Parse given METS and its meta-data, and convert it to TEI.
+
+  If `--ocr` is given, then also read the ALTO full-text files from the
+  fileGrp in `--text-group`, and convert page contents accordingly (in
+  physical order). Decorate page boundaries with image and page numbers, and
+  reference the corresponding base image files from `--img-group`.
+
+  Output XML to `--output (use '-' for stdout), log to stderr.`
+
 Options:
+  -O, --output FILENAME           File path to write TEI output to
   -o, --ocr                       Serialize OCR into resulting TEI
-  -T, --text-group TEXT           File group which contains the full text
+  -T, --text-group TEXT           File group which contains the full-text
+  -I, --img-group TEXT            File group which contains the images
   -l, --log-level [DEBUG|INFO|WARN|ERROR|OFF]
-  --help                          Show this message and exit.
+  -h, --help                      Show this message and exit.
 ```
 
 It reads METS XML via URL or file argument and prints the resulting TEI,
@@ -118,5 +129,4 @@ including the extracted information from the MODS part of the METS.
 
 Example:
 
-    mm2tei "https://digital.slub-dresden.de/oai/?verb=GetRecord&metadataPrefix=mets&identifier=oai:de:slub-dresden:db:id-453779263" > tei.xml
-
+    mm2tei -O tei.xml "https://digital.slub-dresden.de/oai/?verb=GetRecord&metadataPrefix=mets&identifier=oai:de:slub-dresden:db:id-453779263"

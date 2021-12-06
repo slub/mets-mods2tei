@@ -227,16 +227,16 @@ class Mets:
         if amdsec and amdsec[0].get_rightsMD():
             dv = etree.fromstring(amdsec[0].get_rightsMD()[0].get_mdWrap().get_xmlData().get_anytypeobjs_()[0])
         else:
-            dv = []
+            dv = None
 
         # owner of the digital edition
-        self.owner_digital = dv.xpath("//dv:owner", namespaces=ns)[0].text if dv else ""
+        self.owner_digital = dv.xpath("//dv:owner", namespaces=ns)[0].text if dv is not None else ""
 
         # availability/license
         # common case
         self.license = ""
         self.license_url = ""
-        license_nodes = dv.xpath("//dv:license", namespaces=ns) if dv else []
+        license_nodes = dv.xpath("//dv:license", namespaces=ns) if dv is not None else []
         if license_nodes != []:
             self.license = license_nodes[0].text
             self.license_url = ""
@@ -312,35 +312,43 @@ class Mets:
         if fulltext_group:
             fulltext_map = {}
             for entry in fulltext_group[0].xpath("./mets:file", namespaces=ns):
-                fulltext_map[entry.get("ID")] = entry.find("./" + METS + "FLocat").get("%shref" % XLINK)
+                url = entry.find("./" + METS + "FLocat").get("%shref" % XLINK)
+                self.logger.debug("Found full-text file: %s", url)
+                fulltext_map[entry.get("ID")] = url
 
-        # default
-        default_map = {}
-        default_group = self.tree.xpath("//mets:fileGrp[@USE='%s']" % self.image_group_name, namespaces=ns)
-        if default_group:
-            for entry in default_group[0].xpath("./mets:file", namespaces=ns):
-                default_map[entry.get("ID")] = entry.find("./" + METS + "FLocat").get("%shref" % XLINK)
+        # image
+        image_map = {}
+        image_group = self.tree.xpath("//mets:fileGrp[@USE='%s']" % self.image_group_name, namespaces=ns)
+        if image_group:
+            for entry in image_group[0].xpath("./mets:file", namespaces=ns):
+                url = entry.find("./" + METS + "FLocat").get("%shref" % XLINK)
+                self.logger.debug("Found image file: %s", url)
+                image_map[entry.get("ID")] = url
 
         # struct map physical
         for div in self.get_page_structure().get_div():
-            self.page_map[div.get_ID()] = div
+            page = div.get_ID()
+            self.logger.debug("Found physical page: %s", page)
+            self.page_map[page] = div
             if div.get_ORDER():
-                self.order_map[div.get_ID()] = div.get_ORDER()
+                self.order_map[page] = div.get_ORDER()
             if div.get_ORDERLABEL():
-                self.orderlabel_map[div.get_ID()] = div.get_ORDERLABEL()
+                self.orderlabel_map[page] = div.get_ORDERLABEL()
             for fptr in div.get_fptr():
                 if fptr.get_FILEID() in fulltext_map:
-                    self.alto_map[div.get_ID()] = fulltext_map[fptr.get_FILEID()]
-                elif fptr.get_FILEID() in default_map:
-                    self.img_map[div.get_ID()] = default_map[fptr.get_FILEID()]
+                    self.alto_map[page] = fulltext_map[fptr.get_FILEID()]
+                elif fptr.get_FILEID() in image_map:
+                    self.img_map[page] = image_map[fptr.get_FILEID()]
 
         # struct links
         structlinks = self.tree.xpath("//mets:structLink/*", namespaces=ns)
         for sm_link in structlinks:
-            if sm_link.get("%sto" % XLINK) in self.alto_map:
-                if sm_link.get("%sfrom" % XLINK) not in self.struct_links:
-                    self.struct_links[sm_link.get("%sfrom" % XLINK)] = []
-                self.struct_links[sm_link.get("%sfrom" % XLINK)].append(sm_link.get("%sto" % XLINK))
+            logical = sm_link.get("%sfrom" % XLINK)
+            physical = sm_link.get("%sto" % XLINK)
+            if physical in self.alto_map:
+                self.logger.debug("Found structLink from %s to physical page: %s", logical, physical)
+                pages = self.struct_links.setdefault(logical, list())
+                pages.append(physical)
 
     @property
     def fulltext_group_name(self):

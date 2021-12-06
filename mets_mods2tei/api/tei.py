@@ -134,7 +134,7 @@ class Tei:
         # div structure
         div = mets.get_div_structure()
         if div is not None:
-            self.logger.info("Found logical structMap for %s", div.get_TYPE())
+            self.logger.debug("Found logical structMap for %s", div.get_TYPE())
             self.add_div_structure(div)
         elif any(mets.alto_map):
             self.logger.warning("Found no logical structMap div, falling back to physical")
@@ -604,13 +604,15 @@ class Tei:
         """
         Add text to a given node and recursively add text to children too (post order!)
         """
-        
+
+        node_id = node.get("id")
+        self.logger.debug("Adding text for %s", node_id)
         for childnode in node.iterchildren():
             self.__add_ocr_to_node(childnode, mets)
-        struct_links = mets.get_struct_links(node.get("id"))
-        if not struct_links and node.get("id") in mets.page_map:
+        struct_links = mets.get_struct_links(node_id)
+        if not struct_links and node_id in mets.page_map:
             # already physical
-            struct_links = [node.get("id")]
+            struct_links = [node_id]
         
         # a header will always be on the first page of a div
         first = True
@@ -712,14 +714,18 @@ class Tei:
 
         if pages:
             for page in pages:
+                self.logger.debug("Found physical page %s", page.get_ID())
                 self.__add_div(body, page, 1)
             return
 
         # descend to the deepest AMD
         while div.get_ADMID() is None:
+            self.logger.debug("Found logical outer div type %s: %s", div.get_TYPE(), div.get_ID())
             div = div.get_div()[0]
         start_div = div.get_div()[0]
+        self.logger.debug("Found logical inner div type %s: %s", start_div.get_TYPE(), start_div.get_ID())
         while start_div.get_div() and start_div.get_div()[0].get_ADMID() is not None:
+            self.logger.debug("Found logical inner div type %s: %s", start_div.get_TYPE(), start_div.get_ID())
             div = start_div
             start_div = start_div.get_div()[0]
         
@@ -785,6 +791,9 @@ class Tei:
             #head = etree.SubElement(new_div, "%s%s" % (TEI, "head"))
             #head.text = div.get_LABEL()
             new_div.set("rend", div.get_LABEL())
+        self.logger.debug("Adding %s[@id=%s,@n=%d,@rend=%s] for %s",
+                          tag, div.get_ID(), n, div.get_LABEL() or "",
+                          insert_node.tag.split('}')[-1])
         for sub_div in div.get_div():
             self.__add_div(new_div, sub_div, n+1)
 
