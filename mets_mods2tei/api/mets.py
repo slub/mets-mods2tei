@@ -77,8 +77,7 @@ class Mets:
         self.encoding_desc = None
         self.owner_manuscript = None
         self.shelf_locators = None
-        self.urn = None
-        self.vd_id = None
+        self.identifiers = None
         self.scripts = None
         self.collections = None
         self.languages = None
@@ -285,14 +284,11 @@ class Mets:
 
         #
         # URN and VD ID
-        self.urn = ""
-        self.vd_id = ""
+        self.identifiers = dict()
         identifiers = self.mods.get_identifier()
-        for identifier in identifiers:
-            if identifier.get_type().lower() == "urn":
-                self.urn = identifier.get_valueOf_()
-            elif identifier.get_type().lower().startswith("vd"):
-                self.vd_id = identifier.get_valueOf_()
+        if len(identifiers):
+            for identifier in identifiers:
+                self.identifiers[identifier.get_type()] = identifier.get_valueOf_()
 
         #
         # collections (from relatedItem)
@@ -458,17 +454,11 @@ class Mets:
         """
         return self.shelf_locators
 
-    def get_urn(self):
+    def get_identifiers(self):
         """
-        Return the URN of the digital representation
+        Return the (dict of) identifiers of the digital representation
         """
-        return self.urn
-
-    def get_vd_id(self):
-        """
-        Return the VD ID of the digital representation
-        """
-        return self.vd_id
+        return self.identifiers
 
     def get_scripts(self):
         """

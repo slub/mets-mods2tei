@@ -100,13 +100,12 @@ class Tei:
 
         # shelf locator
         for shelf_locator in mets.get_shelf_locators():
-            self.add_shelfmark(shelf_locator)
+            self.add_ms_identifier("shelfmark", shelf_locator)
 
         # identifiers
-        if mets.get_urn():
-            self.add_urn(mets.get_urn())
-        if mets.get_vd_id():
-            self.add_vd_id(mets.get_vd_id())
+        if mets.get_identifiers():
+            for type_, value in mets.get_identifiers().items():
+                self.add_ms_identifier(type_.upper(), value)
 
         # type description
         if mets.get_scripts():
@@ -493,32 +492,15 @@ class Tei:
         repository_node = etree.SubElement(ms_ident, "%srepository" % TEI)
         repository_node.text = repository
 
-    def add_shelfmark(self, shelfmark):
+    def add_ms_identifier(self, type_, value):
         """
-        Add the shelf mark of the (original) manuscript
-        """
-        ms_ident_idno = self.tree.xpath('//tei:msDesc/tei:msIdentifier/tei:idno', namespaces=ns)[0]
-        idno = etree.SubElement(ms_ident_idno, "%sidno" % TEI)
-        idno.set("type", "shelfmark")
-        idno.text = shelfmark
-
-    def add_urn(self, urn):
-        """
-        Add the URN of the digital edition
+        Add the URN, PURL, VD ID, shelfmark etc. of the digital edition
         """
         ms_ident_idno = self.tree.xpath('//tei:msDesc/tei:msIdentifier/tei:idno', namespaces=ns)[0]
+        # FIXME: URN, DTAID, ... should go to /tei:fileDesc/tei:publicationStmt/tei:idno instead
         idno = etree.SubElement(ms_ident_idno, "%sidno" % TEI)
-        idno.set("type", "URN")
-        idno.text = urn
-
-    def add_vd_id(self, vd_id):
-        """
-        Add the VD ID of the digital edition
-        """
-        ms_ident_idno = self.tree.xpath('//tei:msDesc/tei:msIdentifier/tei:idno', namespaces=ns)[0]
-        idno = etree.SubElement(ms_ident_idno, "%sidno" % TEI)
-        idno.set("type", "VD")
-        idno.text = vd_id
+        idno.set("type", type_)
+        idno.text = value
 
     def set_type_desc(self, description):
         """
