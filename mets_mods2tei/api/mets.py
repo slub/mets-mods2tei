@@ -63,6 +63,8 @@ class Mets:
 
         self.title = None
         self.sub_titles = None
+        self.part_titles = None
+        self.volume_titles = None
         self.authors = None
         self.editors = None
         self.places = None
@@ -124,17 +126,74 @@ class Mets:
         """
 
         #
-        # main title and manuscript type
+        # get publication level
+        # get main and sub title from top-level logical div as a fallback
+        self.title = ""
+        self.biblevel = None
+        self.bibtype = None
         div = self.get_div_structure()
-        self.title = div.get_LABEL() if div else ""
-        self.type = div.get_TYPE() if div else ""
+        if div:
+            self.title = div.get_LABEL() # overridden by any titleInfo
+            div_type = div.get_TYPE()
+            # differentiate between analytic and closed, periodic and singular, dependent and indepenent types
+            # (for use in bibl/@type and biblFull//title/@level):
+            # FIXME: verify this ruleset is correct/standardized (but criteria do not look orthogonal, e.g. "issue" and "proceeding")
+            if div_type in ["bachelor_thesis", "diploma_thesis", "magister_thesis", "master_thesis", "doctoral_thesis", "habilitation_thesis", "file", "register", "research_paper", "report", "atlas", "album", "letter", "document", "leaflet", "manuscript", "poster", "plan", "study", "judgement", "preprint", "dossier", "paper"]:
+                self.biblevel = 'u' # unpublished
+                self.bibtype = 'M' # monograph
+            elif div_type in ["contained_work", "folder", ]:
+                self.biblevel = 'a'
+                self.bibtype = 'DM' # dependent part of monograph
+                # ? or 'DS' # dependent part of series
+            elif div_type in ["article"]:
+                self.biblevel = 'a' # analytic
+                self.bibtype = 'JA' # journal article
+            elif div_type in ["periodical", "newspaper"]:
+                self.biblevel = 'j' # journal
+                self.bibtype = 'J' # journal
+            elif div_type in ["lecture"]:
+                self.biblevel = 's' # series
+                self.bibtype = '' # ?
+            elif div_type in ["monograph", ]:
+                self.biblevel = 'm' # monograph
+                self.bibtype = 'M' # monograph
+            elif div_type in ["multivolume_work", "volume"]:
+                self.biblevel = 'm' # monograph
+                self.bibtype = 'MM' # monograph within multi-volume monograph
+                # ? or 'MS' # monograph within series
+                # ? or 'MMS' # monograph within multi-volume monograph series
 
         #
-        # sub titles
-        self.sub_titles = []
-        for title_info in self.mods.get_titleInfo():
+        # titleInfo (main, sub, part/volume)
+        self.sub_titles = [] # subtitle (mods:titleInfo[mods:subTitle]
+        self.part_titles = dict() # part title of multipart subseries (mods:titleInfo[mods:partNumber|mods:partName])
+        self.volume_titles = dict() # volume title in multivolume monograph (mods:part[mods:detail])
+        title_infos = self.mods.get_titleInfo()
+        if len(title_infos):
+            def norm_title_first(titleInfo):
+                if not titleInfo.get_type() or titleInfo.get_type() == 'simple':
+                    # prefer untyped entry ('simple' most likely is from generateDS)
+                    return -1
+                if titleInfo.get_type() == 'uniform':
+                    return 0
+                return 1
+            title_info = sorted(title_infos, key=norm_title_first)[0]
+            if title_info.get_title():
+                self.title = title_info.get_title()[0].get_valueOf_().strip()
             for sub_title in title_info.get_subTitle():
                 self.sub_titles.append(sub_title.get_valueOf_().strip())
+            for part_number, part_name in zip(title_info.get_partNumber(), title_info.get_partName()):
+                self.part_titles[part_number.get_valueOf_().strip()] = part_name.get_valueOf_().strip()
+        part_infos = self.mods.get_part()
+        if len(part_infos):
+            part_info = part_infos[0]
+            order = str(part_info.get_order() or 0)
+            for detail in part_info.get_detail():
+                typ = detail.get_type()
+                val = ', '.join([title.get_valueOf_().strip()
+                                 for title in detail.get_number() + detail.get_caption() + detail.get_title()])
+                self.volume_titles[order, typ] = val
+
         #
         # authors and editors
         self.authors = []
@@ -366,9 +425,21 @@ class Mets:
 
     def get_sub_titles(self):
         """
-        Return the main title of the work.
+        Return the sub-titles of the work.
         """
         return self.sub_titles
+
+    def get_part_titles(self):
+        """
+        Return the part titles of the work.
+        """
+        return self.part_titles
+
+    def get_volume_titles(self):
+        """
+        Return the volume titles of the work.
+        """
+        return self.volume_titles
 
     def get_authors(self):
         """

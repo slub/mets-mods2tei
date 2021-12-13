@@ -38,6 +38,7 @@ class Tei:
         """
         Serializes the TEI object as xml string.
         """
+        # needs lxml>=4.5: etree.indent(self.tree, space="  ")
         return etree.tostring(self.tree, encoding="utf-8")
 
     def fill_from_mets(self, mets, ocr=True):
@@ -50,13 +51,16 @@ class Tei:
 
         # main title
         self.set_main_title(mets.get_main_title())
+        for sub in mets.get_sub_titles():
+            self.add_sub_title(sub)
+        for number, part in mets.get_part_titles().items():
+            self.add_part_title(number, part)
+        for (order, typ), volume in mets.get_volume_titles().items():
+            self.add_volume_title(order, typ, volume)
+        self.init_biblFull()
 
         # publication level
-        self.set_publication_level(mets.type)
-
-        # sub titles
-        for sub_title in mets.get_sub_titles():
-            self.add_sub_title(sub_title)
+        self.set_publication_level(mets.biblevel)
 
         # authors
         for typ, author in mets.get_authors():
@@ -100,12 +104,14 @@ class Tei:
 
         # shelf locator
         for shelf_locator in mets.get_shelf_locators():
-            self.add_ms_identifier("shelfmark", shelf_locator)
+            self.add_identifier("shelfmark", shelf_locator)
 
         # identifiers
         if mets.get_identifiers():
             for type_, value in mets.get_identifiers().items():
-                self.add_ms_identifier(type_.upper(), value)
+                if type_ in ["vd16", "vd17", "vd18"]:
+                    type_ = "VD"
+                self.add_identifier(type_.upper(), value)
 
         # type description
         if mets.get_scripts():
@@ -125,7 +131,7 @@ class Tei:
 
         #
         # citation
-        self.compile_bibl()
+        self.compile_bibl(mets.bibtype)
 
         #
         # text part
@@ -157,13 +163,6 @@ class Tei:
         return self.tree.xpath('//tei:titleStmt/tei:title[@type="main"]', namespaces=ns)[0].text
     
     @property
-    def publication_level(self):
-        """
-        Return the level of publication ('monographic' vs. 'analytic')
-        """
-        return self.tree.xpath('//tei:sourceDesc/tei:biblFull/tei:titleStmt/tei:title[@type="main"]', namespaces=ns)[0].get("level")
-
-    @property
     def subtitles(self):
         """
         Return information on the subtitle(s) of the work represented
@@ -181,6 +180,13 @@ class Tei:
         for author in self.tree.xpath('//tei:fileDesc/tei:titleStmt/tei:author', namespaces=ns):
             authors.append(", ".join(author.xpath('descendant-or-self::*/text()')))
         return authors
+
+    @property
+    def publication_level(self):
+        """
+        Return the level of publication ('monographic' vs. 'analytic')
+        """
+        return self.tree.xpath('//tei:sourceDesc/tei:biblFull/tei:titleStmt/tei:title[@type="main"]', namespaces=ns)[0].get("level")
 
     @property
     def dates(self):
@@ -330,26 +336,70 @@ class Tei:
 
     def set_main_title(self, string):
         """
-        Set the main title of the title statements.
+        Set the main title of the tei:titleStmt.
         """
-        for main_title in self.tree.xpath('//tei:titleStmt/tei:title[@type="main"]', namespaces=ns):
-            main_title.text = string
-
-    def set_publication_level(self, level):
-        """
-        Set the level of publication ('monographic' vs. 'analytic')
-        """
-        self.tree.xpath('//tei:sourceDesc/tei:biblFull/tei:titleStmt/tei:title[@type="main"]', namespaces=ns)[0].set("level", level)
+        titleStmt = self.tree.xpath('//tei:titleStmt', namespaces=ns)[0]
+        for node in titleStmt.xpath('tei:title[@type="main"]', namespaces=ns):
+            node.text = string
 
     def add_sub_title(self, string):
         """
-        Add a sub title to the title statements.
+        Add a sub-title of the tei:titleStmt.
         """
-        sub_title = etree.Element("%stitle" % TEI)
-        sub_title.set("type", "sub")
-        sub_title.text = string
-        for title_stmt in self.tree.xpath('//tei:titleStmt', namespaces=ns):
-            title_stmt.append(copy.deepcopy(sub_title))
+        titleStmt = self.tree.xpath('//tei:titleStmt', namespaces=ns)[0]
+        node = etree.Element("%stitle" % TEI)
+        node.set("type", "sub")
+        node.text = string
+        titleStmt.append(copy.deepcopy(node))
+
+    def add_part_title(self, number, string):
+        """
+        Add a part title of the tei:titleStmt.
+        """
+        titleStmt = self.tree.xpath('//tei:titleStmt', namespaces=ns)[0]
+        node = etree.Element("%stitle" % TEI)
+        node.set("type", "part")
+        node.set("n", number)
+        node.text = string
+        titleStmt.append(copy.deepcopy(node))
+
+    def add_volume_title(self, number, typ, string):
+        """
+        Add a volume title of the tei:titleStmt.
+        """
+        titleStmt = self.tree.xpath('//tei:titleStmt', namespaces=ns)[0]
+        node = etree.Element("%stitle" % TEI)
+        node.set("type", typ)
+        node.set("n", number)
+        node.text = string
+        titleStmt.append(copy.deepcopy(node))
+
+    def init_biblFull(self):
+        """
+        Set the main, sub, and part/volume titles of the tei:biblFull by copying from tei:titleStmt.
+        """
+        titleStmt = self.tree.xpath('//tei:titleStmt', namespaces=ns)[0]
+        bibl = self.tree.xpath('//tei:sourceDesc/tei:biblFull', namespaces=ns)[0]
+        bibl.append(copy.deepcopy(titleStmt))
+
+    def set_publication_level(self, level):
+        """
+        Set the level of publication:
+        - 'm': (monographic) the title applies to a monograph such as a book
+               or other item considered to be a distinct publication, 
+               including single volumes of multi-volume works
+        - 'a': (analytic) the title applies to an analytic item, such as an article, 
+               poem, or other work published as part of a larger item.
+        - 'j': (journal) the title applies to any serial or periodical publication
+               such as a journal, magazine, or newspaper
+        - 's': (series) the title applies to a series of otherwise distinct publications
+               such as a collection
+        - 'u': (unpublished) the title applies to any unpublished material
+               (including theses and dissertations unless published by a commercial press)
+        """
+        assert level in ['m', 'a', 'j', 's', 'u']
+        for title in self.tree.xpath('//tei:sourceDesc/tei:biblFull/tei:titleStmt/tei:title', namespaces=ns):
+            title.set("level", level)
 
     def add_author(self, person, typ):
         """
@@ -492,13 +542,13 @@ class Tei:
         repository_node = etree.SubElement(ms_ident, "%srepository" % TEI)
         repository_node.text = repository
 
-    def add_ms_identifier(self, type_, value):
+    def add_identifier(self, type_, value):
         """
         Add the URN, PURL, VD ID, shelfmark etc. of the digital edition
         """
-        ms_ident_idno = self.tree.xpath('//tei:msDesc/tei:msIdentifier/tei:idno', namespaces=ns)[0]
+        ms_ident = self.tree.xpath('//tei:msDesc/tei:msIdentifier/tei:idno', namespaces=ns)[0]
         # FIXME: URN, DTAID, ... should go to /tei:fileDesc/tei:publicationStmt/tei:idno instead
-        idno = etree.SubElement(ms_ident_idno, "%sidno" % TEI)
+        idno = etree.SubElement(ms_ident, "%sidno" % TEI)
         idno.set("type", type_)
         idno.text = value
 
@@ -542,16 +592,16 @@ class Tei:
         creation = etree.SubElement(profile_desc, "%screation" % TEI)
         creation.text = collection
 
-    def compile_bibl(self):
+    def compile_bibl(self, type_):
         """
         Compile the content of the short citation element 'bibl' based on the current state
         """
-        if self.publication_level:
-            self.bibl.set("type", self.publication_level)
+        if type_:
+            self.bibl.set("type", type_)
         bibl_text = ""
         if self.authors:
             bibl_text += "; ".join(self.authors) + ": "
-        elif self.publication_level == "monograph":
+        elif type_.startswith("M"):
             bibl_text = "[N. N.], "
         bibl_text += self.main_title + "."
         if self.places:

@@ -23,6 +23,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add ALTO `HYP` text content if available, #52
 - Allow empty logical structMap and structLink, fallback to physical, or empty, #57
 - Allow partial dmdSec (MODS) or amdSec, fallback to empty, #46, #51
+- Pass all `mods:identifier`s to `msIdentifier/idno` (not just VD and URN)
+- Parse full `titleInfo` (main/sub/part/volume), and re-use in `biblFull`
+- Prefer `titleInfo/title` over `div/@LABEL` if available
+- Map top logical `div/@TYPE` into allowed `biblFull/title/@level` only
+- Map top logical `div/@TYPE` into appropriate `bibl/@type` if possible
 
 ## [0.1.1] - 2020-05-11
 ### Added
