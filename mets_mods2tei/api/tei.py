@@ -60,7 +60,7 @@ class Tei:
         self.init_biblFull()
 
         # publication level
-        self.set_publication_level(mets.biblevel)
+        self.set_publication_level(mets.biblevel or 'u')
 
         # authors
         for typ, author in mets.get_authors():
