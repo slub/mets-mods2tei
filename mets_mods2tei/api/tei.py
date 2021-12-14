@@ -601,7 +601,7 @@ class Tei:
         bibl_text = ""
         if self.authors:
             bibl_text += "; ".join(self.authors) + ": "
-        elif type_.startswith("M"):
+        elif type_ and type_.startswith("M"):
             bibl_text = "[N. N.], "
         bibl_text += self.main_title + "."
         if self.places:
