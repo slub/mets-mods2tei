@@ -324,7 +324,7 @@ class Tei:
         Return information on the collections of the work represented
         by the TEI Header.
         """
-        return [collection.text for collection in self.tree.xpath('//tei:profileDesc/tei:creation', namespaces=ns)]
+        return [collection.text for collection in self.tree.xpath('//tei:msDesc/tei:msIdentifier/tei:collection', namespaces=ns)]
 
     @property
     def bibl(self):
@@ -588,9 +588,9 @@ class Tei:
         """
         Add a (free-text) collection of the digital document
         """
-        profile_desc = self.tree.xpath('//tei:profileDesc', namespaces=ns)[0]
-        creation = etree.SubElement(profile_desc, "%screation" % TEI)
-        creation.text = collection
+        profile_desc = self.tree.xpath('//tei:msDesc/tei:msIdentifier', namespaces=ns)[0]
+        coll = etree.SubElement(profile_desc, "%scollection" % TEI)
+        coll.text = collection
 
     def compile_bibl(self, type_):
         """
