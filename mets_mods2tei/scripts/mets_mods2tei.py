@@ -39,6 +39,8 @@ def cli(mets, output, ocr, text_group, img_group, log_level):
         f = urlopen(mets)
     except:
         f = open(mets, "rb")
+        # physical file: enter METS directory for relative FLocat refs
+        os.chdir(os.path.dirname(mets))
 
     #
     # read in METS
