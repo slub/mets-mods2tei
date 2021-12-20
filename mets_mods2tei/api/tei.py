@@ -68,7 +68,7 @@ class Tei:
             self.add_author(author,typ)
 
         # notes
-        for note in mets.get_notes():
+        for note in mets.notes:
             self.add_note(note)
 
         # places
@@ -277,7 +277,7 @@ class Tei:
         Return information on the editions of the digitalized work represented
         by the TEI Header.
         """
-        return [digital_edition.text for digital_edition in self.tree.xpath('//tei:fileDesc/tei:titleStmt/tei:editionStmt/tei:edition', namespaces=ns)]
+        return [digital_edition.text for digital_edition in self.tree.xpath('//tei:fileDesc/tei:editionStmt/tei:edition', namespaces=ns)]
 
     @property
     def encoding_dates(self):
@@ -509,7 +509,7 @@ class Tei:
         """
         Add an edition statement with details on the digital edition.
         """
-        title_stmt = self.tree.xpath('//tei:titleStmt', namespaces=ns)[0]
+        title_stmt = self.tree.xpath('//tei:fileDesc', namespaces=ns)[0]
         edition_stmt = etree.SubElement(title_stmt, "%seditionStmt" % TEI)
         edition = etree.SubElement(edition_stmt, "%sedition" % TEI)
         edition.text = digital_edition
