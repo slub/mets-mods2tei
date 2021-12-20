@@ -77,7 +77,8 @@ class Mets:
         self.license_url = None
         self.encoding_date = None
         self.encoding_desc = None
-        self.owner_manuscript = None
+        self.location_phys = None
+        self.location_urls = None
         self.shelf_locators = None
         self.identifiers = None
         self.scripts = None
@@ -339,7 +340,9 @@ class Mets:
             if location.get_shelfLocator():
                 self.shelf_locators.extend([shelf_locator.get_valueOf_() for shelf_locator in location.get_shelfLocator()])
             elif location.get_physicalLocation():
-                self.owner_manuscript = location.get_physicalLocation()
+                self.location_phys = location.get_physicalLocation()[0]
+            elif location.get_url():
+                self.location_urls = location.get_url()
 
         #
         # URN and VD ID
@@ -513,11 +516,17 @@ class Mets:
         """
         return self.encoding_desc
 
-    def get_owner_manuscript(self):
+    def get_location_phys(self):
         """
-        Return the owner of the original manuscript
+        Return the physical location of the original manuscript
         """
-        return self.owner_manuscript
+        return self.location_phys
+
+    def get_location_urls(self):
+        """
+        Return the URL location of the original manuscript
+        """
+        return self.location_urls
 
     def get_shelf_locators(self):
         """

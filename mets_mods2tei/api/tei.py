@@ -5,6 +5,7 @@ from lxml import etree
 import os
 import logging
 import copy
+import re
 
 from contextlib import closing
 from urllib.request import urlopen
@@ -99,8 +100,26 @@ class Tei:
         self.set_encoding_description(mets.get_encoding_description())
 
         # repository
-        if mets.get_owner_manuscript():
-            self.add_repository(mets.get_owner_manuscript())
+        if mets.get_location_phys():
+            # hard to distinguish between settlement, institution and repository at this point
+            self.add_repository(mets.get_location_phys())
+        if mets.get_location_urls():
+            for url in mets.get_location_urls():
+                # hard to determine type of URL at this point – could be (some form of) presentation,
+                # URN, PPN, EPN, DOI, URLWeb, URLCatalogue, URLImages, URLText, URLHTML, URLXML, URLTCF, URLIIIF
+                if url.startswith("urn:"):
+                    typ = "URN"
+                elif re.fullmatch("10[.][0-9]*/.*", url):
+                    typ = "DOI"
+                elif re.fullmatch("[0-9]{8}[0-9X]{1,2}", url):
+                    typ = "PPN"
+                elif re.fullmatch("([0-9]+-)+[0-9]+", url):
+                    typ = "ISBN"
+                elif re.fullmatch("[0-9]{4}-[0-9]{3}[0-9xX]", url):
+                    typ = "ISSN"
+                else:
+                    typ = "URL"
+                self.add_identifier(typ, url)
 
         # shelf locator
         for shelf_locator in mets.get_shelf_locators():
@@ -534,13 +553,13 @@ class Tei:
             encoding_desc_details = etree.SubElement(encoding_desc, "%sp" % TEI)
             encoding_desc_details.text = "Encoded with the help of %s." % creator
 
-    def add_repository(self, repository):
+    def add_repository(self, name):
         """
         Add the repository of the (original) manuscript
         """
         ms_ident = self.tree.xpath('//tei:msDesc/tei:msIdentifier', namespaces=ns)[0]
-        repository_node = etree.SubElement(ms_ident, "%srepository" % TEI)
-        repository_node.text = repository
+        repository = etree.SubElement(ms_ident, "%srepository" % TEI)
+        repository.text = name
 
     def add_identifier(self, type_, value):
         """
