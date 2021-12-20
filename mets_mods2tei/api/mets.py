@@ -69,6 +69,7 @@ class Mets:
         self.editors = None
         self.places = None
         self.dates = None
+        self.notes = None
         self.publishers = None
         self.edition = None
         self.digital_origin = None
@@ -214,6 +215,12 @@ class Mets:
                 elif role.get_valueOf_() == "aut":
                     self.authors.append((typ, person))
 
+        notes = self.mods.get_note()
+        if notes:
+            self.notes = [note.get_valueOf_() for note in notes]
+        else:
+            self.notes = []
+
         #
         # orgin info
         origin_info = self.mods.get_originInfo()
@@ -224,7 +231,7 @@ class Mets:
             for place in origin_info[0].get_place():
                 place_ext = {}
                 for place_term in place.get_placeTerm():
-                    place_ext[place_term.get_type()] = place_term.get_valueOf_()
+                    place_ext[place_term.get_type() or 'text'] = place_term.get_valueOf_()
                 self.places.append(place_ext)
 
         # publication dates

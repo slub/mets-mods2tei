@@ -67,6 +67,10 @@ class Tei:
         for typ, author in mets.get_authors():
             self.add_author(author,typ)
 
+        # notes
+        for note in mets.get_notes():
+            self.add_note(note)
+
         # places
         for place in mets.get_places():
             self.add_place(place)
@@ -444,6 +448,19 @@ class Tei:
             org_name.text = " ".join(person[key] for key in person)
         for title_stmt in self.tree.xpath('//tei:titleStmt', namespaces=ns):
             title_stmt.append(copy.deepcopy(author))
+
+    def add_note(self, note):
+        """
+        Add a note with details about the document.
+        """
+        fileDesc = self.tree.xpath('//tei:fileDesc', namespaces=ns)[0]
+        if not fileDesc.xpath('/tei:notesStmt', namespaces=ns):
+            notes = etree.SubElement(fileDesc, "%snotesStmt" % TEI)
+        else:
+            notes = fileDesc.xpath('/tei:notesStmt', namespaces=ns)[0]
+        node = etree.SubElement(notes, "%snote" % TEI)
+        node.text = note
+        node.set("type", "remarkDocument")
 
     def add_place(self, place):
         """
