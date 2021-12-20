@@ -144,6 +144,15 @@ class Tei:
         for ident_name in mets.get_languages().items():
             self.add_language(ident_name)
 
+        # classes
+        for scheme in mets.classifications:
+            classes = mets.classifications[scheme]
+            for code in classes:
+                self.add_classcode(scheme, code)
+        for scheme in mets.subjects:
+            keywords = mets.subjects[scheme]
+            self.add_keywords(scheme, keywords)
+
         # extents
         for extent in mets.extents:
             self.add_extent(extent)
@@ -597,6 +606,36 @@ class Tei:
         for line in description.split('\n'):
             par = etree.SubElement(type_desc, "%sp" % TEI)
             par.text = line
+
+    def add_classcode(self, scheme, code):
+        """
+        Add a document classification code.
+        """
+        profile_desc = self.tree.xpath('//tei:profileDesc', namespaces=ns)[0]
+        if not profile_desc.xpath('/tei:textClass', namespaces=ns):
+            textclass = etree.SubElement(profile_desc, "%stextClass" % TEI)
+        else:
+            textclass = profile_desc.xpath('/tei:textClass', namespaces=ns)[0]
+        classcode = etree.SubElement(textclass, "%sclassCode" % TEI)
+        classcode.set("scheme", scheme)
+        classcode.text = code
+
+    def add_keywords(self, scheme, terms):
+        """
+        Add a document classification list of terms.
+        """
+        profile_desc = self.tree.xpath('//tei:profileDesc', namespaces=ns)[0]
+        if not profile_desc.xpath('/tei:textClass', namespaces=ns):
+            textclass = etree.SubElement(profile_desc, "%stextClass" % TEI)
+        else:
+            textclass = profile_desc.xpath('/tei:textClass', namespaces=ns)[0]
+        keywords = etree.SubElement(textclass, "%skeywords" % TEI)
+        keywords.set("scheme", scheme)
+        for type_, term in terms:
+            node = etree.SubElement(keywords, "%sterm" % TEI)
+            node.text = term
+            if type_:
+                node.set("type", type_)
 
     def add_language(self, language):
         """

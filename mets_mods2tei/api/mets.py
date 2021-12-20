@@ -85,6 +85,8 @@ class Mets:
         self.scripts = None
         self.collections = None
         self.languages = None
+        self.classifications = None
+        self.subjects = None
         self.extents = None
         self.series = None
 
@@ -271,6 +273,26 @@ class Mets:
             self.languages['mis'] = 'Unkodiert'
         if not self.scripts:
             self.scripts.append(self.script_iso.get('Unknown'))
+
+        #
+        # classifications and subjects
+        classifications = self.mods.get_classification()
+        self.classifications = dict()
+        if classifications:
+            for classification in classifications:
+                codes = self.classifications.setdefault(classification.get_authority(), list())
+                codes.append(classification.get_valueOf_())
+        subjects = self.mods.get_subject()
+        self.subjects = dict()
+        if subjects:
+            for subject in subjects:
+                keywords = self.subjects.setdefault(subject.get_authority(), list())
+                for topic in subject.topic:
+                    keywords.append(('topic', topic.get_valueOf_()))
+                for geographic in subject.geographic:
+                    keywords.append(('geographic', geographic.get_valueOf_()))
+                for temporal in subject.temporal:
+                    keywords.append(('temporal', temporal.get_valueOf_()))
 
         #
         # physical description
