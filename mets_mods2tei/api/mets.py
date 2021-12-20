@@ -365,12 +365,13 @@ class Mets:
 
         # location-related elements are optional or conditional
         self.shelf_locators = []
-        for location in self.mods.get_location():
+        if self.mods.get_location():
+            location = self.mods.get_location()[0]
             if location.get_shelfLocator():
                 self.shelf_locators.extend([shelf_locator.get_valueOf_() for shelf_locator in location.get_shelfLocator()])
-            elif location.get_physicalLocation():
+            if location.get_physicalLocation():
                 self.location_phys = location.get_physicalLocation()[0].get_valueOf_()
-            elif location.get_url():
+            if location.get_url():
                 self.location_urls = [url.get_valueOf_() for url in location.get_url()]
 
         #
