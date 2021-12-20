@@ -340,9 +340,9 @@ class Mets:
             if location.get_shelfLocator():
                 self.shelf_locators.extend([shelf_locator.get_valueOf_() for shelf_locator in location.get_shelfLocator()])
             elif location.get_physicalLocation():
-                self.location_phys = location.get_physicalLocation()[0]
+                self.location_phys = location.get_physicalLocation()[0].get_valueOf_()
             elif location.get_url():
-                self.location_urls = location.get_url()
+                self.location_urls = [url.get_valueOf_() for url in location.get_url()]
 
         #
         # URN and VD ID
