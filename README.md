@@ -118,7 +118,7 @@ Usage: mm2tei [OPTIONS] METS
 Options:
   -O, --output FILENAME           File path to write TEI output to
   -o, --ocr                       Serialize OCR into resulting TEI
-  -T, --text-group TEXT           File group which contains the full-text
+  -T, --text-group TEXT           File group which contains the full text
   -I, --img-group TEXT            File group which contains the images
   -l, --log-level [DEBUG|INFO|WARN|ERROR|OFF]
   -h, --help                      Show this message and exit.
