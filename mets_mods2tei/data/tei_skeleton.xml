@@ -8,13 +8,12 @@
         <title type="main">[Haupttitel]</title>
       </titleStmt>
       <publicationStmt>
+        <idno>
+        </idno>
       </publicationStmt>
       <sourceDesc>
         <bibl type="M">[Zitiertitel]</bibl>
         <biblFull>
-          <titleStmt>
-            <title level="m" type="main">[Haupttitel einer Monographie]</title>
-          </titleStmt>
           <publicationStmt>
           </publicationStmt>
         </biblFull>

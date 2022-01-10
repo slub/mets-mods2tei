@@ -14,7 +14,7 @@ setup(
     packages=find_packages(exclude=('tests', 'docs')),
     package_data={'mets_mods2tei' : ['data/tei_skeleton.xml', 'data/iso15924-utf8-20180827.txt']},
     install_requires=open('requirements.txt').read().split('\n'),
-    python_requires=">=3.5",
+    python_requires=">=3.6",
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Console',

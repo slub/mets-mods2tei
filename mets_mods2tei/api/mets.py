@@ -52,18 +52,24 @@ class Mets:
         self.tree = None
         self.mets = None
         self.mods = None
+        self.page_map = {}
         self.order_map = {}
+        self.orderlabel_map = {}
         self.img_map = {}
         self.alto_map = {}
         self.struct_links = {}
         self.fulltext_group_name = 'FULLTEXT'
+        self.image_group_name = 'DEFAULT'
 
         self.title = None
         self.sub_titles = None
+        self.part_titles = None
+        self.volume_titles = None
         self.authors = None
         self.editors = None
         self.places = None
         self.dates = None
+        self.notes = None
         self.publishers = None
         self.edition = None
         self.digital_origin = None
@@ -72,13 +78,15 @@ class Mets:
         self.license_url = None
         self.encoding_date = None
         self.encoding_desc = None
-        self.owner_manuscript = None
+        self.location_phys = None
+        self.location_urls = None
         self.shelf_locators = None
-        self.urn = None
-        self.vd_id = None
+        self.identifiers = None
         self.scripts = None
         self.collections = None
         self.languages = None
+        self.classifications = None
+        self.subjects = None
         self.extents = None
         self.series = None
 
@@ -122,18 +130,74 @@ class Mets:
         """
 
         #
-        # main title and manuscript type
-        struct_map_logical = list(filter(lambda x: x.get_TYPE() == "LOGICAL", self.mets.get_structMap()))[0]
-        title = struct_map_logical.get_div()
-        self.title = title.get_LABEL()
-        self.type = title.get_TYPE()
+        # get publication level
+        # get main and sub title from top-level logical div as a fallback
+        self.title = ""
+        self.biblevel = None
+        self.bibtype = None
+        div = self.get_div_structure()
+        if div:
+            self.title = div.get_LABEL() # overridden by any titleInfo
+            div_type = div.get_TYPE()
+            # differentiate between analytic and closed, periodic and singular, dependent and indepenent types
+            # (for use in bibl/@type and biblFull//title/@level):
+            # FIXME: verify this ruleset is correct/standardized (but criteria do not look orthogonal, e.g. "issue" and "proceeding")
+            if div_type in ["bachelor_thesis", "diploma_thesis", "magister_thesis", "master_thesis", "doctoral_thesis", "habilitation_thesis", "file", "register", "research_paper", "report", "atlas", "album", "letter", "document", "leaflet", "manuscript", "poster", "plan", "study", "judgement", "preprint", "dossier", "paper"]:
+                self.biblevel = 'u' # unpublished
+                self.bibtype = 'M' # monograph
+            elif div_type in ["contained_work", "folder", ]:
+                self.biblevel = 'a'
+                self.bibtype = 'DM' # dependent part of monograph
+                # ? or 'DS' # dependent part of series
+            elif div_type in ["article"]:
+                self.biblevel = 'a' # analytic
+                self.bibtype = 'JA' # journal article
+            elif div_type in ["periodical", "newspaper"]:
+                self.biblevel = 'j' # journal
+                self.bibtype = 'J' # journal
+            elif div_type in ["lecture"]:
+                self.biblevel = 's' # series
+                self.bibtype = '' # ?
+            elif div_type in ["monograph", ]:
+                self.biblevel = 'm' # monograph
+                self.bibtype = 'M' # monograph
+            elif div_type in ["multivolume_work", "volume"]:
+                self.biblevel = 'm' # monograph
+                self.bibtype = 'MM' # monograph within multi-volume monograph
+                # ? or 'MS' # monograph within series
+                # ? or 'MMS' # monograph within multi-volume monograph series
 
         #
-        # sub titles
-        self.sub_titles = []
-        for title_info in self.mods.get_titleInfo():
+        # titleInfo (main, sub, part/volume)
+        self.sub_titles = [] # subtitle (mods:titleInfo[mods:subTitle]
+        self.part_titles = dict() # part title of multipart subseries (mods:titleInfo[mods:partNumber|mods:partName])
+        self.volume_titles = dict() # volume title in multivolume monograph (mods:part[mods:detail])
+        title_infos = self.mods.get_titleInfo()
+        if len(title_infos):
+            def norm_title_first(titleInfo):
+                if not titleInfo.get_type() or titleInfo.get_type() == 'simple':
+                    # prefer untyped entry ('simple' most likely is from generateDS)
+                    return -1
+                if titleInfo.get_type() == 'uniform':
+                    return 0
+                return 1
+            title_info = sorted(title_infos, key=norm_title_first)[0]
+            if title_info.get_title():
+                self.title = title_info.get_title()[0].get_valueOf_().strip()
             for sub_title in title_info.get_subTitle():
                 self.sub_titles.append(sub_title.get_valueOf_().strip())
+            for part_number, part_name in zip(title_info.get_partNumber(), title_info.get_partName()):
+                self.part_titles[part_number.get_valueOf_().strip()] = part_name.get_valueOf_().strip()
+        part_infos = self.mods.get_part()
+        if len(part_infos):
+            part_info = part_infos[0]
+            order = str(part_info.get_order() or 0)
+            for detail in part_info.get_detail():
+                typ = detail.get_type()
+                val = ', '.join([title.get_valueOf_().strip()
+                                 for title in detail.get_number() + detail.get_caption() + detail.get_title()])
+                self.volume_titles[order, typ] = val
+
         #
         # authors and editors
         self.authors = []
@@ -153,31 +217,42 @@ class Mets:
                 elif role.get_valueOf_() == "aut":
                     self.authors.append((typ, person))
 
+        notes = self.mods.get_note()
+        if notes:
+            self.notes = [note.get_valueOf_() for note in notes]
+        else:
+            self.notes = []
+
         #
         # orgin info
-        origin_info = self.mods.get_originInfo()[0]
+        origin_info = self.mods.get_originInfo()
 
         # publication place
         self.places = []
-        for place in origin_info.get_place():
-            place_ext = {}
-            for place_term in place.get_placeTerm():
-                place_ext[place_term.get_type()] = place_term.get_valueOf_()
-            self.places.append(place_ext)
+        if origin_info:
+            for place in origin_info[0].get_place():
+                place_ext = {}
+                for place_term in place.get_placeTerm():
+                    place_ext[place_term.get_type() or 'text'] = place_term.get_valueOf_()
+                self.places.append(place_ext)
 
         # publication dates
         self.dates = {}
-        for date_issued in origin_info.get_dateIssued():
-            date_type = date_issued.get_point() if date_issued.get_point() != None else "unspecified"
-            self.dates[date_type] = date_issued.get_valueOf_()
+        if origin_info:
+            for date_issued in origin_info[0].get_dateIssued():
+                date_type = date_issued.get_point() if date_issued.get_point() != None else "unspecified"
+                self.dates[date_type] = date_issued.get_valueOf_()
 
         # publishers
         self.publishers = []
-        for publisher in origin_info.get_publisher():
-            self.publishers.append(publisher.get_valueOf_())
+        if origin_info:
+            for publisher in origin_info[0].get_publisher():
+                self.publishers.append(publisher.get_valueOf_())
 
         # edition of the manuscript
-        self.edition = origin_info.get_edition()[0].get_valueOf_() if origin_info.get_edition() else ""
+        self.edition = ""
+        if origin_info and origin_info[0].get_edition():
+            self.edition = origin_info[0].get_edition()[0].get_valueOf_()
 
         #
         # languages and scripts
@@ -200,29 +275,56 @@ class Mets:
             self.scripts.append(self.script_iso.get('Unknown'))
 
         #
+        # classifications and subjects
+        classifications = self.mods.get_classification()
+        self.classifications = dict()
+        if classifications:
+            for classification in classifications:
+                codes = self.classifications.setdefault(classification.get_authority(), list())
+                codes.append(classification.get_valueOf_())
+        subjects = self.mods.get_subject()
+        self.subjects = dict()
+        if subjects:
+            for subject in subjects:
+                keywords = self.subjects.setdefault(subject.get_authority(), list())
+                for topic in subject.topic:
+                    keywords.append(('topic', topic.get_valueOf_()))
+                for geographic in subject.geographic:
+                    keywords.append(('geographic', geographic.get_valueOf_()))
+                for temporal in subject.temporal:
+                    keywords.append(('temporal', temporal.get_valueOf_()))
+
+        #
         # physical description
-        physical_description = self.mods.get_physicalDescription()[0]
+        physical_description = self.mods.get_physicalDescription()
 
         # digital origin
-        self.digital_origin = physical_description.get_digitalOrigin()[0] if physical_description.get_digitalOrigin() else ""
+        self.digital_origin = ""
+        if physical_description and physical_description[0].get_digitalOrigin():
+            self.digital_origin = physical_description[0].get_digitalOrigin()[0]
 
         # extent
         self.extents = []
-        for extent in physical_description.get_extent():
-            self.extents.append(extent.get_valueOf_())
+        if physical_description:
+            for extent in physical_description[0].get_extent():
+                self.extents.append(extent.get_valueOf_())
 
         #
         # dv FIXME: replace with generated code as soon as schema is available
-        dv = etree.fromstring(self.mets.get_amdSec()[0].get_rightsMD()[0].get_mdWrap().get_xmlData().get_anytypeobjs_()[0])
+        amdsec = self.mets.get_amdSec()
+        if amdsec and amdsec[0].get_rightsMD():
+            dv = etree.fromstring(amdsec[0].get_rightsMD()[0].get_mdWrap().get_xmlData().get_anytypeobjs_()[0])
+        else:
+            dv = None
 
         # owner of the digital edition
-        self.owner_digital = dv.xpath("//dv:owner", namespaces=ns)[0].text
+        self.owner_digital = dv.xpath("//dv:owner", namespaces=ns)[0].text if dv is not None else ""
 
         # availability/license
         # common case
         self.license = ""
         self.license_url = ""
-        license_nodes = dv.xpath("//dv:license", namespaces=ns)
+        license_nodes = dv.xpath("//dv:license", namespaces=ns) if dv is not None else []
         if license_nodes != []:
             self.license = license_nodes[0].text
             self.license_url = ""
@@ -263,22 +365,22 @@ class Mets:
 
         # location-related elements are optional or conditional
         self.shelf_locators = []
-        for location in self.mods.get_location():
+        if self.mods.get_location():
+            location = self.mods.get_location()[0]
             if location.get_shelfLocator():
                 self.shelf_locators.extend([shelf_locator.get_valueOf_() for shelf_locator in location.get_shelfLocator()])
-            elif location.get_physicalLocation():
-                self.owner_manuscript = location.get_physicalLocation()
+            if location.get_physicalLocation():
+                self.location_phys = location.get_physicalLocation()[0].get_valueOf_()
+            if location.get_url():
+                self.location_urls = [url.get_valueOf_() for url in location.get_url()]
 
         #
         # URN and VD ID
-        self.urn = ""
-        self.vd_id = ""
+        self.identifiers = dict()
         identifiers = self.mods.get_identifier()
-        for identifier in identifiers:
-            if identifier.get_type().lower() == "urn":
-                self.urn = identifier.get_valueOf_()
-            elif identifier.get_type().lower().startswith("vd"):
-                self.vd_id = identifier.get_valueOf_()
+        if len(identifiers):
+            for identifier in identifiers:
+                self.identifiers[identifier.get_type()] = identifier.get_valueOf_()
 
         #
         # collections (from relatedItem)
@@ -298,30 +400,43 @@ class Mets:
         if fulltext_group:
             fulltext_map = {}
             for entry in fulltext_group[0].xpath("./mets:file", namespaces=ns):
-                fulltext_map[entry.get("ID")] = entry.find("./" + METS + "FLocat").get("%shref" % XLINK)
+                url = entry.find("./" + METS + "FLocat").get("%shref" % XLINK)
+                self.logger.debug("Found full-text file: %s", url)
+                fulltext_map[entry.get("ID")] = url
 
-        # default
-        default_map = {}
-        default_group = self.tree.xpath("//mets:fileGrp[@USE='DEFAULT']", namespaces=ns)
-        if default_group:
-            for entry in default_group[0].xpath("./mets:file", namespaces=ns):
-                default_map[entry.get("ID")] = entry.find("./" + METS + "FLocat").get("%shref" % XLINK)
+        # image
+        image_map = {}
+        image_group = self.tree.xpath("//mets:fileGrp[@USE='%s']" % self.image_group_name, namespaces=ns)
+        if image_group:
+            for entry in image_group[0].xpath("./mets:file", namespaces=ns):
+                url = entry.find("./" + METS + "FLocat").get("%shref" % XLINK)
+                self.logger.debug("Found image file: %s", url)
+                image_map[entry.get("ID")] = url
 
         # struct map physical
-        for div in list(filter(lambda x: x.get_TYPE() == 'PHYSICAL', self.mets.get_structMap()))[0].get_div().get_div():
-            self.order_map[div.get_ID()] = div.get_ORDER()
+        for div in self.get_page_structure().get_div():
+            page = div.get_ID()
+            self.logger.debug("Found physical page: %s", page)
+            self.page_map[page] = div
+            if div.get_ORDER():
+                self.order_map[page] = div.get_ORDER()
+            if div.get_ORDERLABEL():
+                self.orderlabel_map[page] = div.get_ORDERLABEL()
             for fptr in div.get_fptr():
                 if fptr.get_FILEID() in fulltext_map:
-                    self.alto_map[div.get_ID()] = fulltext_map[fptr.get_FILEID()]
-                elif fptr.get_FILEID() in default_map:
-                    self.img_map[div.get_ID()] = default_map[fptr.get_FILEID()]
+                    self.alto_map[page] = fulltext_map[fptr.get_FILEID()]
+                elif fptr.get_FILEID() in image_map:
+                    self.img_map[page] = image_map[fptr.get_FILEID()]
 
         # struct links
-        for sm_link in self.tree.xpath("//mets:structLink", namespaces=ns)[0].iterchildren():
-            if sm_link.get("%sto" % XLINK) in self.alto_map:
-                if sm_link.get("%sfrom" % XLINK) not in self.struct_links:
-                    self.struct_links[sm_link.get("%sfrom" % XLINK)] = []
-                self.struct_links[sm_link.get("%sfrom" % XLINK)].append(sm_link.get("%sto" % XLINK))
+        structlinks = self.tree.xpath("//mets:structLink/*", namespaces=ns)
+        for sm_link in structlinks:
+            logical = sm_link.get("%sfrom" % XLINK)
+            physical = sm_link.get("%sto" % XLINK)
+            if physical in self.alto_map:
+                self.logger.debug("Found structLink from %s to physical page: %s", logical, physical)
+                pages = self.struct_links.setdefault(logical, list())
+                pages.append(physical)
 
     @property
     def fulltext_group_name(self):
@@ -343,9 +458,21 @@ class Mets:
 
     def get_sub_titles(self):
         """
-        Return the main title of the work.
+        Return the sub-titles of the work.
         """
         return self.sub_titles
+
+    def get_part_titles(self):
+        """
+        Return the part titles of the work.
+        """
+        return self.part_titles
+
+    def get_volume_titles(self):
+        """
+        Return the volume titles of the work.
+        """
+        return self.volume_titles
 
     def get_authors(self):
         """
@@ -419,11 +546,17 @@ class Mets:
         """
         return self.encoding_desc
 
-    def get_owner_manuscript(self):
+    def get_location_phys(self):
         """
-        Return the owner of the original manuscript
+        Return the physical location of the original manuscript
         """
-        return self.owner_manuscript
+        return self.location_phys
+
+    def get_location_urls(self):
+        """
+        Return the URL location of the original manuscript
+        """
+        return self.location_urls
 
     def get_shelf_locators(self):
         """
@@ -431,17 +564,11 @@ class Mets:
         """
         return self.shelf_locators
 
-    def get_urn(self):
+    def get_identifiers(self):
         """
-        Return the URN of the digital representation
+        Return the (dict of) identifiers of the digital representation
         """
-        return self.urn
-
-    def get_vd_id(self):
-        """
-        Return the VD ID of the digital representation
-        """
-        return self.vd_id
+        return self.identifiers
 
     def get_scripts(self):
         """
@@ -461,6 +588,15 @@ class Mets:
         """
         return self.languages
 
+    def get_page_structure(self):
+        """
+        Return the div structure from the physical struct map
+        """
+        for struct_map in self.mets.get_structMap():
+            if struct_map.get_TYPE() == "PHYSICAL":
+                return struct_map.get_div()
+        return None
+
     def get_div_structure(self):
         """
         Return the div structure from the logical struct map
@@ -468,7 +604,7 @@ class Mets:
         for struct_map in self.mets.get_structMap():
             if struct_map.get_TYPE() == "LOGICAL":
                 return struct_map.get_div()
-        return []
+        return None
 
     def get_struct_links(self, log_id):
         """
@@ -490,6 +626,12 @@ class Mets:
 
     def get_order(self, phys_id):
         """
-        Return the manually set order for a given physical ID
+        Return the logical (manually set) page number for a given physical ID
         """
-        return self.order_map.get(phys_id, "-1")
+        return self.order_map.get(phys_id, "0")
+
+    def get_orderlabel(self, phys_id):
+        """
+        Return the logical (manually set) page label for a given physical ID
+        """
+        return self.orderlabel_map.get(phys_id, "")

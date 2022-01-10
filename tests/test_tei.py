@@ -59,10 +59,6 @@ def test_data_assignment(subtests):
         tei.set_main_title("Testbuch")
         assert(tei.main_title == "Testbuch")
 
-    with subtests.test("Check publication level"):
-        tei.set_publication_level("m")
-        assert(tei.publication_level == "m")
-
     with subtests.test("Check first subtitle"):
         tei.add_sub_title("Untertitel 1")
         assert(tei.subtitles == ["Untertitel 1"])
@@ -70,6 +66,11 @@ def test_data_assignment(subtests):
     with subtests.test("Check further subtitle"):
         tei.add_sub_title("Untertitel 2")
         assert(tei.subtitles == ["Untertitel 1", "Untertitel 2"])
+
+    with subtests.test("Check publication level"):
+        tei.init_biblFull()
+        tei.set_publication_level("m")
+        assert(tei.publication_level == "m")
 
     with subtests.test("Check first author"):
         tei.add_author({'family': 'Mustermann', 'given': 'Max', 'date': '12.10.1956', 'title': 'Dr.'}, "personal")
@@ -133,16 +134,16 @@ def test_data_assignment(subtests):
         assert(tei.repositories == ["Kitodo.Production", "Saxonica"])
 
     with subtests.test("Check shelfmarks"):
-        tei.add_shelfmark("Foo 25")
-        tei.add_shelfmark("HAL 9000")
+        tei.add_identifier("shelfmark", "Foo 25")
+        tei.add_identifier("shelfmark", "HAL 9000")
         assert(tei.shelfmarks == ["Foo 25", "HAL 9000"])
 
     with subtests.test("Check VD ID"):
-        tei.add_vd_id("VD18 11413883")
+        tei.add_identifier("VD", "VD18 11413883")
         assert(tei.vd_id == "VD18 11413883")
 
     with subtests.test("Check URN"):
-        tei.add_urn("urn:nbn:de:bsz:14-db-id4971666239")
+        tei.add_identifier("URN", "urn:nbn:de:bsz:14-db-id4971666239")
         assert(tei.urn == "urn:nbn:de:bsz:14-db-id4971666239")
 
     with subtests.test("Check first extent"):
@@ -158,5 +159,5 @@ def test_data_assignment(subtests):
         assert(tei.collections == ["LDP"])
 
     with subtests.test("Check bibl"):
-        tei.compile_bibl()
+        tei.compile_bibl('M')
         assert(tei.bibl.text == "Mustermann, Max, Dr.; Mustermann Max 12.10.1956 Dr.: Testbuch. Dresden u. a., 01.01.1823.")
