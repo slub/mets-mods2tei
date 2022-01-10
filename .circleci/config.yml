@@ -29,12 +29,12 @@ jobs:
       - checkout
       - setup_remote_docker
       - run: make install
-      - run: python setup.py sdist
-      - run: pip wheel -w dist .
+      - run: python setup.py sdist bdist_wheel
       - store_artifacts:
           path: dist/
           destination: artifacts
-    # later: upload to PyPI...
+      - run: pip install twine
+      - run: twine upload dist/*
 
 workflows:
   version: 2
