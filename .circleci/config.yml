@@ -12,7 +12,7 @@ jobs:
       version:
         type: string
     docker:
-      - image: circleci/python:<< parameters.version >>
+      - image: cimg/python:<< parameters.version >>
     working_directory: ~/repo
     steps:
       - checkout
@@ -23,7 +23,8 @@ jobs:
       - codecov/upload
   pypi:
     docker:
-      - image: circleci/python:3.6
+      - image: cimg/python:3.6
+    # todo: add macOS target for cibuildwheel
     working_directory: ~/repo
     steps:
       - checkout
@@ -32,7 +33,7 @@ jobs:
       - run: python setup.py sdist
       - run: |
           pip install cibuildwheel
-          cibuildwheel --output-dir dist
+          cibuildwheel --platform linux --output-dir dist
       - store_artifacts:
           path: dist/
           destination: artifacts
@@ -45,7 +46,7 @@ workflows:
       - test:
           matrix:
             parameters:
-              version: [3.6.15, 3.7.12, 3.8.12, 3.9.9]
+              version: [3.6.15, 3.7.12, 3.8.12, 3.9.9, 3.10.1]
   deploy:
     jobs:
       - pypi:
