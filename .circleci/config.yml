@@ -33,8 +33,10 @@ jobs:
       - store_artifacts:
           path: dist/
           destination: artifacts
-      - run: pip install twine
-      - run: twine upload dist/*
+      - run: |
+          pip install -U pip
+          pip install twine
+          twine upload dist/*
 
 workflows:
   version: 2
