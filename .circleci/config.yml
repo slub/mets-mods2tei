@@ -24,16 +24,13 @@ jobs:
   pypi:
     docker:
       - image: cimg/python:3.6
-    # todo: add macOS target for cibuildwheel
     working_directory: ~/repo
     steps:
       - checkout
       - setup_remote_docker
       - run: make install
       - run: python setup.py sdist
-      - run: |
-          pip install cibuildwheel
-          cibuildwheel --platform linux --output-dir dist
+      - run: pip wheel -W dist .
       - store_artifacts:
           path: dist/
           destination: artifacts
