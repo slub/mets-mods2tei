@@ -30,7 +30,7 @@ jobs:
       - setup_remote_docker
       - run: make install
       - run: python setup.py sdist
-      - run: pip wheel -W dist .
+      - run: pip wheel -w dist .
       - store_artifacts:
           path: dist/
           destination: artifacts
