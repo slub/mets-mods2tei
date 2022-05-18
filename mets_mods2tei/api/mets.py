@@ -318,14 +318,15 @@ class Mets:
             dv = None
 
         # owner of the digital edition
-        self.owner_digital = dv.xpath("//dv:owner", namespaces=ns)[0].text if dv is not None else ""
+        owner = dv.xpath("//dv:owner", namespaces=ns) if dv is not None else []
+        self.owner_digital = owner[0].text if len(owner) else ""
 
         # availability/license
         # common case
         self.license = ""
         self.license_url = ""
         license_nodes = dv.xpath("//dv:license", namespaces=ns) if dv is not None else []
-        if license_nodes != []:
+        if len(license_nodes):
             self.license = license_nodes[0].text
             self.license_url = ""
         # slub case
