@@ -35,6 +35,7 @@ class Tei:
 
         # logging
         self.logger = logging.getLogger(__name__)
+        self.corresp = []
 
     def tostring(self):
         """
@@ -44,11 +45,13 @@ class Tei:
         etree.indent(self.tree, space="  ")
         return etree.tostring(self.tree, pretty_print=True, encoding="utf-8")
 
-    def fill_from_mets(self, mets, ocr=True):
+    def fill_from_mets(self, mets, ocr=True, corresp=None):
         """
         Fill the contents of the TEI object from a METS instance
         """
 
+        if corresp:
+            self.corresp = corresp
         #
         # replace skeleton values by real ones
 
@@ -758,12 +761,15 @@ class Tei:
                 pagenum = mets.get_orderlabel(struct_link) or mets.get_order(struct_link)
                 if pagenum:
                     pb.set("n", str(pagenum))
-                pb.set("corresp", mets.get_img(struct_link))
+                if 'page' in self.corresp:
+                    pb.set("corresp", mets.get_img(struct_link))
 
                 for text_block in alto.get_text_blocks():
                     p = etree.SubElement(node, "%sp" % TEI)
                     for line in alto.get_lines_in_text_block(text_block):
                         lb = etree.SubElement(p, "%slb" % TEI)
+                        if 'line' in self.corresp:
+                            lb.set("corresp", line.get("ID"))
                         line_text = alto.get_text_in_line(line)
                         if line_text:
                             lb.tail = line_text

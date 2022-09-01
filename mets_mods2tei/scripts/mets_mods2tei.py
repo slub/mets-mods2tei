@@ -16,15 +16,22 @@ from mets_mods2tei import Tei
 @click.option('-o', '--ocr', is_flag=True, default=False, help="Serialize OCR into resulting TEI")
 @click.option('-T', '--text-group', default="FULLTEXT", help="File group which contains the full-text")
 @click.option('-I', '--img-group', default="DEFAULT", help="File group which contains the images")
+@click.option('-r', '--add-refs', type=click.Choice(['page', 'line']), multiple=True, default=['page'])
 @click.option('-l', '--log-level', type=click.Choice(['DEBUG', 'INFO', 'WARN', 'ERROR', 'OFF']), default='WARN')
-def cli(mets, output, ocr, text_group, img_group, log_level):
+def cli(mets, output, ocr, text_group, img_group, add_refs, log_level):
     """METS: File containing or URL pointing to the METS/MODS XML to be converted
 
     Parse given METS and its meta-data, and convert it to TEI.
 
-    If `--ocr` is given, then also read the ALTO full-text files from the fileGrp in `--text-group`,
-    and convert page contents accordingly (in physical order). Decorate page boundaries with image
-    and page numbers, and reference the corresponding base image files from `--img-group`.
+    If `--ocr` is given, then also read the ALTO full-text files
+    from the fileGrp in `--text-group`, and convert page contents
+    accordingly (in physical order).
+
+    Decorate page boundaries with image and page numbers. Moreover,
+    if `--add-refs` contains `page`, then reference the corresponding
+    base image files (by file name) from `--img-group`. Likewise,
+    if `--add-refs` contains `line`, then reference the corresponding
+    textline segments (by XML ID) from `--text-group`.
 
     Output XML to `--output (use '-' for stdout), log to stderr.`
     """
@@ -53,7 +60,7 @@ def cli(mets, output, ocr, text_group, img_group, log_level):
     # create TEI (from skeleton)
     tei = Tei()
 
-    tei.fill_from_mets(mets, ocr)
+    tei.fill_from_mets(mets, ocr, corresp=add_refs)
 
     output.write(tei.tostring())
 
