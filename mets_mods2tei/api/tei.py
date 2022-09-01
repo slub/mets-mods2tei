@@ -28,8 +28,9 @@ class Tei:
         The constructor.
         """
 
-        self.tree = etree.parse(os.path.realpath(resource_filename(Requirement.parse("mets_mods2tei"), 'mets_mods2tei/data/tei_skeleton.xml')))
-
+        skeleton = os.path.realpath(resource_filename(Requirement.parse("mets_mods2tei"),
+                                                      'mets_mods2tei/data/tei_skeleton.xml'))
+        self.tree = etree.parse(skeleton)
         self.alto_map = {}
 
         # logging
@@ -39,8 +40,9 @@ class Tei:
         """
         Serializes the TEI object as xml string.
         """
-        # needs lxml>=4.5: etree.indent(self.tree, space="  ")
-        return etree.tostring(self.tree, encoding="utf-8")
+        # needs lxml>=4.5:
+        etree.indent(self.tree, space="  ")
+        return etree.tostring(self.tree, pretty_print=True, encoding="utf-8")
 
     def fill_from_mets(self, mets, ocr=True):
         """
