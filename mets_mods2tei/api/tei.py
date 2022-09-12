@@ -769,7 +769,11 @@ class Tei:
                     for line in alto.get_lines_in_text_block(text_block):
                         lb = etree.SubElement(p, "%slb" % TEI)
                         if 'line' in self.corresp:
-                            lb.set("corresp", line.get("ID"))
+                            line_id = line.get("ID")
+                            if not line_id:
+                                block = line.getparent()
+                                line_id = block.get("ID") + '_%04d' % block.index(line)
+                            lb.set("corresp", line_id)
                         line_text = alto.get_text_in_line(line)
                         if line_text:
                             lb.tail = line_text
