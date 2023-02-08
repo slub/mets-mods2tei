@@ -25,10 +25,11 @@ setup(
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Programming Language :: Python',
         'Topic :: Text Processing :: Markup :: XML',
-    ],  
+    ],
     entry_points={
           'console_scripts': [
               'mm2tei=mets_mods2tei.scripts.mets_mods2tei:cli',
+              'mm-update=mets_mods2tei.scripts.update:cli',
           ]
     },
 )
