@@ -11,7 +11,7 @@ import click
 from lxml import etree as ET
 from ocrd.decorators import ocrd_loglevel
 from ocrd import Resolver, Workspace, WorkspaceValidator, WorkspaceBackupManager
-from ocrd_utils import getLogger, initLogging, remove_non_path_from_url
+from ocrd_utils import getLogger, initLogging, remove_non_path_from_url, MIME_TO_EXT
 #from ocrd_models import OcrdXmlDocument
 from ocrd_models.constants import NAMESPACES as NS, TAG_METS_FLOCAT, TAG_METS_FILE
 
@@ -43,23 +43,30 @@ def cli(ctx, directory, mets, backup, **kwargs): # pylint: disable=unused-argume
     ctx.obj = WorkspaceCtx(directory, mets_url=mets, automatic_backup=backup)
 
 @cli.command('download')
-@click.option('-G', '--file-grp', help="limit file downloads to this fileGrp", default=None, metavar='FILE_GRP')
+@click.option('-G', '--file-grp', help="fileGrp USE (or empty if all fileGrps)", default=None, metavar='FILE_GRP')
+@click.option('-g', '--page-id', help="ID of the physical page (or empty if all pages)", default=None, metavar='PAGE_ID')
+@click.option('-p', '--path-names', help="how to generate local path names (from URL or from fileGrp, file ID and suffix)", show_default=True,
+              type=click.Choice(['URL', 'GRP/ID.SUF']), default='URL')
 @click.option('-u', '--url-prefix', help="URL prefix to remove from path before storing downloaded files (to avoid creating host directories)", required=False)
 @click.option('-r', '--reference', help="whether and how to update the FLocat reference in METS", show_default=True,
               type=click.Choice(['no-change', 'replace-by-local', 'insert-local', 'append-local']), default='no-change')
 @pass_workspace
-def download_cli(ctx, file_grp, url_prefix, reference):
+def download_cli(ctx, file_grp, page_id, path_names, url_prefix, reference):
     """
     download files into subdirectories, as path or URL
     """
     workspace = Workspace(ctx.resolver, ctx.directory, mets_basename=ctx.mets_basename, automatic_backup=ctx.automatic_backup)
-    files = list(workspace.find_files(file_grp=file_grp))
+    files = list(workspace.find_files(file_grp=file_grp, page_id=page_id))
     ctx.log.info("downloading files for for %d references", len(files))
     for f in files:
-        path = remove_non_path_from_url(f.url)
-        if url_prefix and path.startswith(url_prefix):
-            path = path[len(url_prefix):]
-        subdir, _, basename = path.rpartition('/')
+        if path_names == 'URL':
+            path = remove_non_path_from_url(f.url)
+            if url_prefix and path.startswith(url_prefix):
+                path = path[len(url_prefix):]
+            subdir, _, basename = path.rpartition('/')
+        else:
+            subdir = f.fileGrp
+            basename = '%s%s' % (f.ID, MIME_TO_EXT.get(f.mimetype, '')) if f.ID else f.basename
         path = ctx.resolver.download_to_directory(ctx.directory, f.url, subdir=subdir, basename=basename)
         if reference != 'no-change':
             # todo: as soon as OcrdFile provides a mechanism to manage multiple FLocats, use that instead
