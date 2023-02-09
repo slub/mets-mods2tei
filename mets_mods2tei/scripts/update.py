@@ -8,10 +8,13 @@ import sys
 from pathlib import Path
 import click
 #from lxml.isoschematron import Schematron
+from lxml import etree as ET
 from ocrd.decorators import ocrd_loglevel
 from ocrd import Resolver, Workspace, WorkspaceValidator, WorkspaceBackupManager
 from ocrd_utils import getLogger, initLogging, remove_non_path_from_url
 #from ocrd_models import OcrdXmlDocument
+from ocrd_models.constants import NAMESPACES as NS, TAG_METS_FLOCAT, TAG_METS_FILE
+
 
 class WorkspaceCtx():
 
@@ -42,10 +45,12 @@ def cli(ctx, directory, mets, backup, **kwargs): # pylint: disable=unused-argume
 @cli.command('download')
 @click.option('-G', '--file-grp', help="limit file downloads to this fileGrp", default=None, metavar='FILE_GRP')
 @click.option('-u', '--url-prefix', help="URL prefix to remove from path before storing downloaded files (to avoid creating host directories)", required=False)
+@click.option('-r', '--reference', help="whether and how to update the FLocat reference in METS", show_default=True,
+              type=click.Choice(['no-change', 'replace-by-local', 'insert-local', 'append-local']), default='no-change')
 @pass_workspace
-def download_cli(ctx, file_grp, url_prefix):
+def download_cli(ctx, file_grp, url_prefix, reference):
     """
-    download files into subdirectories, as path or URL, keeping refs
+    download files into subdirectories, as path or URL
     """
     workspace = Workspace(ctx.resolver, ctx.directory, mets_basename=ctx.mets_basename, automatic_backup=ctx.automatic_backup)
     files = list(workspace.find_files(file_grp=file_grp))
@@ -55,7 +60,22 @@ def download_cli(ctx, file_grp, url_prefix):
         if url_prefix and path.startswith(url_prefix):
             path = path[len(url_prefix):]
         subdir, _, basename = path.rpartition('/')
-        ctx.resolver.download_to_directory(ctx.directory, f.url, subdir=subdir, basename=basename)
+        path = ctx.resolver.download_to_directory(ctx.directory, f.url, subdir=subdir, basename=basename)
+        if reference != 'no-change':
+            # todo: as soon as OcrdFile provides a mechanism to manage multiple FLocats, use that instead
+            newref = ET.Element(TAG_METS_FLOCAT)
+            newref.set('LOCTYPE', 'OTHER')
+            newref.set('OTHERLOCTYPE', 'FILE')
+            newref.set("{%s}href" % NS["xlink"], path)
+            oldref = f._el.find('mets:FLocat', NS)
+            if reference == 'replace-by-local':
+                f._el.replace(oldref, newref)
+            elif reference == 'insert-local':
+                f._el.insert(0, newref)
+            elif reference == 'append-local':
+                oldref.addnext(newref)
+    if reference != 'no-change':
+        workspace.save_mets()
 
 @cli.command('remove-files')
 @click.option('-G', '--file-grp', help="fileGrp to add to", required=True, metavar='FILE_GRP')
