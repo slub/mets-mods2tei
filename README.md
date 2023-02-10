@@ -1,6 +1,8 @@
 # mets-mods2tei
 
-[![CircleCI](https://circleci.com/gh/slub/mets-mods2tei.svg?style=svg)](https://circleci.com/gh/slub/mets-mods2tei) [![codecov](https://codecov.io/gh/slub/mets-mods2tei/branch/master/graph/badge.svg)](https://codecov.io/gh/slub/mets-mods2tei)
+[![CircleCI](https://circleci.com/gh/slub/mets-mods2tei.svg?style=svg)](https://circleci.com/gh/slub/mets-mods2tei)
+[![codecov](https://codecov.io/gh/slub/mets-mods2tei/branch/master/graph/badge.svg)](https://codecov.io/gh/slub/mets-mods2tei)
+[![PyPI version](https://badge.fury.io/py/mets-mods2tei.svg)](https://badge.fury.io/py/mets-mods2tei)
 
 Convert bibliographic meta data in METS/MODS format to TEI headers and optionally serialize linked ALTO-encoded OCR to TEI text.
 
@@ -162,11 +164,27 @@ Options:
   --help                          Show this message and exit.
 
 Commands:
+  add-agent     add agent headers, optionally from external METS
   add-file      add a file reference, optionally as URL
-  download      download files into subdirectories, as path or URL,...
+  download      download files into subdirectories, as path or URL
   remove-file   remove all file references for a specific location,...
   remove-files  remove all file references for a specific fileGrp / MIME...
   validate      custom OcrdWorkspaceValidator
+```
+
+</p></details>
+
+<details><summary>mm-update add-agent --help</summary>
+<p>
+
+```
+Usage: mm-update add-agent [OPTIONS]
+
+  add agent headers, optionally from external METS
+
+Options:
+  -m, --mets TEXT  copy metsHdr/agent from this file, too
+  --help           Show this message and exit.
 ```
 
 </p></details>
@@ -251,14 +269,23 @@ Options:
 ```
 Usage: mm-update download [OPTIONS]
 
-  download files into subdirectories, as path or URL, keeping refs
+  download files into subdirectories, as path or URL
 
 Options:
-  -G, --file-grp FILE_GRP  limit file downloads to this fileGrp
-  -u, --url-prefix TEXT    URL prefix to remove from path before storing
-                           downloaded files (to avoid creating host
-                           directories)
-  --help                   Show this message and exit.
+  -G, --file-grp FILE_GRP         fileGrp USE (or empty if all fileGrps)
+  -g, --page-id PAGE_ID           ID of the physical page (or empty if all
+                                  pages)
+  -p, --path-names [URL|GRP/ID.SUF]
+                                  how to generate local path names (from URL
+                                  or from fileGrp, file ID and suffix)
+                                  [default: URL]
+  -u, --url-prefix TEXT           URL prefix to remove from path before
+                                  storing downloaded files (to avoid creating
+                                  host directories)
+  -r, --reference [no-change|replace-by-local|insert-local|append-local]
+                                  whether and how to update the FLocat
+                                  reference in METS  [default: no-change]
+  --help                          Show this message and exit.
 ```
 
 </p></details>
