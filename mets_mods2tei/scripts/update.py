@@ -6,14 +6,22 @@ from __future__ import absolute_import
 import os
 import sys
 from pathlib import Path
+from datetime import datetime
 import click
 #from lxml.isoschematron import Schematron
 from lxml import etree as ET
 from ocrd.decorators import ocrd_loglevel
 from ocrd import Resolver, Workspace, WorkspaceValidator, WorkspaceBackupManager
-from ocrd_utils import getLogger, initLogging, remove_non_path_from_url, MIME_TO_EXT
+from ocrd_utils import getLogger, initLogging, remove_non_path_from_url, MIME_TO_EXT, VERSION
 #from ocrd_models import OcrdXmlDocument
-from ocrd_models.constants import NAMESPACES as NS, TAG_METS_FLOCAT, TAG_METS_FILE
+from ocrd_models import OcrdMets, OcrdAgent
+from ocrd_models.constants import (
+    NAMESPACES as NS,
+    TAG_METS_FLOCAT,
+    TAG_METS_FILE,
+    TAG_METS_AGENT,
+    TAG_METS_METSHDR
+)
 
 
 class WorkspaceCtx():
@@ -142,6 +150,39 @@ def add_file_cli(ctx, file_grp, mimetype, page_id, url_prefix, path):
             url_prefix += '/'
         path = url_prefix + path
     workspace.add_file(file_grp, file_id=file_id, mimetype=mimetype, page_id=page_id, url=path, loctype='URL' if url_prefix else 'OTHER')
+    workspace.save_mets()
+
+@cli.command('add-agent')
+@click.option('-m', '--mets', help="copy metsHdr/agent from this file, too", default=None)
+@pass_workspace
+def add_agent_cli(ctx, mets):
+    """
+    add agent headers, optionally from external METS
+    """
+    workspace = Workspace(ctx.resolver, ctx.directory, mets_basename=ctx.mets_basename, automatic_backup=ctx.automatic_backup)
+    if mets:
+        mets = OcrdMets(filename=mets)
+        agents = mets.agents
+    else:
+        agents = []
+    agents.append(OcrdAgent(_type="OTHER", othertype="SOFTWARE", role="OTHER", otherrole="publication",
+                            name="ocrd/core v%s" % VERSION))
+    el_metsHdr = workspace.mets._tree.getroot().find('./mets:metsHdr', NS)
+    if el_metsHdr is None:
+        el_metsHdr = ET.Element(TAG_METS_METSHDR)
+        el_metsHdr.set('CREATEDATE', datetime.now().isoformat())
+        workspace.mets._tree.getroot().insert(0, el_metsHdr)
+    el_agent = None
+    for agent in agents:
+        if el_agent is None:
+            try:
+                el_agent = next(el_metsHdr.iterchildren(tag=TAG_METS_AGENT, reversed=True))
+                el_agent.addnext(agent._el)
+            except StopIteration:
+                el_metsHdr.insert(0, agent._el)
+        else:
+            el_agent.addnext(agent._el)
+        el_agent = agent._el
     workspace.save_mets()
 
 @cli.command('validate')
