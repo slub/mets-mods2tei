@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='mets-mods2tei',
-    version='0.1.2',
+    version='0.1.3',
     description='Convert digital documents in METS/MODS format to TEI',
     long_description=open('README.md').read(),
     long_description_content_type="text/markdown",

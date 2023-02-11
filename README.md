@@ -115,16 +115,22 @@ Usage: mm2tei [OPTIONS] METS
 
   If `--ocr` is given, then also read the ALTO full-text files from the
   fileGrp in `--text-group`, and convert page contents accordingly (in
-  physical order). Decorate page boundaries with image and page numbers, and
-  reference the corresponding base image files from `--img-group`.
+  physical order).
+
+  Decorate page boundaries with image and page numbers. Moreover, if `--add-
+  refs` contains `page`, then reference the corresponding base image files (by
+  file name) from `--img-group`. Likewise, if `--add-refs` contains `line`,
+  then reference the corresponding textline segments (by XML ID) from `--text-
+  group`.
 
   Output XML to `--output (use '-' for stdout), log to stderr.`
 
 Options:
   -O, --output FILENAME           File path to write TEI output to
   -o, --ocr                       Serialize OCR into resulting TEI
-  -T, --text-group TEXT           File group which contains the full text
+  -T, --text-group TEXT           File group which contains the full-text
   -I, --img-group TEXT            File group which contains the images
+  -r, --add-refs [page|line]
   -l, --log-level [DEBUG|INFO|WARN|ERROR|OFF]
   -h, --help                      Show this message and exit.
 ```
