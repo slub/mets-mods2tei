@@ -97,7 +97,7 @@ def download_cli(ctx, file_grp, page_id, path_names, url_prefix, reference):
 @click.option('-m', '--mimetype', help="Media type of the file. Guessed from extension if not provided", required=False, metavar='TYPE')
 @click.option('-g', '--page-id', help="ID of the physical page (or empty if document-global)", metavar='PAGE_ID')
 @pass_workspace
-def remove_files_cli(ctx, file_grp, mimetype, page_id, url_prefix, path):
+def remove_files_cli(ctx, file_grp, mimetype, page_id):
     """
     remove all file references for a specific fileGrp / MIME type / page ID combination
     """
