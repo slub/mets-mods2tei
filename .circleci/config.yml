@@ -16,6 +16,7 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
+      - run: pip install -U pip
       - run: make deps deps-test
       - run: make install
       - run: make test
@@ -28,6 +29,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
+      - run: pip install -U pip
       - run: make install
       - run: python setup.py sdist bdist_wheel
       - store_artifacts:
