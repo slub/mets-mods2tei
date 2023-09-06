@@ -29,7 +29,7 @@ class WorkspaceCtx():
     def __init__(self, directory, mets_url, automatic_backup):
         self.log = getLogger('mets_mods2tei.update')
         self.resolver = Resolver()
-        self.directory, self.mets_url, self.mets_basename = self.resolver.resolve_mets_arguments(directory, mets_url, None, None)
+        self.directory, self.mets_url, self.mets_basename, self.mets_server_url = self.resolver.resolve_mets_arguments(directory, mets_url, None, None)
         self.automatic_backup = automatic_backup
 
 pass_workspace = click.make_pass_decorator(WorkspaceCtx)
