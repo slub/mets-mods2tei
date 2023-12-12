@@ -4,5 +4,5 @@ babel
 generateDS
 python-Levenshtein
 more-itertools
-ocrd
+ocrd >= 2.59
 ocrd_utils
