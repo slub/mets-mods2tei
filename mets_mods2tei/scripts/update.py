@@ -26,10 +26,10 @@ from ocrd_models.constants import (
 
 class WorkspaceCtx():
 
-    def __init__(self, directory, mets_url, automatic_backup):
+    def __init__(self, *args, **kwargs):
         self.log = getLogger('mets_mods2tei.update')
         self.resolver = Resolver()
-        self.directory, self.mets_url, self.mets_basename, _= self.resolver.resolve_mets_arguments(directory, mets_url, None, None)
+        self.directory, self.mets_url, self.mets_basename, _ = self.resolver.resolve_mets_arguments(directory, mets_url, None, None)
         self.automatic_backup = automatic_backup
 
 pass_workspace = click.make_pass_decorator(WorkspaceCtx)
@@ -121,8 +121,10 @@ def remove_file_cli(ctx, url_prefix, path):
     if url_prefix:
         if not url_prefix.endswith('/'):
             url_prefix += '/'
-        path = url_prefix + path
-    files = list(workspace.find_files(url=path))
+        kwargs = dict(url=url_prefix + path)
+    else:
+        kwargs = dict(local_filename=path)
+    files = list(workspace.find_files(**kwargs))
     ctx.log.info("removing references for %d files", len(files))
     for file_ in files:
         workspace.remove_file(file_.ID, keep_file=True)
@@ -148,8 +150,10 @@ def add_file_cli(ctx, file_grp, mimetype, page_id, url_prefix, path):
     if url_prefix:
         if not url_prefix.endswith('/'):
             url_prefix += '/'
-        path = url_prefix + path
-    workspace.add_file(file_grp, file_id=file_id, mimetype=mimetype, page_id=page_id, url=path, loctype='URL' if url_prefix else 'OTHER')
+        kwargs = dict(url=url_prefix + path, loctype='URL')
+    else:
+        kwargs = dict(local_filename = path, loctype='OTHER')
+    workspace.add_file(file_grp, file_id=file_id, mimetype=mimetype, page_id=page_id, **kwargs)
     workspace.save_mets()
 
 @cli.command('add-agent')
