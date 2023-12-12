@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='mets-mods2tei',
-    version='0.1.3.post1',
+    version='0.1.4',
     description='Convert digital documents in METS/MODS format to TEI',
     long_description=open('README.md').read(),
     long_description_content_type="text/markdown",
@@ -14,7 +14,7 @@ setup(
     packages=find_packages(exclude=('tests', 'docs')),
     package_data={'mets_mods2tei' : ['data/tei_skeleton.xml', 'data/iso15924-utf8-20180827.txt']},
     install_requires=open('requirements.txt').read().split('\n'),
-    python_requires=">=3.6",
+    python_requires=">=3.7",
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Console',
