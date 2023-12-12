@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [0.1.4] - 2023-12-12
+### Changed
+- mm-update: adapt to OCR-D API changes
+
 ## [0.1.3] - 2023-02-11
 ### Added
 - mm2tei CLI param controlling page and line refs via @corresp
@@ -66,7 +71,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Get rid of code artifacts carried over from `tocrify`
 
 <!-- link-labels -->
-[unreleased]: ../../compare/v0.1.3...master
+[unreleased]: ../../compare/v0.1.4...master
+[0.1.4]: ../../compare/v0.1.3...v0.1.4
 [0.1.3]: ../../compare/v0.1.2...v0.1.3
 [0.1.2]: ../../compare/v0.1.1...v0.1.2
 [0.1.1]: ../../compare/v0.1.0...v0.1.1
