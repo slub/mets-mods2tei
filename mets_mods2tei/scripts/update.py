@@ -26,7 +26,7 @@ from ocrd_models.constants import (
 
 class WorkspaceCtx():
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, directory, mets_url=None, automatic_backup=None):
         self.log = getLogger('mets_mods2tei.update')
         self.resolver = Resolver()
         self.directory, self.mets_url, self.mets_basename, _ = self.resolver.resolve_mets_arguments(directory, mets_url, None, None)
