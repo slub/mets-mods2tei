@@ -323,3 +323,10 @@ Example:
     ...
     # validate:
     mm-update validate -u https://digital.slub-dresden.de/data/kitodo/GottDie_453779263/
+
+## Maintainers
+
+If you have any questions or encounter any problems, please do not hesitate to contact us.
+
+- [Kay-Michael Würzner](https://github.com/wrznr)
+- [Robert Sachunsky](https://github.com/bertsky)
