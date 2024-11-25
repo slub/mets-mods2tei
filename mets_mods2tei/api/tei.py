@@ -841,8 +841,7 @@ class Tei:
         while div.get_ADMID() is None:
             self.logger.debug("Found logical outer div type %s: %s", div.get_TYPE(), div.get_ID())
             div = div.get_div()[0]
-        start_div = div.get_div()[0]
-        self.logger.debug("Found logical inner div type %s: %s", start_div.get_TYPE(), start_div.get_ID())
+        start_div = div.get_div()
         while start_div.get_div() and start_div.get_div()[0].get_ADMID() is not None:
             self.logger.debug("Found logical inner div type %s: %s", start_div.get_TYPE(), start_div.get_ID())
             div = start_div
