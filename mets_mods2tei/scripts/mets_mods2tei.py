@@ -39,7 +39,7 @@ def cli(mets, output, ocr, text_group, img_group, add_refs, log_level):
     #
     # logging level
     logging.basicConfig(level=logging.getLevelName(log_level), stream=sys.stderr)
-    
+
     #
     # interpret mets argument
     try:
