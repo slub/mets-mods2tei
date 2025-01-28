@@ -800,7 +800,7 @@ class Tei:
                             if not line_id:
                                 block = line.getparent()
                                 line_id = block.get("ID") + '_%04d' % block.index(line)
-                            lb.set("corresp", line_id)
+                            lb.set("n", line_id)
                         line_text = alto.get_text_in_line(line)
                         if line_text:
                             lb.tail = line_text
