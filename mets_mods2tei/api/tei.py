@@ -178,13 +178,14 @@ class Tei:
         if div is not None:
             self.logger.debug("Found logical structMap for %s", div.get_TYPE())
             self.add_div_structure(div)
-        elif any(mets.alto_map):
-            self.logger.warning("Found no logical structMap div, falling back to physical")
+        if (not len(self.tree.xpath('//tei:text/tei:body/tei:div', namespaces=ns))
+            and any(mets.alto_map)):
+            self.logger.warning("Found no logical structMap divs, falling back to physical")
             pages = mets.alto_map.keys()
             if any(mets.order_map.values()):
                 pages = sorted(pages, key=mets.get_order)
-            self.add_div_structure(None, map(mets.page_map.get, pages))
-        else:
+            self.add_physical_pages(map(mets.page_map.get, pages))
+        if not len(self.tree.xpath('//tei:text/tei:body/tei:div', namespaces=ns)):
             self.logger.error("Found no logical or physical structMap div")
 
         # OCR
@@ -820,7 +821,7 @@ class Tei:
                             node.insert(0, par)
             first = False
 
-    def add_div_structure(self, div, pages=None):
+    def add_div_structure(self, div):
         """
         Add logical div elements to the text font/body/back according to the given div hierarchy
         """
@@ -830,12 +831,6 @@ class Tei:
         front = etree.SubElement(text, "%sfront" % TEI)
         body = etree.SubElement(text, "%sbody" % TEI)
         back = etree.SubElement(text, "%sback" % TEI)
-
-        if pages:
-            for page in pages:
-                self.logger.debug("Found physical page %s", page.get_ID())
-                self.__add_div(body, page, 1)
-            return
 
         # descend to the deepest AMD
         while div.get_ADMID() is None:
@@ -897,6 +892,18 @@ class Tei:
             # month → ?
             # volume → ?
             # year → ?
+
+    def add_physical_pages(self, pages):
+        """
+        Add logical div elements to the text font/body/back according to the given div hierarchy
+        """
+
+        # div structure has to be added to text
+        body = self.tree.xpath('//tei:body', namespaces=NS)[0]
+
+        for page in pages:
+            self.logger.debug("Found physical page %s", page.get_ID())
+            self.__add_div(body, page, 1)
 
     def __add_div(self, insert_node, div, n, tag="div"):
         """
