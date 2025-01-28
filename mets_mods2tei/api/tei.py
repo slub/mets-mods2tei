@@ -6,6 +6,7 @@ import os
 import logging
 import copy
 import re
+import mimetypes
 
 from contextlib import closing
 from urllib.request import urlopen
@@ -33,7 +34,7 @@ class Tei:
 
         # logging
         self.logger = logging.getLogger(__name__)
-        self.corresp = []
+        self.refs = []
 
     def tostring(self):
         """
@@ -46,13 +47,13 @@ class Tei:
             lb.tail += "  " + prefix
         return etree.tostring(self.tree, pretty_print=True, encoding="utf-8")
 
-    def fill_from_mets(self, mets, ocr=True, corresp=None):
+    def fill_from_mets(self, mets, ocr=True, refs=None):
         """
         Fill the contents of the TEI object from a METS instance
         """
 
-        if corresp:
-            self.corresp = corresp
+        if refs:
+            self.refs = refs
         #
         # replace skeleton values by real ones
 
@@ -768,20 +769,33 @@ class Tei:
                 pb = etree.SubElement(node, "%spb" % TEI)
                 try:
                     pagenum = list(mets.page_map.keys()).index(struct_link)
-                    pb.set("facs", "#f{:04d}".format(pagenum + 1))
                 except ValueError:
-                    self.logger.warning("cannot determine image number for '%s'", struct_link)
-                pagenum = mets.get_orderlabel(struct_link) or mets.get_order(struct_link)
-                if pagenum:
-                    pb.set("n", str(pagenum))
-                if 'page' in self.corresp:
-                    pb.set("corresp", mets.get_img(struct_link))
-
+                    self.logger.warning("cannot determine image number for link '%s'", struct_link)
+                    pagenum = len(node.xpath("tei:pb", namespaces=NS))
+                pageid = "f{:04d}".format(pagenum + 1)
+                pb.set("facs", "#" + pageid)
+                orderlabel = mets.get_orderlabel(struct_link) or mets.get_order(struct_link)
+                if orderlabel:
+                    pb.set("n", str(orderlabel))
+                if 'page' in self.refs:
+                    if self.purl:
+                        pb.set("corresp", self.purl + "/" + pageid[1:])
+                    img_url = mets.get_img(struct_link)
+                    if img_url:
+                        facsimile = self.tree.xpath('//tei:facsimile', namespaces=NS)[0]
+                        # facsimile.set("base", ...common url_prefix...)
+                        # todo: DTABf seems to use "graphic" directly, but other dialects wrap them inside a "surface"
+                        graphic = etree.SubElement(facsimile, "%sgraphic" % TEI)
+                        mime, enc = mimetypes.guess_type(img_url)
+                        if mime is not None:
+                            graphic.set("mimeType", mime)
+                        graphic.set("url", img_url)
+                        graphic.set("id", pageid)
                 for text_block in alto.get_text_blocks():
                     p = etree.SubElement(node, "%sp" % TEI)
                     for line in alto.get_lines_in_text_block(text_block):
                         lb = etree.SubElement(p, "%slb" % TEI)
-                        if 'line' in self.corresp:
+                        if 'line' in self.refs:
                             line_id = line.get("ID")
                             if not line_id:
                                 block = line.getparent()

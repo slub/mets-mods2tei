@@ -60,7 +60,7 @@ def cli(mets, output, ocr, text_group, img_group, add_refs, log_level):
     # create TEI (from skeleton)
     tei = Tei()
 
-    tei.fill_from_mets(mets, ocr, corresp=add_refs)
+    tei.fill_from_mets(mets, ocr, refs=add_refs)
 
     output.write(tei.tostring())
 
