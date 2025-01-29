@@ -10,7 +10,7 @@ import babel
 from .mets_generateds import parseString as parse_mets
 from .mods_generateds import parseString as parse_mods
 
-from pkg_resources import resource_filename, Requirement
+from .util import resource_filename
 
 NS = {
      'mets': "http://www.loc.gov/METS/",
@@ -28,7 +28,7 @@ class Iso15924:
         The constructor.
         """
         self.map = {}
-        with open(os.path.realpath(resource_filename(Requirement.parse("mets_mods2tei"), 'mets_mods2tei/data/iso15924-utf8-20180827.txt'))) as filep:
+        with open(resource_filename('mets_mods2tei', 'data/iso15924-utf8-20180827.txt')) as filep:
             reader = csv.DictReader(filter(lambda row: row[0]!='#', filep), delimiter=';', quoting=csv.QUOTE_NONE, fieldnames=['code','index','name_eng', 'name_fr', 'alias', 'Age', 'Date'])
             for row in reader:
                 self.map[row['code']] = row['name_eng']

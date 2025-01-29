@@ -11,8 +11,8 @@ import mimetypes
 from contextlib import closing
 from urllib.request import urlopen
 from urllib.parse import urlparse
-from pkg_resources import resource_filename, Requirement
 
+from .util import resource_filename
 from .alto import Alto
 
 NS = {
@@ -27,9 +27,8 @@ class Tei:
         The constructor.
         """
 
-        skeleton = os.path.realpath(resource_filename(Requirement.parse("mets_mods2tei"),
-                                                      'mets_mods2tei/data/tei_skeleton.xml'))
-        self.tree = etree.parse(skeleton)
+        with open(resource_filename('mets_mods2tei', 'data/tei_skeleton.xml')) as skeleton:
+            self.tree = etree.parse(skeleton)
         self.alto_map = {}
 
         # logging
