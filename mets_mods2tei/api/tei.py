@@ -43,6 +43,9 @@ class Tei:
         """
         # needs lxml>=4.5:
         etree.indent(self.tree, space="  ")
+        for lb in self.tree.xpath('//tei:lb', namespaces=NS):
+            prefix = lb.getparent().text
+            lb.tail += "  " + prefix
         return etree.tostring(self.tree, pretty_print=True, encoding="utf-8")
 
     def fill_from_mets(self, mets, ocr=True, corresp=None):
