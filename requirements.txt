@@ -3,6 +3,6 @@ lxml
 babel
 importlib_resources ; python_version < '3.10'
 generateDS
-python-Levenshtein
+rapidfuzz
 more-itertools
 ocrd >= 2.59

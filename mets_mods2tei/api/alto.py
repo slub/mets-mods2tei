@@ -5,7 +5,7 @@ from lxml import etree
 import os
 import logging
 import re
-import Levenshtein
+from rapidfuzz.distance import Levenshtein
 
 NS = {
      'xlink' : "http://www.w3.org/1999/xlink",
