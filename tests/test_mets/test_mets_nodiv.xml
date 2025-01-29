@@ -1,0 +1,1429 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mets:mets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/" xmlns:dv="http://dfg-viewer.de/" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:slub="http://www.slub-dresden.de/namespace" xmlns:slubarchiv="http://slubarchiv.slub-dresden.de/rights1" xmlns="http://www.openarchives.org/OAI/2.0/" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/mods.xsd http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd">
+  <mets:metsHdr CREATEDATE="2023-08-08T10:03:59.000+02:00" LASTMODDATE="2024-01-31T08:20:00.115+01:00"/>
+  <mets:dmdSec ID="uuid-017a6d80-fde9-3445-a239-bc86ba0c9f14">
+    <mets:mdWrap MDTYPE="MODS">
+      <mets:xmlData>
+        <mods:mods>
+          <mods:titleInfo>
+            <mods:title>Abhandlung vom Umwerfen oder Ausroden der Waldbäume</mods:title>
+          </mods:titleInfo>
+          <mods:name type="personal" authority="gnd" valueURI="http://d-nb.info/gnd/117168998">
+            <mods:namePart type="family">Burgsdorf</mods:namePart>
+            <mods:namePart type="given">Friedrich August Ludwig</mods:namePart>
+            <mods:displayForm>Burgsdorf, Friedrich August Ludwig von</mods:displayForm>
+            <mods:nameIdentifier type="gnd">117168998</mods:nameIdentifier>
+            <mods:nameIdentifier type="ppn">078617065</mods:nameIdentifier>
+            <mods:role>
+              <mods:roleTerm type="code" authority="marcrelator">aut</mods:roleTerm>
+            </mods:role>
+          </mods:name>
+          <mods:name type="personal" authority="gnd" valueURI="http://d-nb.info/gnd/116465980">
+            <mods:namePart type="family">Gatterer</mods:namePart>
+            <mods:namePart type="given">Christoph Wilhelm Jakob</mods:namePart>
+            <mods:displayForm>Gatterer, Christoph Wilhelm Jakob</mods:displayForm>
+            <mods:nameIdentifier type="gnd">116465980</mods:nameIdentifier>
+            <mods:nameIdentifier type="ppn">134677307</mods:nameIdentifier>
+            <mods:role>
+              <mods:roleTerm type="code" authority="marcrelator">edt</mods:roleTerm>
+            </mods:role>
+          </mods:name>
+          <mods:name type="corporate">
+            <mods:displayForm>SLUB Dresden</mods:displayForm>
+            <mods:role>
+              <mods:roleTerm authority="marcrelator" type="code">own</mods:roleTerm>
+            </mods:role>
+            <mods:role>
+              <mods:roleTerm authority="marcrelator" type="code">len</mods:roleTerm>
+            </mods:role>
+          </mods:name>
+          <mods:originInfo eventType="publication">
+            <mods:place>
+              <mods:placeTerm type="text">Ulm</mods:placeTerm>
+            </mods:place>
+            <mods:publisher>Stettin</mods:publisher>
+            <mods:dateIssued encoding="iso8601" keyDate="yes">1801</mods:dateIssued>
+            <mods:displayDate>1801</mods:displayDate>
+          </mods:originInfo>
+          <mods:language>
+            <mods:languageTerm type="code" authority="rfc3066">ger</mods:languageTerm>
+            <mods:scriptTerm type="code" authority="iso15924">Latf</mods:scriptTerm>
+          </mods:language>
+          <mods:physicalDescription>
+            <mods:extent>48 Seiten</mods:extent>
+            <mods:digitalOrigin>reformatted digital</mods:digitalOrigin>
+          </mods:physicalDescription>
+          <mods:relatedItem type="series">
+            <mods:titleInfo>
+              <mods:title lang="ger">Digitaler Schaukasten der Forstbibliothek Tharandt</mods:title>
+            </mods:titleInfo>
+          </mods:relatedItem>
+          <mods:identifier type="purl">http://digital.slub-dresden.de/id1852685697</mods:identifier>
+          <mods:identifier type="urn">urn:nbn:de:bsz:14-db-id18526856978</mods:identifier>
+          <mods:identifier type="kxp-ppn-digital">1852685697</mods:identifier>
+          <mods:identifier type="kxp-ppn-source">113012066X</mods:identifier>
+          <mods:identifier type="kitodo">729813</mods:identifier>
+          <mods:location>
+            <mods:physicalLocation valueURI="https://ld.zdb-services.de/resource/organisations/DE-14">Sächsische Landesbibliothek - Staats- und Universitätsbibliothek Dresden</mods:physicalLocation>
+            <mods:shelfLocator>Fbc 19</mods:shelfLocator>
+          </mods:location>
+          <mods:accessCondition type="use and reproduction" xlink:href="http://creativecommons.org/publicdomain/mark/1.0/">Public Domain Mark 1.0</mods:accessCondition>
+          <mods:accessCondition type="restriction on access" xlink:href="http://purl.org/coar/access_right/c_abf2" displayLabel="Access Status">Open Access</mods:accessCondition>
+          <mods:accessCondition type="slubRightsRecord">
+            <slubarchiv:rightsRecord>
+              <slubarchiv:copyrightStatus>publicdomain</slubarchiv:copyrightStatus>
+            </slubarchiv:rightsRecord>
+          </mods:accessCondition>
+          <mods:extension>
+            <slub:slub>
+              <slub:id type="digital">1852685697</slub:id>
+              <slub:id type="source">113012066X</slub:id>
+              <slub:id type="tsl-ats">BurgAbha</slub:id>
+            </slub:slub>
+          </mods:extension>
+          <mods:recordInfo>
+            <mods:recordIdentifier source="http://digital.slub-dresden.de/oai/">oai:de:slub-dresden:db:id-1852685697</mods:recordIdentifier>
+          </mods:recordInfo>
+        </mods:mods>
+      </mets:xmlData>
+    </mets:mdWrap>
+  </mets:dmdSec>
+  <mets:amdSec ID="AMD">
+    <mets:rightsMD ID="uuid-2e47d8d8-cb0b-339c-9907-27cc3a0fe9ea">
+      <mets:mdWrap MDTYPE="OTHER" MIMETYPE="text/xml" OTHERMDTYPE="DVRIGHTS">
+        <mets:xmlData>
+          <dv:rights>
+            <dv:owner>Sächsische Landesbibliothek - Staats- und Universitätsbibliothek Dresden</dv:owner>
+            <dv:ownerLogo>https://digital.slub-dresden.de/fileadmin/images/dfgviewer_logo_slub.gif</dv:ownerLogo>
+            <dv:ownerSiteURL>https://www.slub-dresden.de/</dv:ownerSiteURL>
+            <dv:ownerContact>mailto:digital@slub-dresden.de</dv:ownerContact>
+            <dv:license>pdm</dv:license>
+          </dv:rights>
+        </mets:xmlData>
+      </mets:mdWrap>
+    </mets:rightsMD>
+    <mets:digiprovMD ID="uuid-32a3c6af-54ef-3770-85ce-5b03238cc663">
+      <mets:mdWrap MDTYPE="OTHER" MIMETYPE="text/xml" OTHERMDTYPE="DVLINKS">
+        <mets:xmlData>
+          <dv:links>
+            <dv:presentation>https://digital.slub-dresden.de/id1852685697</dv:presentation>
+            <dv:reference>https://katalog.slub-dresden.de/ppn/1852685697</dv:reference>
+          </dv:links>
+        </mets:xmlData>
+      </mets:mdWrap>
+    </mets:digiprovMD>
+  </mets:amdSec>
+  <mets:fileSec>
+    <mets:fileGrp USE="DEFAULT">
+      <mets:file ID="uuid-083191ec-3104-46d9-b61d-b014bd56e487" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000001.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-5e721473-49a0-436a-814d-1fea75ffec2a" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000002.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-3fadc5e4-73f2-4793-a11f-d26c660adab8" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000003.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-9dc30826-e59c-497b-bb78-8da4cd98929c" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000004.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-015d2409-2da8-483d-8530-82edb30a8a9e" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000005.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-5e67e664-05d5-44af-9401-320fc3dd6c12" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000006.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-a9e74eef-8cdc-4168-8e05-acf6c06d8f35" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000007.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-67890133-f4f7-4ddf-82a4-8bbf6813f075" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000008.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-25c54550-9236-4641-8774-44371749395a" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000009.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-95c49545-a3de-4e6b-8083-185203bd3863" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000010.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-26b78ebb-4a5e-4af5-963d-8cd95ffdbc56" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000011.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-87b2473f-c4a8-4e14-a016-814492aef5b1" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000012.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-2712993d-2778-4ede-8a2d-cc4c159e4ac8" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000013.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-bfcd3e28-55c6-4717-bab3-86c9f17306a1" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000014.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-5906d74f-998d-45c0-a2b0-07b93a02e5ff" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000015.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-61d08b8d-9e40-4e25-a525-b7b5582401f2" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000016.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-421750e5-95ff-42bc-8e35-1e0fb12266f1" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000017.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-25682c30-24ff-4e9d-a560-5db77e87f51e" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000018.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-87560307-efd6-47f7-b59c-87d7f263f024" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000019.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-f18fa88a-6cd9-449c-a30f-0b7425b1f98b" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000020.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-3cb6617a-bc28-4829-b628-557cc64d7cf7" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000021.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-6b0e8d44-8f7b-41e8-85c6-4609b1bde9b4" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000022.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-d23f2a50-f702-48ce-8e27-9560a5f274fd" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000023.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-edec5a24-cac7-446f-a64d-3cc98220b6c7" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000024.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-2ba86091-6c92-44a2-b1f6-06bddd7b5f92" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000025.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-6e30e073-e7d0-4f1b-aa41-00ee192ff12f" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000026.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-adee9a29-b9ca-4ab0-9a72-5d8dd44db7bf" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000027.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-48fc5083-d2cd-4c6c-aa48-2506a8063696" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000028.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-cdc94707-9219-4ebf-9e44-2be2532e0915" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000029.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-1ead2a40-1c73-4bb7-a72c-5ab3b00aa523" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000030.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-66931014-8f3f-4553-9e45-fc68a95a20da" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000031.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-c54c76c8-2eef-4941-b164-e1a622b31f3e" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000032.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-4ff82b59-c559-42ea-b027-edab773240ce" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000033.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-4aa69fbf-bf39-4cc8-88b0-e1a90babf207" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000034.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-d91a5e26-99a1-4335-90ff-c37231f258a5" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000035.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-87e34b8a-de88-4832-af6d-3bcb966d2ba6" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000036.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-af064149-d019-48b7-8c9e-ea3f54695e30" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000037.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-63d9454a-4e64-411f-9108-08ffad5ca5b6" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000038.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-cc2740d9-c45d-4a94-ae30-896f963a2656" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000039.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-1bbb1c79-1616-4130-a392-6390ed21af8a" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000040.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-dbac91d5-0afb-4814-b596-b3878939f920" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000041.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-795b3089-8085-46be-9502-455db9dbff33" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000042.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-d955866e-8632-42f2-9e0c-96f6a929c023" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000043.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-9e816828-4692-4021-b1db-cc77e5f20fc1" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000044.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-6917b712-e2be-481b-a66a-10584f779a23" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000045.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-8d7a1b2c-e088-4c2f-9a6b-f646c47c673d" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000046.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-67543c58-165f-41ef-805d-d530912d9b1b" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000047.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-8a146076-2c72-4b3a-bf6a-665b151d1b29" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000048.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-f002a365-e8b9-486f-a08f-bf23ebd742b4" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000049.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-c9ba3bba-01e1-4629-ada3-06cf5b54d4c0" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000050.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-49e0e6e5-905b-489d-beff-a91aed86fa0c" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000051.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-d8aaf48a-41f3-4ae1-a664-bad375d645d3" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000052.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-fe137b0a-4822-4d00-a25d-238b54d21d40" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000053.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-4d25571b-c6ee-4a61-b6d3-82e8bba8e3d2" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000054.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-cd749e54-5ca5-43fa-a7e2-7fe66a9fc98a" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000055.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-f5af94c1-a571-42fc-87e4-ad72365912a0" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000056.tif.medium.jpg" LOCTYPE="URL"/>
+      </mets:file>
+    </mets:fileGrp>
+    <mets:fileGrp USE="FULLTEXT">
+      <mets:file ID="uuid-629ce02a-24d4-4c66-a3a8-80c188184eda" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000001.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-650ebbc7-6951-4af8-aa36-29fc9c1dd939" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000002.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-8a7a12d3-1c56-4439-837b-e01c5d5ddf40" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000003.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-5a888631-7dd2-4919-b9bd-cb2c429255d6" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000004.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-bea1c083-9bde-412a-beca-8a85e99a1a71" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000005.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-61fa0ce3-97f2-472e-820c-7757cd1f0f92" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000006.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-771cbddf-c2c8-431c-811a-e40d28a08038" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000007.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-66ff21d7-854f-41b2-8c36-7f8487aa0537" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000008.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-ab9b9bd3-e01c-4ddd-917d-6021b352582a" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000009.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-16f2cbfc-2faa-40bb-b984-9bc30cd68f9f" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000010.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-5ce48e6b-9b86-4efd-ba43-306f62404d79" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000011.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-8ae754c0-ca32-4f60-8e82-d4578e9fff9f" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000012.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-6fed66ac-5ec2-43f1-85e8-8ba8a768696f" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000013.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-602caac2-791c-46a1-b0fc-977b69bc45ab" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000014.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-93da6ec7-7368-411f-a9fd-2f2e57eb77a9" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000015.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-799a2921-9c10-4ccc-a228-334f0ec1aef4" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000016.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-9c228b73-f513-40f0-828f-8534cc06482c" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000017.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-8a100ae3-73d2-470d-a3fc-cd85d1c58766" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000018.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-b482d935-069b-4de8-b14c-cca43a035573" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000019.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-7ca55baf-ec7d-4ba4-b2fa-de4a534526b8" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000020.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-58ccdd4e-3d32-4642-8007-13e5096515d4" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000021.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-d43d50ca-6eac-4c23-9120-7f1c1a7b1b03" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000022.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-9672aeb8-d80d-4038-bd12-e49f5950944e" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000023.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-5a099511-6a4a-4f4d-8abc-ff56b51f8e24" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000024.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-5e6e86c8-fec3-4b78-ad09-3620dcd1c5d9" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000025.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-aeecfc07-eb19-4124-88a8-868cf6492db6" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000026.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-26b78335-01b9-4ac5-9f07-f98b028b2ae5" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000027.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-c6706f35-6061-455a-923d-b96f16bb1e1a" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000028.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-318cf190-3b86-43c2-a4f8-481ad277e87d" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000029.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-054ca388-9836-4f57-a707-68aa6d5c8f19" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000030.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-4cfc5301-6bdb-4486-a50a-d5b4db0d0208" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000031.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-f45aec22-4163-41c2-be7a-76bc5e87c35d" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000032.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-147817bb-aea4-4dd9-9865-fe33b870bed6" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000033.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-e84a7ac7-cbc8-49cd-9a20-e1d455f5ccaf" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000034.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-92fb6635-f451-49cd-97b1-49b1b1d7f5f0" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000035.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-a97f3827-becb-4b4f-bc57-9a0ca2b50788" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000036.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-f8ddd280-5fa4-4e78-99ad-9330e1ba93d4" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000037.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-9f31523e-70fd-4bab-b473-fe44129728d2" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000038.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-aba77c84-e984-4ded-8500-17c6a93eb78f" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000039.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-928dd40f-ce7e-4ad8-8f7a-dcd52662ee3e" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000040.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-23781b45-8491-42ce-bc58-d634cad3a3b4" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000041.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-5305cfc2-e49a-49f5-b059-acf8b8bf8729" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000042.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-8ceb1857-d9e5-41ce-adde-21ffe5b2bd22" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000043.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-491833b9-fa09-4f9e-8686-abe89df422dd" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000044.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-9265de7c-6dc8-4e83-bd22-38f7d4c6d4b1" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000045.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-263cd6d4-a48c-45cf-8454-96ffedcfe55b" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000046.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-c8719bbe-6cc4-4e03-ac40-ac6bc46d0ce7" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000047.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-27550cdf-f00b-4540-a461-c773efacedae" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000048.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-da028354-9533-4fa1-8f9d-0e67940f34c4" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000049.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-3eb9fb08-5553-49a3-9eb4-9fee99c9fc42" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000050.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-8fc2bd3f-d7ce-405c-91bf-677e0a6d9ba3" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000051.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-72588d15-6d88-4e56-9587-dfcd3f110fda" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000052.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-9facf512-b589-422e-b69c-b46ea78be76a" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000053.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-41d3f429-6653-4b13-9015-2606c2ceae2b" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000054.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-3e662e19-064f-48a1-9b7d-7aba0aeb99a1" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000055.xml" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-69422dd3-d4bd-4608-a380-df5d5d050e9a" MIMETYPE="text/xml">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_ocr/00000056.xml" LOCTYPE="URL"/>
+      </mets:file>
+    </mets:fileGrp>
+    <mets:fileGrp USE="DOWNLOAD">
+      <mets:file ID="uuid-da499e4a-9202-4bb6-be36-965bff8eb126" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000001.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-1b2e2be4-bb3c-4704-b755-e5f74c044552" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000002.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-44f89eb6-ae92-4e16-b296-273c9fcad8e6" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000003.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-79d8469c-58e0-4299-b1da-813005d47e26" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000004.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-0f4e58ad-5cf5-4cec-be8d-f96c356eede8" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000005.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-98271ebf-8ee1-494e-93c9-92b75c9c47ae" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000006.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-7e1d01a2-1326-4cca-a037-3cfa113c0d3d" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000007.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-a31ff1ee-0189-40c5-8cee-f3970d11e572" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000008.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-a10a2900-f6b8-4d54-9721-bff49c8c64c6" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000009.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-5ab3a46a-458e-444f-b336-fc54f845f4f4" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000010.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-2ff751ed-305e-48cc-b1c0-fbb27729c521" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000011.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-360f2aa7-f70e-4c46-8c3b-e3de8e06ba90" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000012.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-7e278c01-bdb1-4212-84de-4ebcc2114f14" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000013.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-2641cfc3-1f77-47ab-b470-257a1755382c" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000014.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-b600907d-1265-4ee8-a87e-7143810f6531" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000015.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-aa20c0aa-9189-4b31-968f-eea0824b28aa" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000016.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-438e37b1-caaf-47ff-bfc2-44b48c8a599e" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000017.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-5fd5f71c-197f-4fa5-858f-3533fc4875f2" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000018.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-0471ad84-1a9e-44dc-85e1-02ec8b0852f8" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000019.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-a968a699-154e-453b-8b03-6de9987219bd" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000020.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-2fa33233-235f-42b2-8e88-35b6db744f21" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000021.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-005779ab-e9f8-4cca-a2cd-ac86bcf8d73b" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000022.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-646b3a68-197f-4781-aa1b-98fdf1781ecf" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000023.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-c7e960e8-a4ed-4306-aa31-fa5140746206" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000024.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-e071ded3-ceec-4fda-96ec-a7c4e5cb0567" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000025.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-88aaf508-a038-4342-a52e-6a2f72844b3b" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000026.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-a8ebe47d-866c-4caf-9aea-d807631acfc1" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000027.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-d756a0b6-1724-4ac1-a40d-adecc65a2b63" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000028.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-f541b0ae-1bc8-45ca-9bd4-7e2c92f0ed14" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000029.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-7d0d37b6-059f-4075-956c-8f3fc379710f" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000030.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-2fbc185b-72ea-4de5-8d6b-ff2b1e6d7afe" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000031.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-74d701cd-88ba-48ef-b2f5-040ec5326fcd" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000032.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-83c64795-ac08-40bd-ba6b-26db8cf2d6b8" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000033.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-8773f349-bbb6-454f-ad7b-548296a3e61f" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000034.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-85d3f233-8029-4c81-a8fa-985820291cee" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000035.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-43f4a5dc-e649-4c59-82bf-90e646999804" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000036.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-eaa4921e-e44a-4a58-a9f6-63014eb50789" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000037.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-9dcdaf2d-6a7a-4ddb-ad8c-3dc2f69299b1" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000038.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-446a8823-7648-4344-800f-d53fcd2f7072" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000039.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-a87ad074-0aa8-4ad6-b503-168911cd6e89" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000040.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-c77dcd65-f8c3-43af-9866-eeb7a9ddae3e" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000041.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-fd460dc1-ba04-4433-b65f-a5c091fd9f30" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000042.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-4535822c-6455-44dc-a286-61b958eb1485" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000043.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-cd1663ee-b59b-41d0-bda9-0221aa9e55d7" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000044.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-0c338e54-7700-4581-b498-a8cc73e0bb59" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000045.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-b3136e1e-923a-4230-9a40-f4ea0ccc8699" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000046.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-b476325c-2091-4d44-8bd5-472dc890e6f4" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000047.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-cc9561ef-dc8b-46ae-969b-5eb8eb5a21d7" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000048.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-1c456038-444f-4859-b620-2ff06e208c14" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000049.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-86b6acd8-e265-4cbb-9ca6-3bb6592ecf04" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000050.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-a6320520-ec0f-4ff5-85a5-38d6b536dd12" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000051.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-d7b4bd43-cd84-40f1-a20d-0b51fcd9a148" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000052.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-364befd0-248e-47a8-9a91-325b558730e7" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000053.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-7edf5d4f-2d7e-4ef2-8a86-9dd4b4850fab" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000054.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-f0797bc6-0c2e-4918-83fd-6614b8d17d0d" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000055.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-7e496395-4634-4475-b1be-4c534a1fd5ab" MIMETYPE="application/pdf">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000056.tif.pdf" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="FULLDOWNLOAD" MIMETYPE="application/pdf">
+        <mets:FLocat LOCTYPE="URL" xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/BurgAbha_1852685697.pdf"/>
+      </mets:file>
+    </mets:fileGrp>
+    <mets:fileGrp USE="ORIGINAL">
+      <mets:file ID="uuid-2585448f-6d3a-48ec-8c90-48842a31307f" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000001.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-fd545aba-dc2f-4e77-9fae-9d4c589b9bb6" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000002.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-ad784f40-ec64-4629-bfee-033e6b6650dd" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000003.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-f0facd7f-e52b-4445-a915-16a9535cf572" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000004.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-c3bc16b7-5389-4a2f-8847-615f0f95c503" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000005.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-1bec0c41-7943-4227-984c-2b24cd07a246" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000006.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-904f3504-8fa7-476e-912d-ec721c69c318" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000007.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-45bbb6e0-cc1e-450e-81f0-23da44d1d391" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000008.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-7a50455e-09aa-449c-8784-2ae45af29d40" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000009.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-a67b05b1-d0fd-4208-8118-b93c77714f89" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000010.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-9b2909b6-0475-41c0-95be-5640c31fdbf0" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000011.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-7b5b03f2-cd9e-4772-a5ba-b8f2bb079bb4" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000012.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-2538e8df-02d5-4e05-9f7d-da6b54de17bf" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000013.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-ec281cf1-a8de-4a16-bdc3-252a927fbd57" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000014.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-551371f9-bf4d-4f33-8965-9d979d1b3d8c" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000015.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-414156d5-48ef-4cc2-b2a9-5055bec8c015" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000016.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-10b940b1-c3a1-44ec-adc3-618fd2f04577" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000017.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-f580c625-7b5e-47f8-a372-52310affcd4a" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000018.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-e6a1af9b-6f5c-4ec8-b766-4d6f40a4b621" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000019.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-ed477b09-6f1c-42d8-b057-48667d4fd91f" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000020.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-6325a5e2-cfab-41ad-9593-cd24eb3b1835" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000021.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-69816a6b-3a82-4063-b4b8-7d28bd5ae29e" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000022.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-3fe1e4a9-09a2-4f78-b576-089ee4c895ba" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000023.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-44cf0c86-bc63-4fad-bdf2-368883695172" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000024.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-e07ab028-3247-4005-9d49-3eae1e289c6f" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000025.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-7a25bfcc-0ab6-4cbe-b99b-5a6ef9313445" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000026.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-883a34a7-7a2b-4e41-9703-66439087e728" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000027.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-035714da-e3f8-4d00-8c83-65ffc0e7f453" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000028.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-46a9631b-5692-4ad9-a4a0-f3c4e714f496" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000029.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-00fc3ec5-ba60-4365-97b4-d6fd3954c6aa" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000030.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-a57d43a1-7f2f-4a91-9312-20f4f8edd358" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000031.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-b00b0a33-7437-4796-858e-5035f97dd00a" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000032.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-fbeeecf9-5dfb-44f2-a185-0e464fea3f50" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000033.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-d68f1231-720f-4a35-b213-40497f8a74b8" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000034.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-43c0452e-2965-40c3-bdce-1d74f9c11dc8" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000035.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-9a80d4e5-0274-4ec4-80e5-a432a84f465c" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000036.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-9f383d6c-771b-4144-a871-9e9d76277097" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000037.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-12bc275d-b5eb-43ca-bcc1-7fa68b3b42a4" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000038.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-35eb5cdc-fd75-4df7-85db-4d881ee1284b" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000039.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-2bcc5419-d051-4a03-a901-535997bd545d" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000040.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-b93c63de-6a71-4226-9957-f68ba1595ba6" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000041.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-b89ae8e6-07e2-40e8-9767-148ff55a829c" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000042.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-d6452390-50e7-4c8a-9767-c700eb55badb" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000043.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-38cf0c9d-f022-494c-ab5c-e6305df92fbf" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000044.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-a40db68e-ae7f-46b6-bafe-e6e7e241dc4a" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000045.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-68ff043e-d110-4f88-851a-ffef95c8b594" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000046.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-c93cac87-4cfd-4648-9a13-26497b5397da" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000047.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-fc302c6d-2baa-4e3c-9272-37afd47ae5ca" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000048.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-4a3c3e47-9530-4a57-a4c1-ad36d83cb635" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000049.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-f2faf002-1f6e-473a-b90a-ee82571841c8" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000050.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-1c0f16cb-149c-4d7c-ae8c-026867ca5f66" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000051.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-06724eb3-d097-4eb1-a0ab-101ba4abadd4" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000052.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-6521c973-da42-41f9-89e3-05971109385f" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000053.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-51dd8d28-31d9-4254-a2f6-e8ae56fefbb6" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000054.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-a3ff1b71-9cc2-443d-9b00-9804c0356e87" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000055.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-ee23a314-0aec-4f76-a074-815feca2b0ff" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000056.tif.original.jpg" LOCTYPE="URL"/>
+      </mets:file>
+    </mets:fileGrp>
+    <mets:fileGrp USE="THUMBS">
+      <mets:file ID="uuid-b31c5801-e4c5-4b41-9d83-40541d2612bd" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000001.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-b2b4b9b5-7f51-48ff-b5fd-0cfebfe526e0" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000002.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-7317094a-8f74-457e-9a17-07b0b8207dfa" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000003.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-20efbe44-92f3-4deb-baca-72c5a412135d" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000004.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-9c28579f-2f0d-477f-b698-29679d8f283a" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000005.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-5bdef8b4-45c4-4764-b2a0-16fd56024a40" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000006.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-1638a585-5ec2-4824-88ae-c87b497c0361" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000007.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-113595f2-ca97-4bb5-8de7-058fe4af1356" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000008.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-7ec333b1-dafe-413d-8321-cc02bed62477" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000009.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-338d83b4-5e62-44c6-b7ab-de2faade406f" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000010.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-4ef63027-0baf-4fba-86e3-161627605c8c" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000011.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-7a6a57f4-541d-483e-8079-a4642a27c002" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000012.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-57ca7d56-50f9-425b-8e8d-a4c260880d90" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000013.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-75554608-49fd-4466-9622-f1bb973b139b" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000014.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-a28b8d80-5f8e-455c-a618-ff577bb74dc5" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000015.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-44b66097-45b5-4528-bb4b-edf94c394edf" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000016.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-783326dc-4abe-464d-b4da-d9c0fe96a180" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000017.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-233fff5f-9d4d-45a9-8074-484556b94c64" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000018.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-353000c5-ab2e-4e1e-a88a-fc15726c055f" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000019.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-a0efb7e0-c4f4-4508-a115-f60bf87c5f2d" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000020.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-c33b00ad-1edd-4355-b010-b75f806c1e3e" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000021.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-f2d4f928-c3d5-47d3-8df7-87142139600f" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000022.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-886cef45-a510-4c17-967e-bfdc00679424" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000023.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-232a027f-f550-4034-9748-b81a41949623" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000024.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-ffcc372f-8f81-428c-95cb-a62c3874f759" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000025.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-b04e1009-7cca-4eb8-84c5-b1fcc99b90f1" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000026.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-c172edc8-4aee-4170-9cf4-b96d3d45e7aa" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000027.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-ce53025c-cd0d-47a3-911a-fe9ee0e230a9" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000028.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-02c5547e-62f7-4023-b2f7-7c5461c9fe17" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000029.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-e1585169-ea17-4a6c-9d64-c83a17a92ebf" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000030.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-24a0556b-4ba3-48ae-9784-dcab71bbc730" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000031.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-d4b0b878-e3fd-4867-ad1f-ba9630ca5657" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000032.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-c73c24b7-8196-4536-952e-e6f79a46bcec" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000033.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-9e586fb3-0d9d-41ea-a5f2-bf57e2f27d88" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000034.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-a4401a26-583b-45ad-97ce-d060cf46ab9f" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000035.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-b01d0978-71fb-49be-9a43-d95795a7bce9" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000036.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-1e32b0d3-febd-4efd-8c66-d682f3719562" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000037.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-871e9d67-a3a7-41ba-ae11-51b3229fdc46" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000038.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-66238110-b5fb-44d8-8163-38bdac7701c7" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000039.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-454f8138-c073-48e2-bcba-c6da2d1d484c" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000040.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-63c13526-c453-4a59-8273-8f508e7505fe" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000041.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-a5a5e515-26ef-46c1-82f7-60d6e151d824" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000042.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-11679234-dcf1-4508-98ff-b3688a9a1fe4" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000043.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-00553493-fc9e-4504-913e-a82a8a3b9013" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000044.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-024c66ca-5c79-4e30-85ed-369e4f39265a" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000045.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-60a621bd-6f6a-4529-a636-99000b547007" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000046.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-82aa17e5-b16a-4b16-ad57-a5f70270a9bc" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000047.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-3ff51cb0-80e8-4c42-98a3-47e4eed8afbd" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000048.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-761e41b4-3122-4316-899a-3bbe47c2764c" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000049.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-5ae4ac39-b700-4787-a95b-e7bbb3eab804" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000050.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-4e1f2166-57a1-426c-8cee-83c44b8a79fc" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000051.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-243b378b-7e2c-48a6-87e9-7fe877fef495" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000052.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-aaaccc82-334c-460b-89cf-d678ade18fa4" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000053.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-0a2ff6ea-ee5b-447c-ae9b-fbcd4cbf37c4" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000054.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-47c5fe0a-7f1f-462c-a80a-7218aea3e28f" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000055.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+      <mets:file ID="uuid-fdea6c11-d033-473e-a3f1-355f62131f83" MIMETYPE="image/jpeg">
+        <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000056.tif.thumbnail.jpg" LOCTYPE="URL"/>
+      </mets:file>
+    </mets:fileGrp>
+  </mets:fileSec>
+  <mets:structMap TYPE="PHYSICAL">
+    <mets:div TYPE="physSequence" ID="PHYS_0000">
+      <mets:fptr FILEID="FULLDOWNLOAD"/>
+      <mets:div ID="PHYS_0001" TYPE="page" ORDER="1" ORDERLABEL=" - ">
+        <mets:fptr FILEID="uuid-2585448f-6d3a-48ec-8c90-48842a31307f"/>
+        <mets:fptr FILEID="uuid-b31c5801-e4c5-4b41-9d83-40541d2612bd"/>
+        <mets:fptr FILEID="uuid-629ce02a-24d4-4c66-a3a8-80c188184eda"/>
+        <mets:fptr FILEID="uuid-083191ec-3104-46d9-b61d-b014bd56e487"/>
+        <mets:fptr FILEID="uuid-da499e4a-9202-4bb6-be36-965bff8eb126"/>
+      </mets:div>
+      <mets:div ID="PHYS_0002" TYPE="page" ORDER="2" ORDERLABEL=" - ">
+        <mets:fptr FILEID="uuid-fd545aba-dc2f-4e77-9fae-9d4c589b9bb6"/>
+        <mets:fptr FILEID="uuid-b2b4b9b5-7f51-48ff-b5fd-0cfebfe526e0"/>
+        <mets:fptr FILEID="uuid-650ebbc7-6951-4af8-aa36-29fc9c1dd939"/>
+        <mets:fptr FILEID="uuid-5e721473-49a0-436a-814d-1fea75ffec2a"/>
+        <mets:fptr FILEID="uuid-1b2e2be4-bb3c-4704-b755-e5f74c044552"/>
+      </mets:div>
+      <mets:div ID="PHYS_0003" TYPE="page" ORDER="3" ORDERLABEL=" - ">
+        <mets:fptr FILEID="uuid-ad784f40-ec64-4629-bfee-033e6b6650dd"/>
+        <mets:fptr FILEID="uuid-7317094a-8f74-457e-9a17-07b0b8207dfa"/>
+        <mets:fptr FILEID="uuid-8a7a12d3-1c56-4439-837b-e01c5d5ddf40"/>
+        <mets:fptr FILEID="uuid-3fadc5e4-73f2-4793-a11f-d26c660adab8"/>
+        <mets:fptr FILEID="uuid-44f89eb6-ae92-4e16-b296-273c9fcad8e6"/>
+      </mets:div>
+      <mets:div ID="PHYS_0004" TYPE="page" ORDER="4" ORDERLABEL=" - ">
+        <mets:fptr FILEID="uuid-f0facd7f-e52b-4445-a915-16a9535cf572"/>
+        <mets:fptr FILEID="uuid-20efbe44-92f3-4deb-baca-72c5a412135d"/>
+        <mets:fptr FILEID="uuid-5a888631-7dd2-4919-b9bd-cb2c429255d6"/>
+        <mets:fptr FILEID="uuid-9dc30826-e59c-497b-bb78-8da4cd98929c"/>
+        <mets:fptr FILEID="uuid-79d8469c-58e0-4299-b1da-813005d47e26"/>
+      </mets:div>
+      <mets:div ID="PHYS_0005" TYPE="page" ORDER="5" ORDERLABEL="1">
+        <mets:fptr FILEID="uuid-c3bc16b7-5389-4a2f-8847-615f0f95c503"/>
+        <mets:fptr FILEID="uuid-9c28579f-2f0d-477f-b698-29679d8f283a"/>
+        <mets:fptr FILEID="uuid-bea1c083-9bde-412a-beca-8a85e99a1a71"/>
+        <mets:fptr FILEID="uuid-015d2409-2da8-483d-8530-82edb30a8a9e"/>
+        <mets:fptr FILEID="uuid-0f4e58ad-5cf5-4cec-be8d-f96c356eede8"/>
+      </mets:div>
+      <mets:div ID="PHYS_0006" TYPE="page" ORDER="6" ORDERLABEL="2">
+        <mets:fptr FILEID="uuid-1bec0c41-7943-4227-984c-2b24cd07a246"/>
+        <mets:fptr FILEID="uuid-5bdef8b4-45c4-4764-b2a0-16fd56024a40"/>
+        <mets:fptr FILEID="uuid-61fa0ce3-97f2-472e-820c-7757cd1f0f92"/>
+        <mets:fptr FILEID="uuid-5e67e664-05d5-44af-9401-320fc3dd6c12"/>
+        <mets:fptr FILEID="uuid-98271ebf-8ee1-494e-93c9-92b75c9c47ae"/>
+      </mets:div>
+      <mets:div ID="PHYS_0007" TYPE="page" ORDER="7" ORDERLABEL="3">
+        <mets:fptr FILEID="uuid-904f3504-8fa7-476e-912d-ec721c69c318"/>
+        <mets:fptr FILEID="uuid-1638a585-5ec2-4824-88ae-c87b497c0361"/>
+        <mets:fptr FILEID="uuid-771cbddf-c2c8-431c-811a-e40d28a08038"/>
+        <mets:fptr FILEID="uuid-a9e74eef-8cdc-4168-8e05-acf6c06d8f35"/>
+        <mets:fptr FILEID="uuid-7e1d01a2-1326-4cca-a037-3cfa113c0d3d"/>
+      </mets:div>
+      <mets:div ID="PHYS_0008" TYPE="page" ORDER="8" ORDERLABEL="4">
+        <mets:fptr FILEID="uuid-45bbb6e0-cc1e-450e-81f0-23da44d1d391"/>
+        <mets:fptr FILEID="uuid-113595f2-ca97-4bb5-8de7-058fe4af1356"/>
+        <mets:fptr FILEID="uuid-66ff21d7-854f-41b2-8c36-7f8487aa0537"/>
+        <mets:fptr FILEID="uuid-67890133-f4f7-4ddf-82a4-8bbf6813f075"/>
+        <mets:fptr FILEID="uuid-a31ff1ee-0189-40c5-8cee-f3970d11e572"/>
+      </mets:div>
+      <mets:div ID="PHYS_0009" TYPE="page" ORDER="9" ORDERLABEL="5">
+        <mets:fptr FILEID="uuid-7a50455e-09aa-449c-8784-2ae45af29d40"/>
+        <mets:fptr FILEID="uuid-7ec333b1-dafe-413d-8321-cc02bed62477"/>
+        <mets:fptr FILEID="uuid-ab9b9bd3-e01c-4ddd-917d-6021b352582a"/>
+        <mets:fptr FILEID="uuid-25c54550-9236-4641-8774-44371749395a"/>
+        <mets:fptr FILEID="uuid-a10a2900-f6b8-4d54-9721-bff49c8c64c6"/>
+      </mets:div>
+      <mets:div ID="PHYS_0010" TYPE="page" ORDER="10" ORDERLABEL="6">
+        <mets:fptr FILEID="uuid-a67b05b1-d0fd-4208-8118-b93c77714f89"/>
+        <mets:fptr FILEID="uuid-338d83b4-5e62-44c6-b7ab-de2faade406f"/>
+        <mets:fptr FILEID="uuid-16f2cbfc-2faa-40bb-b984-9bc30cd68f9f"/>
+        <mets:fptr FILEID="uuid-95c49545-a3de-4e6b-8083-185203bd3863"/>
+        <mets:fptr FILEID="uuid-5ab3a46a-458e-444f-b336-fc54f845f4f4"/>
+      </mets:div>
+      <mets:div ID="PHYS_0011" TYPE="page" ORDER="11" ORDERLABEL="7">
+        <mets:fptr FILEID="uuid-9b2909b6-0475-41c0-95be-5640c31fdbf0"/>
+        <mets:fptr FILEID="uuid-4ef63027-0baf-4fba-86e3-161627605c8c"/>
+        <mets:fptr FILEID="uuid-5ce48e6b-9b86-4efd-ba43-306f62404d79"/>
+        <mets:fptr FILEID="uuid-26b78ebb-4a5e-4af5-963d-8cd95ffdbc56"/>
+        <mets:fptr FILEID="uuid-2ff751ed-305e-48cc-b1c0-fbb27729c521"/>
+      </mets:div>
+      <mets:div ID="PHYS_0012" TYPE="page" ORDER="12" ORDERLABEL="8">
+        <mets:fptr FILEID="uuid-7b5b03f2-cd9e-4772-a5ba-b8f2bb079bb4"/>
+        <mets:fptr FILEID="uuid-7a6a57f4-541d-483e-8079-a4642a27c002"/>
+        <mets:fptr FILEID="uuid-8ae754c0-ca32-4f60-8e82-d4578e9fff9f"/>
+        <mets:fptr FILEID="uuid-87b2473f-c4a8-4e14-a016-814492aef5b1"/>
+        <mets:fptr FILEID="uuid-360f2aa7-f70e-4c46-8c3b-e3de8e06ba90"/>
+      </mets:div>
+      <mets:div ID="PHYS_0013" TYPE="page" ORDER="13" ORDERLABEL="9">
+        <mets:fptr FILEID="uuid-2538e8df-02d5-4e05-9f7d-da6b54de17bf"/>
+        <mets:fptr FILEID="uuid-57ca7d56-50f9-425b-8e8d-a4c260880d90"/>
+        <mets:fptr FILEID="uuid-6fed66ac-5ec2-43f1-85e8-8ba8a768696f"/>
+        <mets:fptr FILEID="uuid-2712993d-2778-4ede-8a2d-cc4c159e4ac8"/>
+        <mets:fptr FILEID="uuid-7e278c01-bdb1-4212-84de-4ebcc2114f14"/>
+      </mets:div>
+      <mets:div ID="PHYS_0014" TYPE="page" ORDER="14" ORDERLABEL="10">
+        <mets:fptr FILEID="uuid-ec281cf1-a8de-4a16-bdc3-252a927fbd57"/>
+        <mets:fptr FILEID="uuid-75554608-49fd-4466-9622-f1bb973b139b"/>
+        <mets:fptr FILEID="uuid-602caac2-791c-46a1-b0fc-977b69bc45ab"/>
+        <mets:fptr FILEID="uuid-bfcd3e28-55c6-4717-bab3-86c9f17306a1"/>
+        <mets:fptr FILEID="uuid-2641cfc3-1f77-47ab-b470-257a1755382c"/>
+      </mets:div>
+      <mets:div ID="PHYS_0015" TYPE="page" ORDER="15" ORDERLABEL="11">
+        <mets:fptr FILEID="uuid-551371f9-bf4d-4f33-8965-9d979d1b3d8c"/>
+        <mets:fptr FILEID="uuid-a28b8d80-5f8e-455c-a618-ff577bb74dc5"/>
+        <mets:fptr FILEID="uuid-93da6ec7-7368-411f-a9fd-2f2e57eb77a9"/>
+        <mets:fptr FILEID="uuid-5906d74f-998d-45c0-a2b0-07b93a02e5ff"/>
+        <mets:fptr FILEID="uuid-b600907d-1265-4ee8-a87e-7143810f6531"/>
+      </mets:div>
+      <mets:div ID="PHYS_0016" TYPE="page" ORDER="16" ORDERLABEL="12">
+        <mets:fptr FILEID="uuid-414156d5-48ef-4cc2-b2a9-5055bec8c015"/>
+        <mets:fptr FILEID="uuid-44b66097-45b5-4528-bb4b-edf94c394edf"/>
+        <mets:fptr FILEID="uuid-799a2921-9c10-4ccc-a228-334f0ec1aef4"/>
+        <mets:fptr FILEID="uuid-61d08b8d-9e40-4e25-a525-b7b5582401f2"/>
+        <mets:fptr FILEID="uuid-aa20c0aa-9189-4b31-968f-eea0824b28aa"/>
+      </mets:div>
+      <mets:div ID="PHYS_0017" TYPE="page" ORDER="17" ORDERLABEL="13">
+        <mets:fptr FILEID="uuid-10b940b1-c3a1-44ec-adc3-618fd2f04577"/>
+        <mets:fptr FILEID="uuid-783326dc-4abe-464d-b4da-d9c0fe96a180"/>
+        <mets:fptr FILEID="uuid-9c228b73-f513-40f0-828f-8534cc06482c"/>
+        <mets:fptr FILEID="uuid-421750e5-95ff-42bc-8e35-1e0fb12266f1"/>
+        <mets:fptr FILEID="uuid-438e37b1-caaf-47ff-bfc2-44b48c8a599e"/>
+      </mets:div>
+      <mets:div ID="PHYS_0018" TYPE="page" ORDER="18" ORDERLABEL="14">
+        <mets:fptr FILEID="uuid-f580c625-7b5e-47f8-a372-52310affcd4a"/>
+        <mets:fptr FILEID="uuid-233fff5f-9d4d-45a9-8074-484556b94c64"/>
+        <mets:fptr FILEID="uuid-8a100ae3-73d2-470d-a3fc-cd85d1c58766"/>
+        <mets:fptr FILEID="uuid-25682c30-24ff-4e9d-a560-5db77e87f51e"/>
+        <mets:fptr FILEID="uuid-5fd5f71c-197f-4fa5-858f-3533fc4875f2"/>
+      </mets:div>
+      <mets:div ID="PHYS_0019" TYPE="page" ORDER="19" ORDERLABEL="15">
+        <mets:fptr FILEID="uuid-e6a1af9b-6f5c-4ec8-b766-4d6f40a4b621"/>
+        <mets:fptr FILEID="uuid-353000c5-ab2e-4e1e-a88a-fc15726c055f"/>
+        <mets:fptr FILEID="uuid-b482d935-069b-4de8-b14c-cca43a035573"/>
+        <mets:fptr FILEID="uuid-87560307-efd6-47f7-b59c-87d7f263f024"/>
+        <mets:fptr FILEID="uuid-0471ad84-1a9e-44dc-85e1-02ec8b0852f8"/>
+      </mets:div>
+      <mets:div ID="PHYS_0020" TYPE="page" ORDER="20" ORDERLABEL="16">
+        <mets:fptr FILEID="uuid-ed477b09-6f1c-42d8-b057-48667d4fd91f"/>
+        <mets:fptr FILEID="uuid-a0efb7e0-c4f4-4508-a115-f60bf87c5f2d"/>
+        <mets:fptr FILEID="uuid-7ca55baf-ec7d-4ba4-b2fa-de4a534526b8"/>
+        <mets:fptr FILEID="uuid-f18fa88a-6cd9-449c-a30f-0b7425b1f98b"/>
+        <mets:fptr FILEID="uuid-a968a699-154e-453b-8b03-6de9987219bd"/>
+      </mets:div>
+      <mets:div ID="PHYS_0021" TYPE="page" ORDER="21" ORDERLABEL="17">
+        <mets:fptr FILEID="uuid-6325a5e2-cfab-41ad-9593-cd24eb3b1835"/>
+        <mets:fptr FILEID="uuid-c33b00ad-1edd-4355-b010-b75f806c1e3e"/>
+        <mets:fptr FILEID="uuid-58ccdd4e-3d32-4642-8007-13e5096515d4"/>
+        <mets:fptr FILEID="uuid-3cb6617a-bc28-4829-b628-557cc64d7cf7"/>
+        <mets:fptr FILEID="uuid-2fa33233-235f-42b2-8e88-35b6db744f21"/>
+      </mets:div>
+      <mets:div ID="PHYS_0022" TYPE="page" ORDER="22" ORDERLABEL="18">
+        <mets:fptr FILEID="uuid-69816a6b-3a82-4063-b4b8-7d28bd5ae29e"/>
+        <mets:fptr FILEID="uuid-f2d4f928-c3d5-47d3-8df7-87142139600f"/>
+        <mets:fptr FILEID="uuid-d43d50ca-6eac-4c23-9120-7f1c1a7b1b03"/>
+        <mets:fptr FILEID="uuid-6b0e8d44-8f7b-41e8-85c6-4609b1bde9b4"/>
+        <mets:fptr FILEID="uuid-005779ab-e9f8-4cca-a2cd-ac86bcf8d73b"/>
+      </mets:div>
+      <mets:div ID="PHYS_0023" TYPE="page" ORDER="23" ORDERLABEL="19">
+        <mets:fptr FILEID="uuid-3fe1e4a9-09a2-4f78-b576-089ee4c895ba"/>
+        <mets:fptr FILEID="uuid-886cef45-a510-4c17-967e-bfdc00679424"/>
+        <mets:fptr FILEID="uuid-9672aeb8-d80d-4038-bd12-e49f5950944e"/>
+        <mets:fptr FILEID="uuid-d23f2a50-f702-48ce-8e27-9560a5f274fd"/>
+        <mets:fptr FILEID="uuid-646b3a68-197f-4781-aa1b-98fdf1781ecf"/>
+      </mets:div>
+      <mets:div ID="PHYS_0024" TYPE="page" ORDER="24" ORDERLABEL="20">
+        <mets:fptr FILEID="uuid-44cf0c86-bc63-4fad-bdf2-368883695172"/>
+        <mets:fptr FILEID="uuid-232a027f-f550-4034-9748-b81a41949623"/>
+        <mets:fptr FILEID="uuid-5a099511-6a4a-4f4d-8abc-ff56b51f8e24"/>
+        <mets:fptr FILEID="uuid-edec5a24-cac7-446f-a64d-3cc98220b6c7"/>
+        <mets:fptr FILEID="uuid-c7e960e8-a4ed-4306-aa31-fa5140746206"/>
+      </mets:div>
+      <mets:div ID="PHYS_0025" TYPE="page" ORDER="25" ORDERLABEL="21">
+        <mets:fptr FILEID="uuid-e07ab028-3247-4005-9d49-3eae1e289c6f"/>
+        <mets:fptr FILEID="uuid-ffcc372f-8f81-428c-95cb-a62c3874f759"/>
+        <mets:fptr FILEID="uuid-5e6e86c8-fec3-4b78-ad09-3620dcd1c5d9"/>
+        <mets:fptr FILEID="uuid-2ba86091-6c92-44a2-b1f6-06bddd7b5f92"/>
+        <mets:fptr FILEID="uuid-e071ded3-ceec-4fda-96ec-a7c4e5cb0567"/>
+      </mets:div>
+      <mets:div ID="PHYS_0026" TYPE="page" ORDER="26" ORDERLABEL="22">
+        <mets:fptr FILEID="uuid-7a25bfcc-0ab6-4cbe-b99b-5a6ef9313445"/>
+        <mets:fptr FILEID="uuid-b04e1009-7cca-4eb8-84c5-b1fcc99b90f1"/>
+        <mets:fptr FILEID="uuid-aeecfc07-eb19-4124-88a8-868cf6492db6"/>
+        <mets:fptr FILEID="uuid-6e30e073-e7d0-4f1b-aa41-00ee192ff12f"/>
+        <mets:fptr FILEID="uuid-88aaf508-a038-4342-a52e-6a2f72844b3b"/>
+      </mets:div>
+      <mets:div ID="PHYS_0027" TYPE="page" ORDER="27" ORDERLABEL="23">
+        <mets:fptr FILEID="uuid-883a34a7-7a2b-4e41-9703-66439087e728"/>
+        <mets:fptr FILEID="uuid-c172edc8-4aee-4170-9cf4-b96d3d45e7aa"/>
+        <mets:fptr FILEID="uuid-26b78335-01b9-4ac5-9f07-f98b028b2ae5"/>
+        <mets:fptr FILEID="uuid-adee9a29-b9ca-4ab0-9a72-5d8dd44db7bf"/>
+        <mets:fptr FILEID="uuid-a8ebe47d-866c-4caf-9aea-d807631acfc1"/>
+      </mets:div>
+      <mets:div ID="PHYS_0028" TYPE="page" ORDER="28" ORDERLABEL="24">
+        <mets:fptr FILEID="uuid-035714da-e3f8-4d00-8c83-65ffc0e7f453"/>
+        <mets:fptr FILEID="uuid-ce53025c-cd0d-47a3-911a-fe9ee0e230a9"/>
+        <mets:fptr FILEID="uuid-c6706f35-6061-455a-923d-b96f16bb1e1a"/>
+        <mets:fptr FILEID="uuid-48fc5083-d2cd-4c6c-aa48-2506a8063696"/>
+        <mets:fptr FILEID="uuid-d756a0b6-1724-4ac1-a40d-adecc65a2b63"/>
+      </mets:div>
+      <mets:div ID="PHYS_0029" TYPE="page" ORDER="29" ORDERLABEL="25">
+        <mets:fptr FILEID="uuid-46a9631b-5692-4ad9-a4a0-f3c4e714f496"/>
+        <mets:fptr FILEID="uuid-02c5547e-62f7-4023-b2f7-7c5461c9fe17"/>
+        <mets:fptr FILEID="uuid-318cf190-3b86-43c2-a4f8-481ad277e87d"/>
+        <mets:fptr FILEID="uuid-cdc94707-9219-4ebf-9e44-2be2532e0915"/>
+        <mets:fptr FILEID="uuid-f541b0ae-1bc8-45ca-9bd4-7e2c92f0ed14"/>
+      </mets:div>
+      <mets:div ID="PHYS_0030" TYPE="page" ORDER="30" ORDERLABEL="26">
+        <mets:fptr FILEID="uuid-00fc3ec5-ba60-4365-97b4-d6fd3954c6aa"/>
+        <mets:fptr FILEID="uuid-e1585169-ea17-4a6c-9d64-c83a17a92ebf"/>
+        <mets:fptr FILEID="uuid-054ca388-9836-4f57-a707-68aa6d5c8f19"/>
+        <mets:fptr FILEID="uuid-1ead2a40-1c73-4bb7-a72c-5ab3b00aa523"/>
+        <mets:fptr FILEID="uuid-7d0d37b6-059f-4075-956c-8f3fc379710f"/>
+      </mets:div>
+      <mets:div ID="PHYS_0031" TYPE="page" ORDER="31" ORDERLABEL="27">
+        <mets:fptr FILEID="uuid-a57d43a1-7f2f-4a91-9312-20f4f8edd358"/>
+        <mets:fptr FILEID="uuid-24a0556b-4ba3-48ae-9784-dcab71bbc730"/>
+        <mets:fptr FILEID="uuid-4cfc5301-6bdb-4486-a50a-d5b4db0d0208"/>
+        <mets:fptr FILEID="uuid-66931014-8f3f-4553-9e45-fc68a95a20da"/>
+        <mets:fptr FILEID="uuid-2fbc185b-72ea-4de5-8d6b-ff2b1e6d7afe"/>
+      </mets:div>
+      <mets:div ID="PHYS_0032" TYPE="page" ORDER="32" ORDERLABEL="28">
+        <mets:fptr FILEID="uuid-b00b0a33-7437-4796-858e-5035f97dd00a"/>
+        <mets:fptr FILEID="uuid-d4b0b878-e3fd-4867-ad1f-ba9630ca5657"/>
+        <mets:fptr FILEID="uuid-f45aec22-4163-41c2-be7a-76bc5e87c35d"/>
+        <mets:fptr FILEID="uuid-c54c76c8-2eef-4941-b164-e1a622b31f3e"/>
+        <mets:fptr FILEID="uuid-74d701cd-88ba-48ef-b2f5-040ec5326fcd"/>
+      </mets:div>
+      <mets:div ID="PHYS_0033" TYPE="page" ORDER="33" ORDERLABEL="29">
+        <mets:fptr FILEID="uuid-fbeeecf9-5dfb-44f2-a185-0e464fea3f50"/>
+        <mets:fptr FILEID="uuid-c73c24b7-8196-4536-952e-e6f79a46bcec"/>
+        <mets:fptr FILEID="uuid-147817bb-aea4-4dd9-9865-fe33b870bed6"/>
+        <mets:fptr FILEID="uuid-4ff82b59-c559-42ea-b027-edab773240ce"/>
+        <mets:fptr FILEID="uuid-83c64795-ac08-40bd-ba6b-26db8cf2d6b8"/>
+      </mets:div>
+      <mets:div ID="PHYS_0034" TYPE="page" ORDER="34" ORDERLABEL="30">
+        <mets:fptr FILEID="uuid-d68f1231-720f-4a35-b213-40497f8a74b8"/>
+        <mets:fptr FILEID="uuid-9e586fb3-0d9d-41ea-a5f2-bf57e2f27d88"/>
+        <mets:fptr FILEID="uuid-e84a7ac7-cbc8-49cd-9a20-e1d455f5ccaf"/>
+        <mets:fptr FILEID="uuid-4aa69fbf-bf39-4cc8-88b0-e1a90babf207"/>
+        <mets:fptr FILEID="uuid-8773f349-bbb6-454f-ad7b-548296a3e61f"/>
+      </mets:div>
+      <mets:div ID="PHYS_0035" TYPE="page" ORDER="35" ORDERLABEL="31">
+        <mets:fptr FILEID="uuid-43c0452e-2965-40c3-bdce-1d74f9c11dc8"/>
+        <mets:fptr FILEID="uuid-a4401a26-583b-45ad-97ce-d060cf46ab9f"/>
+        <mets:fptr FILEID="uuid-92fb6635-f451-49cd-97b1-49b1b1d7f5f0"/>
+        <mets:fptr FILEID="uuid-d91a5e26-99a1-4335-90ff-c37231f258a5"/>
+        <mets:fptr FILEID="uuid-85d3f233-8029-4c81-a8fa-985820291cee"/>
+      </mets:div>
+      <mets:div ID="PHYS_0036" TYPE="page" ORDER="36" ORDERLABEL="32">
+        <mets:fptr FILEID="uuid-9a80d4e5-0274-4ec4-80e5-a432a84f465c"/>
+        <mets:fptr FILEID="uuid-b01d0978-71fb-49be-9a43-d95795a7bce9"/>
+        <mets:fptr FILEID="uuid-a97f3827-becb-4b4f-bc57-9a0ca2b50788"/>
+        <mets:fptr FILEID="uuid-87e34b8a-de88-4832-af6d-3bcb966d2ba6"/>
+        <mets:fptr FILEID="uuid-43f4a5dc-e649-4c59-82bf-90e646999804"/>
+      </mets:div>
+      <mets:div ID="PHYS_0037" TYPE="page" ORDER="37" ORDERLABEL="33">
+        <mets:fptr FILEID="uuid-9f383d6c-771b-4144-a871-9e9d76277097"/>
+        <mets:fptr FILEID="uuid-1e32b0d3-febd-4efd-8c66-d682f3719562"/>
+        <mets:fptr FILEID="uuid-f8ddd280-5fa4-4e78-99ad-9330e1ba93d4"/>
+        <mets:fptr FILEID="uuid-af064149-d019-48b7-8c9e-ea3f54695e30"/>
+        <mets:fptr FILEID="uuid-eaa4921e-e44a-4a58-a9f6-63014eb50789"/>
+      </mets:div>
+      <mets:div ID="PHYS_0038" TYPE="page" ORDER="38" ORDERLABEL="34">
+        <mets:fptr FILEID="uuid-12bc275d-b5eb-43ca-bcc1-7fa68b3b42a4"/>
+        <mets:fptr FILEID="uuid-871e9d67-a3a7-41ba-ae11-51b3229fdc46"/>
+        <mets:fptr FILEID="uuid-9f31523e-70fd-4bab-b473-fe44129728d2"/>
+        <mets:fptr FILEID="uuid-63d9454a-4e64-411f-9108-08ffad5ca5b6"/>
+        <mets:fptr FILEID="uuid-9dcdaf2d-6a7a-4ddb-ad8c-3dc2f69299b1"/>
+      </mets:div>
+      <mets:div ID="PHYS_0039" TYPE="page" ORDER="39" ORDERLABEL="35">
+        <mets:fptr FILEID="uuid-35eb5cdc-fd75-4df7-85db-4d881ee1284b"/>
+        <mets:fptr FILEID="uuid-66238110-b5fb-44d8-8163-38bdac7701c7"/>
+        <mets:fptr FILEID="uuid-aba77c84-e984-4ded-8500-17c6a93eb78f"/>
+        <mets:fptr FILEID="uuid-cc2740d9-c45d-4a94-ae30-896f963a2656"/>
+        <mets:fptr FILEID="uuid-446a8823-7648-4344-800f-d53fcd2f7072"/>
+      </mets:div>
+      <mets:div ID="PHYS_0040" TYPE="page" ORDER="40" ORDERLABEL="36">
+        <mets:fptr FILEID="uuid-2bcc5419-d051-4a03-a901-535997bd545d"/>
+        <mets:fptr FILEID="uuid-454f8138-c073-48e2-bcba-c6da2d1d484c"/>
+        <mets:fptr FILEID="uuid-928dd40f-ce7e-4ad8-8f7a-dcd52662ee3e"/>
+        <mets:fptr FILEID="uuid-1bbb1c79-1616-4130-a392-6390ed21af8a"/>
+        <mets:fptr FILEID="uuid-a87ad074-0aa8-4ad6-b503-168911cd6e89"/>
+      </mets:div>
+      <mets:div ID="PHYS_0041" TYPE="page" ORDER="41" ORDERLABEL="37">
+        <mets:fptr FILEID="uuid-b93c63de-6a71-4226-9957-f68ba1595ba6"/>
+        <mets:fptr FILEID="uuid-63c13526-c453-4a59-8273-8f508e7505fe"/>
+        <mets:fptr FILEID="uuid-23781b45-8491-42ce-bc58-d634cad3a3b4"/>
+        <mets:fptr FILEID="uuid-dbac91d5-0afb-4814-b596-b3878939f920"/>
+        <mets:fptr FILEID="uuid-c77dcd65-f8c3-43af-9866-eeb7a9ddae3e"/>
+      </mets:div>
+      <mets:div ID="PHYS_0042" TYPE="page" ORDER="42" ORDERLABEL="38">
+        <mets:fptr FILEID="uuid-b89ae8e6-07e2-40e8-9767-148ff55a829c"/>
+        <mets:fptr FILEID="uuid-a5a5e515-26ef-46c1-82f7-60d6e151d824"/>
+        <mets:fptr FILEID="uuid-5305cfc2-e49a-49f5-b059-acf8b8bf8729"/>
+        <mets:fptr FILEID="uuid-795b3089-8085-46be-9502-455db9dbff33"/>
+        <mets:fptr FILEID="uuid-fd460dc1-ba04-4433-b65f-a5c091fd9f30"/>
+      </mets:div>
+      <mets:div ID="PHYS_0043" TYPE="page" ORDER="43" ORDERLABEL="39">
+        <mets:fptr FILEID="uuid-d6452390-50e7-4c8a-9767-c700eb55badb"/>
+        <mets:fptr FILEID="uuid-11679234-dcf1-4508-98ff-b3688a9a1fe4"/>
+        <mets:fptr FILEID="uuid-8ceb1857-d9e5-41ce-adde-21ffe5b2bd22"/>
+        <mets:fptr FILEID="uuid-d955866e-8632-42f2-9e0c-96f6a929c023"/>
+        <mets:fptr FILEID="uuid-4535822c-6455-44dc-a286-61b958eb1485"/>
+      </mets:div>
+      <mets:div ID="PHYS_0044" TYPE="page" ORDER="44" ORDERLABEL="40">
+        <mets:fptr FILEID="uuid-38cf0c9d-f022-494c-ab5c-e6305df92fbf"/>
+        <mets:fptr FILEID="uuid-00553493-fc9e-4504-913e-a82a8a3b9013"/>
+        <mets:fptr FILEID="uuid-491833b9-fa09-4f9e-8686-abe89df422dd"/>
+        <mets:fptr FILEID="uuid-9e816828-4692-4021-b1db-cc77e5f20fc1"/>
+        <mets:fptr FILEID="uuid-cd1663ee-b59b-41d0-bda9-0221aa9e55d7"/>
+      </mets:div>
+      <mets:div ID="PHYS_0045" TYPE="page" ORDER="45" ORDERLABEL="41">
+        <mets:fptr FILEID="uuid-a40db68e-ae7f-46b6-bafe-e6e7e241dc4a"/>
+        <mets:fptr FILEID="uuid-024c66ca-5c79-4e30-85ed-369e4f39265a"/>
+        <mets:fptr FILEID="uuid-9265de7c-6dc8-4e83-bd22-38f7d4c6d4b1"/>
+        <mets:fptr FILEID="uuid-6917b712-e2be-481b-a66a-10584f779a23"/>
+        <mets:fptr FILEID="uuid-0c338e54-7700-4581-b498-a8cc73e0bb59"/>
+      </mets:div>
+      <mets:div ID="PHYS_0046" TYPE="page" ORDER="46" ORDERLABEL="42">
+        <mets:fptr FILEID="uuid-68ff043e-d110-4f88-851a-ffef95c8b594"/>
+        <mets:fptr FILEID="uuid-60a621bd-6f6a-4529-a636-99000b547007"/>
+        <mets:fptr FILEID="uuid-263cd6d4-a48c-45cf-8454-96ffedcfe55b"/>
+        <mets:fptr FILEID="uuid-8d7a1b2c-e088-4c2f-9a6b-f646c47c673d"/>
+        <mets:fptr FILEID="uuid-b3136e1e-923a-4230-9a40-f4ea0ccc8699"/>
+      </mets:div>
+      <mets:div ID="PHYS_0047" TYPE="page" ORDER="47" ORDERLABEL="43">
+        <mets:fptr FILEID="uuid-c93cac87-4cfd-4648-9a13-26497b5397da"/>
+        <mets:fptr FILEID="uuid-82aa17e5-b16a-4b16-ad57-a5f70270a9bc"/>
+        <mets:fptr FILEID="uuid-c8719bbe-6cc4-4e03-ac40-ac6bc46d0ce7"/>
+        <mets:fptr FILEID="uuid-67543c58-165f-41ef-805d-d530912d9b1b"/>
+        <mets:fptr FILEID="uuid-b476325c-2091-4d44-8bd5-472dc890e6f4"/>
+      </mets:div>
+      <mets:div ID="PHYS_0048" TYPE="page" ORDER="48" ORDERLABEL="44">
+        <mets:fptr FILEID="uuid-fc302c6d-2baa-4e3c-9272-37afd47ae5ca"/>
+        <mets:fptr FILEID="uuid-3ff51cb0-80e8-4c42-98a3-47e4eed8afbd"/>
+        <mets:fptr FILEID="uuid-27550cdf-f00b-4540-a461-c773efacedae"/>
+        <mets:fptr FILEID="uuid-8a146076-2c72-4b3a-bf6a-665b151d1b29"/>
+        <mets:fptr FILEID="uuid-cc9561ef-dc8b-46ae-969b-5eb8eb5a21d7"/>
+      </mets:div>
+      <mets:div ID="PHYS_0049" TYPE="page" ORDER="49" ORDERLABEL="45">
+        <mets:fptr FILEID="uuid-4a3c3e47-9530-4a57-a4c1-ad36d83cb635"/>
+        <mets:fptr FILEID="uuid-761e41b4-3122-4316-899a-3bbe47c2764c"/>
+        <mets:fptr FILEID="uuid-da028354-9533-4fa1-8f9d-0e67940f34c4"/>
+        <mets:fptr FILEID="uuid-f002a365-e8b9-486f-a08f-bf23ebd742b4"/>
+        <mets:fptr FILEID="uuid-1c456038-444f-4859-b620-2ff06e208c14"/>
+      </mets:div>
+      <mets:div ID="PHYS_0050" TYPE="page" ORDER="50" ORDERLABEL="46">
+        <mets:fptr FILEID="uuid-f2faf002-1f6e-473a-b90a-ee82571841c8"/>
+        <mets:fptr FILEID="uuid-5ae4ac39-b700-4787-a95b-e7bbb3eab804"/>
+        <mets:fptr FILEID="uuid-3eb9fb08-5553-49a3-9eb4-9fee99c9fc42"/>
+        <mets:fptr FILEID="uuid-c9ba3bba-01e1-4629-ada3-06cf5b54d4c0"/>
+        <mets:fptr FILEID="uuid-86b6acd8-e265-4cbb-9ca6-3bb6592ecf04"/>
+      </mets:div>
+      <mets:div ID="PHYS_0051" TYPE="page" ORDER="51" ORDERLABEL="47">
+        <mets:fptr FILEID="uuid-1c0f16cb-149c-4d7c-ae8c-026867ca5f66"/>
+        <mets:fptr FILEID="uuid-4e1f2166-57a1-426c-8cee-83c44b8a79fc"/>
+        <mets:fptr FILEID="uuid-8fc2bd3f-d7ce-405c-91bf-677e0a6d9ba3"/>
+        <mets:fptr FILEID="uuid-49e0e6e5-905b-489d-beff-a91aed86fa0c"/>
+        <mets:fptr FILEID="uuid-a6320520-ec0f-4ff5-85a5-38d6b536dd12"/>
+      </mets:div>
+      <mets:div ID="PHYS_0052" TYPE="page" ORDER="52" ORDERLABEL="48">
+        <mets:fptr FILEID="uuid-06724eb3-d097-4eb1-a0ab-101ba4abadd4"/>
+        <mets:fptr FILEID="uuid-243b378b-7e2c-48a6-87e9-7fe877fef495"/>
+        <mets:fptr FILEID="uuid-72588d15-6d88-4e56-9587-dfcd3f110fda"/>
+        <mets:fptr FILEID="uuid-d8aaf48a-41f3-4ae1-a664-bad375d645d3"/>
+        <mets:fptr FILEID="uuid-d7b4bd43-cd84-40f1-a20d-0b51fcd9a148"/>
+      </mets:div>
+      <mets:div ID="PHYS_0053" TYPE="page" ORDER="53" ORDERLABEL=" - ">
+        <mets:fptr FILEID="uuid-6521c973-da42-41f9-89e3-05971109385f"/>
+        <mets:fptr FILEID="uuid-aaaccc82-334c-460b-89cf-d678ade18fa4"/>
+        <mets:fptr FILEID="uuid-9facf512-b589-422e-b69c-b46ea78be76a"/>
+        <mets:fptr FILEID="uuid-fe137b0a-4822-4d00-a25d-238b54d21d40"/>
+        <mets:fptr FILEID="uuid-364befd0-248e-47a8-9a91-325b558730e7"/>
+      </mets:div>
+      <mets:div ID="PHYS_0054" TYPE="page" ORDER="54" ORDERLABEL=" - ">
+        <mets:fptr FILEID="uuid-51dd8d28-31d9-4254-a2f6-e8ae56fefbb6"/>
+        <mets:fptr FILEID="uuid-0a2ff6ea-ee5b-447c-ae9b-fbcd4cbf37c4"/>
+        <mets:fptr FILEID="uuid-41d3f429-6653-4b13-9015-2606c2ceae2b"/>
+        <mets:fptr FILEID="uuid-4d25571b-c6ee-4a61-b6d3-82e8bba8e3d2"/>
+        <mets:fptr FILEID="uuid-7edf5d4f-2d7e-4ef2-8a86-9dd4b4850fab"/>
+      </mets:div>
+      <mets:div ID="PHYS_0055" TYPE="page" ORDER="55" ORDERLABEL=" - ">
+        <mets:fptr FILEID="uuid-a3ff1b71-9cc2-443d-9b00-9804c0356e87"/>
+        <mets:fptr FILEID="uuid-47c5fe0a-7f1f-462c-a80a-7218aea3e28f"/>
+        <mets:fptr FILEID="uuid-3e662e19-064f-48a1-9b7d-7aba0aeb99a1"/>
+        <mets:fptr FILEID="uuid-cd749e54-5ca5-43fa-a7e2-7fe66a9fc98a"/>
+        <mets:fptr FILEID="uuid-f0797bc6-0c2e-4918-83fd-6614b8d17d0d"/>
+      </mets:div>
+      <mets:div ID="PHYS_0056" TYPE="page" ORDER="56" ORDERLABEL=" - ">
+        <mets:fptr FILEID="uuid-ee23a314-0aec-4f76-a074-815feca2b0ff"/>
+        <mets:fptr FILEID="uuid-fdea6c11-d033-473e-a3f1-355f62131f83"/>
+        <mets:fptr FILEID="uuid-69422dd3-d4bd-4608-a380-df5d5d050e9a"/>
+        <mets:fptr FILEID="uuid-f5af94c1-a571-42fc-87e4-ad72365912a0"/>
+        <mets:fptr FILEID="uuid-7e496395-4634-4475-b1be-4c534a1fd5ab"/>
+      </mets:div>
+    </mets:div>
+  </mets:structMap>
+  <mets:structMap TYPE="LOGICAL">
+    <mets:div ID="LOG_0000" LABEL="Abhandlung vom Umwerfen oder Ausroden der Waldbäume" ORDERLABEL="Abhandlung vom Umwerfen oder Ausroden der Waldbäume" DMDID="uuid-017a6d80-fde9-3445-a239-bc86ba0c9f14" ADMID="AMD" TYPE="monograph"/>
+  </mets:structMap>
+  <mets:structLink>
+    <mets:smLink xlink:to="PHYS_0001" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0002" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0003" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0004" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0005" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0006" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0007" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0008" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0009" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0010" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0011" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0012" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0013" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0014" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0015" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0016" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0017" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0018" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0019" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0020" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0021" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0022" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0023" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0024" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0025" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0026" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0027" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0028" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0029" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0030" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0031" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0032" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0033" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0034" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0035" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0036" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0037" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0038" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0039" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0040" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0041" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0042" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0043" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0044" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0045" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0046" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0047" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0048" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0049" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0050" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0051" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0052" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0053" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0054" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0055" xlink:from="LOG_0000"/>
+    <mets:smLink xlink:to="PHYS_0056" xlink:from="LOG_0000"/>
+  </mets:structLink>
+</mets:mets>
