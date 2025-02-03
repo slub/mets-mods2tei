@@ -6,6 +6,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.5] - 2025-02-03
+### Added
+- Cover flat logical `structMap` with only top-level `@ADMID="AMD"` div  
+  (i.e. no structure / headings): fall back to physical structMap, too
+- Increase test coverage (OCR, only physical structMap)
+
+### Changed
+- replaced `python-Levenshtein` with `rapidfuzz` dependency
+- improved pretty-printing of `lb` (one newline and indentation per line)
+- :fire: add-refs page: use top-level `facsimile` for `pb/@facs` page URLs instead `pb/@corresp`, #69
+- :fire: add-refs page: use `mods:identifier[@type="PURL"]` (presentation) for `pb/@corresp` links, #69
+- :fire: add-refs line: use `lb/@n` instead of `lb/@corresp` for line IDs, #69
+
+### Fixed
+- adapted to `click.File` change (CLI option for output file)
+- adapted to `pkg_resources` deprecation
 
 ## [0.1.4] - 2023-12-12
 ### Changed
@@ -71,7 +87,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Get rid of code artifacts carried over from `tocrify`
 
 <!-- link-labels -->
-[unreleased]: ../../compare/v0.1.4...master
+[unreleased]: ../../compare/v0.1.5...master
+[0.1.5]: ../../compare/v0.1.4...v0.1.5
 [0.1.4]: ../../compare/v0.1.3...v0.1.4
 [0.1.3]: ../../compare/v0.1.2...v0.1.3
 [0.1.2]: ../../compare/v0.1.1...v0.1.2
