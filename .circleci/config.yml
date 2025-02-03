@@ -58,3 +58,5 @@ workflows:
 # that we cannot have both
 #            branches:
 #              only: master
+            branches:
+              ignore: /.*/
