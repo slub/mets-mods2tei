@@ -54,5 +54,7 @@ workflows:
           filters:
             tags:
               only: /^v\d+\.\d+\.\d+/
-            branches:
-              only: master
+# https://circleci.com/docs/workflows/#using-filters-in-your-workflows says
+# that we cannot have both
+#            branches:
+#              only: master
