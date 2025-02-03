@@ -29,9 +29,9 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run: pip install -U pip
+      - run: pip install -U pip build
       - run: make install
-      - run: python setup.py sdist bdist_wheel
+      - run: python -m build .
       - store_artifacts:
           path: dist/
           destination: artifacts
@@ -52,5 +52,7 @@ workflows:
     jobs:
       - pypi:
           filters:
+            tags:
+              only: /^v\d+\.\d+\.\d+/
             branches:
               only: master
