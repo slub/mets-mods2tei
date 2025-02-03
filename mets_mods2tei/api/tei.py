@@ -8,8 +8,8 @@ import copy
 import re
 import mimetypes
 
-from contextlib import closing
-from urllib.request import urlopen
+import requests
+from requests.adapters import HTTPAdapter, Retry
 from urllib.parse import urlparse
 
 from .util import resource_filename
@@ -742,6 +742,29 @@ class Tei:
         # a header will always be on the first page of a div
         first = True
 
+        retries = Retry(total=3,
+                        status_forcelist=[
+                            # probably too wide (only transient failures):
+                            408, # Request Timeout
+                            409, # Conflict
+                            412, # Precondition Failed
+                            417, # Expectation Failed
+                            423, # Locked
+                            424, # Fail
+                            425, # Too Early
+                            426, # Upgrade Required
+                            428, # Precondition Required
+                            429, # Too Many Requests
+                            440, # Login Timeout
+                            500, # Internal Server Error
+                            503, # Service Unavailable
+                            504, # Gateway Timeout
+                            509, # Bandwidth Limit Exceeded
+                            529, # Site Overloaded
+                            598, # Proxy Read Timeout
+                            599, # Proxy Connect Timeout
+                        ])
+        adapter = HTTPAdapter(max_retries=retries)
         # iterate over all struct links for a div
         for struct_link in struct_links:
             alto_link = mets.get_alto(struct_link)
@@ -759,8 +782,15 @@ class Tei:
                     mod_link = alto_link
                 self.logger.debug(mod_link)
 
-                with closing(urlopen(mod_link)) as f:
-                    alto = Alto.read(f)
+                with requests.Session() as session:
+                    session.mount('http://', adapter)
+                    session.mount('https://', adapter)
+                    try:
+                        response = session.get(mod_link, timeout=3, stream=True)
+                    except requests.exceptions.RetryError as e:
+                        self.logger.error("cannot fetch OCR result for '%s': %s", mod_link, e)
+                        continue
+                    alto = Alto.frombytes(response.content)
 
                 # save original link!
                 self.alto_map[alto_link] = alto
