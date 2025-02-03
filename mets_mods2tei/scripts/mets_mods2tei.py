@@ -12,7 +12,7 @@ from mets_mods2tei import Tei
 
 @click.command(context_settings={'help_option_names': ['-h', '--help']})
 @click.argument('mets', required=True)
-@click.option('-O', '--output', default="-", type=click.File("wb"), help="File path to write TEI output to")
+@click.option('-O', '--output', default="-", type=click.File("wb", lazy=False), help="File path to write TEI output to")
 @click.option('-o', '--ocr', is_flag=True, default=False, help="Serialize OCR into resulting TEI")
 @click.option('-T', '--text-group', default="FULLTEXT", help="File group which contains the full-text")
 @click.option('-I', '--img-group', default="DEFAULT", help="File group which contains the images")
@@ -39,7 +39,7 @@ def cli(mets, output, ocr, text_group, img_group, add_refs, log_level):
     #
     # logging level
     logging.basicConfig(level=logging.getLevelName(log_level), stream=sys.stderr)
-    
+
     #
     # interpret mets argument
     try:
@@ -60,7 +60,7 @@ def cli(mets, output, ocr, text_group, img_group, add_refs, log_level):
     # create TEI (from skeleton)
     tei = Tei()
 
-    tei.fill_from_mets(mets, ocr, corresp=add_refs)
+    tei.fill_from_mets(mets, ocr, refs=add_refs)
 
     output.write(tei.tostring())
 

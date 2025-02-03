@@ -5,14 +5,14 @@ from lxml import etree
 import os
 import logging
 import re
-import Levenshtein
+from rapidfuzz.distance import Levenshtein
 
-ns = {
+NS = {
      'xlink' : "http://www.w3.org/1999/xlink",
      'alto': "http://www.loc.gov/standards/alto/ns-v4#",
 }
-XLINK = "{%s}" % ns['xlink']
-ALTO = "{%s}" % ns['alto']
+XLINK = "{%s}" % NS['xlink']
+ALTO = "{%s}" % NS['alto']
 
 norm_alto_ns_re = re.compile(rb'alto/ns-v.#')
 
@@ -33,7 +33,7 @@ class Alto:
 
         # logging
         self.logger = logging.getLogger(__name__)
-    
+
     def write(self, stream):
         """
         Writes the ALTO tree to stream.
@@ -76,7 +76,7 @@ class Alto:
         """
         Returns an iterator on the text block elements.
         """
-        for text_block in self.tree.xpath(".//alto:TextBlock", namespaces=ns):
+        for text_block in self.tree.xpath(".//alto:TextBlock", namespaces=NS):
             yield text_block
 
     def get_lines_in_text_block(self, text_block):
@@ -84,7 +84,7 @@ class Alto:
         Returns an iterator on the lines within a text block element.
         :param Element text_block: The text block element to iterate on.
         """
-        for line in text_block.xpath("./alto:TextLine", namespaces=ns):
+        for line in text_block.xpath("./alto:TextLine", namespaces=NS):
             yield line
 
     def get_text_in_line(self, line):
@@ -92,8 +92,8 @@ class Alto:
         Returns the ALTO-encoded text .
         :param Element line: The line to extract the text from.
         """
-        text = " ".join(element.get("CONTENT") for element in line.xpath("./alto:String", namespaces=ns))
-        hyp = line.find("alto:HYP", namespaces=ns)
+        text = " ".join(element.get("CONTENT") for element in line.xpath("./alto:String", namespaces=NS))
+        hyp = line.find("alto:HYP", namespaces=NS)
         if hyp is not None:
             text += hyp.get("CONTENT")
         return text
@@ -106,7 +106,7 @@ class Alto:
         :param String text2: Another string.
         """
         return Levenshtein.distance(text1.translate({ord(i): None for i in '. '}), text2.translate({ord(i): None for i in '. '}))
-    
+
     def get_best_insert_index(self, label, lower=False):
         """
         Finds the "closest" match (wrt. to Levenshtein distance)

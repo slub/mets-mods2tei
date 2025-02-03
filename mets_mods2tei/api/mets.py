@@ -10,16 +10,16 @@ import babel
 from .mets_generateds import parseString as parse_mets
 from .mods_generateds import parseString as parse_mods
 
-from pkg_resources import resource_filename, Requirement
+from .util import resource_filename
 
-ns = {
+NS = {
      'mets': "http://www.loc.gov/METS/",
      'mods': "http://www.loc.gov/mods/v3",
      'xlink': "http://www.w3.org/1999/xlink",
      'dv': "http://dfg-viewer.de/",
 }
-METS = "{%s}" % ns['mets']
-XLINK = "{%s}" % ns['xlink']
+METS = "{%s}" % NS['mets']
+XLINK = "{%s}" % NS['xlink']
 
 class Iso15924:
 
@@ -28,7 +28,7 @@ class Iso15924:
         The constructor.
         """
         self.map = {}
-        with open(os.path.realpath(resource_filename(Requirement.parse("mets_mods2tei"), 'mets_mods2tei/data/iso15924-utf8-20180827.txt'))) as filep:
+        with open(resource_filename('mets_mods2tei', 'data/iso15924-utf8-20180827.txt')) as filep:
             reader = csv.DictReader(filter(lambda row: row[0]!='#', filep), delimiter=';', quoting=csv.QUOTE_NONE, fieldnames=['code','index','name_eng', 'name_fr', 'alias', 'Age', 'Date'])
             for row in reader:
                 self.map[row['code']] = row['name_eng']
@@ -120,7 +120,7 @@ class Mets:
         :param str path: Path to a METS document.
         """
         self.tree = etree.parse(path)
-        self.mets = parse_mets(etree.tostring(self.tree.getroot().xpath('//mets:mets', namespaces=ns)[0]), silence=True)
+        self.mets = parse_mets(etree.tostring(self.tree.getroot().xpath('//mets:mets', namespaces=NS)[0]), silence=True)
         self.mods = parse_mods(self.mets.get_dmdSec()[0].get_mdWrap().get_xmlData().get_anytypeobjs_()[0], silence=True)
         self.__spur()
 
@@ -318,14 +318,14 @@ class Mets:
             dv = None
 
         # owner of the digital edition
-        owner = dv.xpath("//dv:owner", namespaces=ns) if dv is not None else []
+        owner = dv.xpath("//dv:owner", namespaces=NS) if dv is not None else []
         self.owner_digital = owner[0].text if len(owner) else ""
 
         # availability/license
         # common case
         self.license = ""
         self.license_url = ""
-        license_nodes = dv.xpath("//dv:license", namespaces=ns) if dv is not None else []
+        license_nodes = dv.xpath("//dv:license", namespaces=NS) if dv is not None else []
         if len(license_nodes):
             self.license = license_nodes[0].text
             self.license_url = ""
@@ -397,19 +397,19 @@ class Mets:
 
         # fulltext
         fulltext_map = {}
-        fulltext_group = self.tree.xpath("//mets:fileGrp[@USE='%s']" % self.fulltext_group_name, namespaces=ns)
+        fulltext_group = self.tree.xpath("//mets:fileGrp[@USE='%s']" % self.fulltext_group_name, namespaces=NS)
         if fulltext_group:
             fulltext_map = {}
-            for entry in fulltext_group[0].xpath("./mets:file", namespaces=ns):
+            for entry in fulltext_group[0].xpath("./mets:file", namespaces=NS):
                 url = entry.find("./" + METS + "FLocat").get("%shref" % XLINK)
                 self.logger.debug("Found full-text file: %s", url)
                 fulltext_map[entry.get("ID")] = url
 
         # image
         image_map = {}
-        image_group = self.tree.xpath("//mets:fileGrp[@USE='%s']" % self.image_group_name, namespaces=ns)
+        image_group = self.tree.xpath("//mets:fileGrp[@USE='%s']" % self.image_group_name, namespaces=NS)
         if image_group:
-            for entry in image_group[0].xpath("./mets:file", namespaces=ns):
+            for entry in image_group[0].xpath("./mets:file", namespaces=NS):
                 url = entry.find("./" + METS + "FLocat").get("%shref" % XLINK)
                 self.logger.debug("Found image file: %s", url)
                 image_map[entry.get("ID")] = url
@@ -430,7 +430,7 @@ class Mets:
                     self.img_map[page] = image_map[fptr.get_FILEID()]
 
         # struct links
-        structlinks = self.tree.xpath("//mets:structLink/*", namespaces=ns)
+        structlinks = self.tree.xpath("//mets:structLink/*", namespaces=NS)
         for sm_link in structlinks:
             logical = sm_link.get("%sfrom" % XLINK)
             physical = sm_link.get("%sto" % XLINK)
