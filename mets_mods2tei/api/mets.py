@@ -257,7 +257,7 @@ class Mets:
         #
         # languages and scripts
         languages = self.mods.get_language()
-        
+
         self.languages = {}
         self.scripts = []
         for language in languages:
@@ -350,7 +350,7 @@ class Mets:
         else:
             self.encoding_date = None
             self.encoding_desc = None
-        
+
         if self.encoding_date:
             self.encoding_date = self.encoding_date.isoformat()
         else:
@@ -359,7 +359,7 @@ class Mets:
             self.encoding_desc = self.encoding_desc[0] # or -1?
             # what about agent.get_OTHERROLE() and agent.get_note()?
         else:
-            self.logger.error("Found no mets:agent for encodingDesc")
+            self.logger.warning("Found no mets:agent for encodingDesc")
 
 	#
 	# location of manuscript
