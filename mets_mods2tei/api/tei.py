@@ -782,15 +782,39 @@ class Tei:
                     mod_link = alto_link
                 self.logger.debug(mod_link)
 
-                with requests.Session() as session:
-                    session.mount('http://', adapter)
-                    session.mount('https://', adapter)
+                if mod_link.startswith('file:'):
+                    fpath = mod_link[5:]
+                    if fpath.startswith('///'):
+                        # support condensed file://localhost/path
+                        fpath = fpath[3:]
+                        if not fpath.startswith('/'):
+                            fpath = os.path.join(mets.wd, fpath)
+                    elif fpath.startswith('//'):
+                        # support non-standard file://path
+                        fpath = fpath[2:]
+                        fpath = os.path.join(mets.wd, fpath)
+                    elif fpath.startswith('/'):
+                        # support file:/path
+                        fpath = fpath[1:]
+                        fpath = os.path.join(mets.wd, fpath)
+                    else:
+                        fpath = os.path.join(mets.wd, fpath)
                     try:
-                        response = session.get(mod_link, timeout=3, stream=True)
-                    except requests.exceptions.RetryError as e:
-                        self.logger.error("cannot fetch OCR result for '%s': %s", mod_link, e)
+                        with open(fpath, 'rb') as file:
+                            alto = Alto.fromfile(file)
+                    except FileNotFoundError as e:
+                        self.logger.error("cannot open OCR result for '%s': %s", mod_link, e)
                         continue
-                    alto = Alto.frombytes(response.content)
+                else:
+                    with requests.Session() as session:
+                        session.mount('http://', adapter)
+                        session.mount('https://', adapter)
+                        try:
+                            response = session.get(mod_link, timeout=3, stream=True)
+                        except requests.exceptions.RetryError as e:
+                            self.logger.error("cannot fetch OCR result for '%s': %s", mod_link, e)
+                            continue
+                        alto = Alto.frombytes(response.content)
 
                 # save original link!
                 self.alto_map[alto_link] = alto

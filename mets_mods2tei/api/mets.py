@@ -50,6 +50,7 @@ class Mets:
         self.script_iso = Iso15924()
 
         self.tree = None
+        self.wd = os.getcwd()
         self.mets = None
         self.mods = None
         self.page_map = {}
@@ -119,6 +120,7 @@ class Mets:
         Reads in METS from a given file source.
         :param str path: Path to a METS document.
         """
+        self.wd = os.path.dirname(path.name if hasattr(path, 'read') else path)
         self.tree = etree.parse(path)
         self.mets = parse_mets(etree.tostring(self.tree.getroot().xpath('//mets:mets', namespaces=NS)[0]), silence=True)
         self.mods = parse_mods(self.mets.get_dmdSec()[0].get_mdWrap().get_xmlData().get_anytypeobjs_()[0], silence=True)
