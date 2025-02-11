@@ -56,6 +56,20 @@ def test_reading_local_file(subtests, datadir):
         assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:body//tei:div//tei:pb', namespaces=NS)) > 700
         assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:body//tei:div//tei:p//tei:lb', namespaces=NS)) > 8000
 
+def test_reading_local_file_local_ocr(subtests, datadir):
+    '''
+    Test reading from a local mets file, referencing local alto files
+    '''
+    f = open(datadir.join('test_mets_nodiv_local.xml'))
+    mets = Mets.read(f)
+    tei = Tei()
+    with subtests.test("Check TEI conversion"):
+        tei.fill_from_mets(mets, ocr=True)
+        assert tei.tree is not None
+        assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:body', namespaces=NS)) == 1
+        assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:body//tei:div//tei:pb', namespaces=NS)) > 55
+        assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:body//tei:div//tei:p//tei:lb', namespaces=NS)) > 800
+
 def test_string_dumping():
     tei = Tei()
     assert tei.tostring().startswith(b"<")
