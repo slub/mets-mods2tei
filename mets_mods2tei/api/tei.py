@@ -20,6 +20,45 @@ NS = {
 }
 TEI = "{%s}" % NS['tei']
 
+# FIXME: add more structural mappings from METS-Anwendungsprofil (DFG Strukturdatenset) to TEI-P5 tagset (DTAbf)
+DIV_METS2TEI = {
+    "article": "chapter",
+    "contents": "contents",
+    "corrigenda": "corrigenda",
+    "dedication": "dedication",
+    "index": "index",
+    "imprint": "imprint",
+    # not in DFG Strukturdatenset, but maybe used as @(ORDER)LABEL:
+    "Imprimatur": "imprimatur",
+    "privileges": "copyright",
+    "provenance": "",
+    # not in DFG Strukturdatenset, but maybe used as @(ORDER)LABEL:
+    "appendix": "appendix",
+    "additional": "appendix",
+    "advertising": "advertisement",
+    "preface": "preface",
+    "epilogue": "postface",
+    "chapter": "chapter",
+    "letter": "letter",
+    "verse": "poem",
+    "?": "diaryEntry",
+    "?": "recipe",
+    "?": "scene",
+    "?": "act",
+    "engraved_titlepage": "frontispiece",
+    "?": "bibliography",
+    "list_illustrations?": "figures",
+    "?": "abbreviations",
+    "?": "edition",
+    "cover": "",
+    "cover_front": "",
+    "cover_back": "",
+    "table": "appendix?",
+    "manuscript": "?",
+    "illustration": "?",
+    "section": "chapter?",
+}
+
 class Tei:
 
     def __init__(self):
@@ -915,62 +954,54 @@ class Tei:
         while div.get_ADMID() is None:
             self.logger.debug("Found logical outer div type %s: %s", div.get_TYPE(), div.get_ID())
             div = div.get_div()[0]
+        # we want to dive into multivolume_work, periodical, newspaper, year, month...
+        # we are looking for issue, volume, monograph, lecture, dossier, act, judgement, study, paper, *_thesis, report, register, file, fragment...
         start_div = div
         while start_div.get_div() and start_div.get_div()[0].get_ADMID() is not None:
             self.logger.debug("Found logical inner div type %s: %s", start_div.get_TYPE(), start_div.get_ID())
             div = start_div
             start_div = start_div.get_div()[0]
 
-        entry_point = front
-
+        # start search
+        has_frontmatter = any(True for sub_div in div.get_div()
+                              if sub_div.get_TYPE() in [
+                                      # FIXME: what are the exact criteria for the presence of front-matter in DFG METS?
+                                      "title_page",
+                                      "preface",
+                                      "dedication",
+                                      "engraved_titlepage",
+                              ]) 
+        entry_point = front if has_frontmatter else body
         for sub_div in div.get_div():
-            if sub_div.get_TYPE() == "binding" or sub_div.get_TYPE() == "colour_checker":
+            subtype = sub_div.get_TYPE() or sub_div.get_LABEL() or sub_div.get_ORDERLABEL() or ""
+            divtype = DIV_METS2TEI.get(subtype.lower(), "")
+            if (subtype == "binding" or
+                subtype == "colour_checker" or
+                subtype == "spine" or
+                subtype.startswith("cover")):
                 continue
-            elif sub_div.get_TYPE() == "title_page":
-                self.__add_div(entry_point, sub_div, 1, "titlePage")
+            elif subtype == "title_page":
+                self.__add_div(entry_point, sub_div, 1, tag="titlePage")
             else:
-                # FIXME: if title_page gets preceded by figure/preface/contents/..., they *all* will end up in body
-                entry_point = body
-                self.__add_div(entry_point, sub_div, 1)
-            # FIXME: add more structural mappings from METS-Anwendungsprofil (DFG Strukturdatenset) to TEI-P5 tagset (DTAbf)
-            # ...for example:
-            # contents → contents
-            # corrigenda → corrigenda
-            # dedication → dedication
-            # index → index
-            # imprint → imprint
-            # ? → imprimatur
-            # priviledges? → copyright
-            # provenance → ?
-            # ? → appendix
-            # ? → advertisement
-            # preface → preface
-            # ? → postface
-            # chapter → chapter
-            # letter → letter
-            # verse → poem
-            # ? → diaryEntry
-            # ? → recipe
-            # ? → scene
-            # ? → act
-            # ? → frontispiece
-            # ? → bibliography
-            # list_illustrations? → figures
-            # ? → abbreviations
-            # ? → edition
-            # cover → ?
-            # cover_front → ?
-            # cover_back → ?
-            # table → ?
-            # manuscript → ?
-            # illustration → ?
-            # section → ?
-            # article → ?
-            # issue → ?
-            # day → ?
-            # month → ?
-            # volume → ?
-            # year → ?
+                if has_frontmatter and entry_point is front and subtype in [
+                        # FIXME: what are the exact criteria for the end of front-matter in DFG METS?
+                        "article",
+                        "chapter",
+                        "section",
+                        ]:
+                    entry_point = body
+                elif entry_point is body and subtype in [
+                        # FIXME: what are the exact criteria for the start of back-matter in DFG METS?
+                        "epilogue",
+                        "index",
+                        "corrigenda",
+                        "contents",
+                        "imprint",
+                        "dedication",
+                        "additional",
+                ]:
+                    entry_point = back
+                self.__add_div(entry_point, sub_div, 1, divtype=divtype)
 
     def add_physical_pages(self, pages):
         """
@@ -984,20 +1015,26 @@ class Tei:
             self.logger.debug("Found physical page %s", page.get_ID())
             self.__add_div(body, page, 1)
 
-    def __add_div(self, insert_node, div, n, tag="div"):
+    def __add_div(self, insert_node, div, n, tag="div", divtype=""):
         """
         Add div element to a given node and recursively add children too
         """
         new_div = etree.SubElement(insert_node, "%s%s" % (TEI, tag))
         new_div.set("id", div.get_ID())
-        if div.get_LABEL():
+        label = div.get_LABEL()
+        if label:
             new_div.set("n", str(n))
             #head = etree.SubElement(new_div, "%s%s" % (TEI, "head"))
-            #head.text = div.get_LABEL()
-            new_div.set("rend", div.get_LABEL())
-        self.logger.debug("Adding %s[@id=%s,@n=%d,@rend=%s] for %s",
-                          tag, div.get_ID(), n, div.get_LABEL() or "",
+            #head.text = label
+            new_div.set("rend", label)
+        if tag == "div" and divtype:
+            new_div.set("type", divtype)
+        self.logger.debug("Adding %s[@id=%s,@n=%d%s%s] for %s",
+                          tag, div.get_ID(), n,
+                          ",@rend=%s" % label if label else "",
+                          ",@type=%s" % divtype if divtype else "",
                           insert_node.tag.split('}')[-1])
         for sub_div in div.get_div():
-            self.__add_div(new_div, sub_div, n+1)
+            subtype = sub_div.get_TYPE() or sub_div.get_LABEL() or sub_div.get_ORDERLABEL() or ""
+            self.__add_div(new_div, sub_div, n+1, divtype=DIV_METS2DIV.get(subtype.lower(), ""))
 
