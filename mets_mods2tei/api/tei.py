@@ -23,6 +23,8 @@ TEI = "{%s}" % NS['tei']
 # FIXME: add more structural mappings from METS-Anwendungsprofil (DFG Strukturdatenset) to TEI-P5 tagset (DTAbf)
 DIV_METS2TEI = {
     "article": "chapter",
+    # misfit...
+    "contained_work": "chapter",
     "contents": "contents",
     "corrigenda": "corrigenda",
     "dedication": "dedication",
@@ -35,6 +37,8 @@ DIV_METS2TEI = {
     # not in DFG Strukturdatenset, but maybe used as @(ORDER)LABEL:
     "appendix": "appendix",
     "additional": "appendix",
+    "addendum": "appendix",
+    "attached_work": "appendix",
     "advertising": "advertisement",
     "preface": "preface",
     "epilogue": "postface",
@@ -955,7 +959,7 @@ class Tei:
             self.logger.debug("Found logical outer div type %s: %s", div.get_TYPE(), div.get_ID())
             div = div.get_div()[0]
         # we want to dive into multivolume_work, periodical, newspaper, year, month...
-        # we are looking for issue, volume, monograph, lecture, dossier, act, judgement, study, paper, *_thesis, report, register, file, fragment...
+        # we are looking for issue, volume, monograph, lecture, dossier, act, judgement, study, paper, *_thesis, report, register, file, fragment, manuscript...
         start_div = div
         while start_div.get_div() and start_div.get_div()[0].get_ADMID() is not None:
             self.logger.debug("Found logical inner div type %s: %s", start_div.get_TYPE(), start_div.get_ID())
@@ -963,14 +967,17 @@ class Tei:
             start_div = start_div.get_div()[0]
 
         # start search
-        has_frontmatter = any(True for sub_div in div.get_div()
-                              if sub_div.get_TYPE() in [
-                                      # FIXME: what are the exact criteria for the presence of front-matter in DFG METS?
-                                      "title_page",
-                                      "preface",
-                                      "dedication",
-                                      "engraved_titlepage",
-                              ]) 
+        has_frontmatter = (any(1 for sub_div in div.get_div()
+                               if sub_div.get_TYPE() in [
+                                       # FIXME: what are the exact criteria for the presence of front-matter in DFG METS?
+                                       "title_page",
+                                       "preface",
+                                       "dedication",
+                                       "engraved_titlepage",
+                               ]) and
+                           # no front if document has multiple title_page (e.g. multiple contained_work):
+                           not sum(1 for sub_div in div.get_div()
+                                   if sub_div.get_TYPE() == "title_page") > 1)
         entry_point = front if has_frontmatter else body
         for sub_div in div.get_div():
             subtype = sub_div.get_TYPE() or sub_div.get_LABEL() or sub_div.get_ORDERLABEL() or ""
@@ -978,9 +985,11 @@ class Tei:
             if (subtype == "binding" or
                 subtype == "colour_checker" or
                 subtype == "spine" or
+                subtype == "paste_down" or
+                subtype == "endsheet" or
                 subtype.startswith("cover")):
                 continue
-            elif subtype == "title_page":
+            elif entry_point is front and subtype == "title_page":
                 self.__add_div(entry_point, sub_div, 1, tag="titlePage")
             else:
                 if has_frontmatter and entry_point is front and subtype in [
@@ -988,6 +997,9 @@ class Tei:
                         "article",
                         "chapter",
                         "section",
+                        "part",
+                        "fascicle",
+                        "other",
                         ]:
                     entry_point = body
                 elif entry_point is body and subtype in [
@@ -995,10 +1007,12 @@ class Tei:
                         "epilogue",
                         "index",
                         "corrigenda",
-                        "contents",
+                        #"contents", # can also be in front
                         "imprint",
                         "dedication",
+                        "appendix",
                         "additional",
+                        "attached_work",
                 ]:
                     entry_point = back
                 self.__add_div(entry_point, sub_div, 1, divtype=divtype)
@@ -1019,8 +1033,9 @@ class Tei:
         """
         Add div element to a given node and recursively add children too
         """
+        div_id = div.get_ID()
         new_div = etree.SubElement(insert_node, "%s%s" % (TEI, tag))
-        new_div.set("id", div.get_ID())
+        new_div.set("id", div_id)
         label = div.get_LABEL()
         if label:
             new_div.set("n", str(n))
@@ -1030,7 +1045,7 @@ class Tei:
         if tag == "div" and divtype:
             new_div.set("type", divtype)
         self.logger.debug("Adding %s[@id=%s,@n=%d%s%s] for %s",
-                          tag, div.get_ID(), n,
+                          tag, div_id, n,
                           ",@rend=%s" % label if label else "",
                           ",@type=%s" % divtype if divtype else "",
                           insert_node.tag.split('}')[-1])
