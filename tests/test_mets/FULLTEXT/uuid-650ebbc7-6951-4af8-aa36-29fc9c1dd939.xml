@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<alto xmlns="http://www.loc.gov/standards/alto/ns-v2#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/standards/alto/ns-v2# http://www.loc.gov/standards/alto/alto-v2.0.xsd">
+<Description>
+<MeasurementUnit>pixel</MeasurementUnit>
+<OCRProcessing ID="IdOcr"><ocrProcessingStep><processingDateTime>2023-08-08</processingDateTime><processingSoftware><softwareCreator>ABBYY</softwareCreator><softwareName>ABBYY FineReader Engine</softwareName><softwareVersion>12</softwareVersion></processingSoftware></ocrProcessingStep></OCRProcessing>
+</Description>
+<Styles>
+</Styles>
+<Layout>
+<Page ID="Page1" PHYSICAL_IMG_NR="1" HEIGHT="2491" WIDTH="1628">
+<LeftMargin HEIGHT="2035" WIDTH="113" VPOS="0" HPOS="0">
+</LeftMargin>
+<BottomMargin HEIGHT="456" WIDTH="1628" VPOS="2035" HPOS="0">
+</BottomMargin>
+<PrintSpace HEIGHT="2035" WIDTH="1515" VPOS="0" HPOS="113">
+<Illustration ID="Page1_Block1" HEIGHT="2052" WIDTH="1538" VPOS="0" HPOS="90"><Shape><Polygon POINTS="115,0 1628,0 1628,202 1627,202 1627,203 1628,203 1628,286 1627,286 1627,287 1628,287 1628,370 1627,370 1627,371 1628,371 1628,621 1627,621 1627,622 1628,622 1628,705 1627,705 1627,706 1628,706 1628,789 1627,789 1627,790 1628,790 1628,1040 1627,1040 1627,1041 1628,1041 1628,1124 1627,1124 1627,1126 1628,1126 1628,1208 1627,1208 1627,1209 1628,1209 1628,1543 1627,1543 1627,1544 1628,1544 1628,1627 1627,1627 1627,1628 1628,1628 1628,1962 1627,1962 1627,1963 1628,1963 1628,2034 1599,2034 1599,2035 139,2035 139,2034 115,2034 115,2032 114,2032 114,1954 115,1954 115,1949 114,1949 114,1870 115,1870 115,1866 114,1866 114,1786 115,1786 115,1782 114,1782 114,1703 115,1703 115,1699 114,1699 114,1619 115,1619 115,1616 114,1616 114,1535 115,1535 115,1533 114,1533 114,1451 115,1451 115,1450 114,1450 114,1033 113,1033 113,1032 114,1032 114,950 113,950 113,948 114,948 114,867 113,867 113,864 114,864 114,783 113,783 113,781 114,781 114,700 113,700 113,697 114,697 114,617 113,617 113,613 114,613 114,534 113,534 113,529 114,529 114,451 113,451 113,445 114,445 114,368 113,368 113,362 114,362 114,285 113,285 113,278 114,278 114,201 113,201 113,194 114,194 114,118 113,118 113,110 114,110 114,35 113,35 113,26 114,26 114,1 115,1 115,0"/></Shape></Illustration><GraphicalElement ID="Page1_Block2" HEIGHT="11" WIDTH="242" VPOS="87" HPOS="370"/><GraphicalElement ID="Page1_Block3" HEIGHT="434" WIDTH="24" VPOS="1590" HPOS="1540"/><GraphicalElement ID="Page1_Block4" HEIGHT="578" WIDTH="34" VPOS="979" HPOS="1542"/><GraphicalElement ID="Page1_Block5" HEIGHT="871" WIDTH="32" VPOS="108" HPOS="1548"/>
+</PrintSpace>
+</Page>
+</Layout>
+</alto>
