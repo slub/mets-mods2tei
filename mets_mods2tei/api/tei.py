@@ -949,10 +949,9 @@ class Tei:
         """
 
         # div structure has to be added to text
-        text = self.tree.xpath('//tei:text', namespaces=NS)[0]
-        front = etree.SubElement(text, "%sfront" % TEI)
-        body = etree.SubElement(text, "%sbody" % TEI)
-        back = etree.SubElement(text, "%sback" % TEI)
+        front = self.tree.xpath('//tei:front', namespaces=NS)[0]
+        body = self.tree.xpath('//tei:body', namespaces=NS)[0]
+        back = self.tree.xpath('//tei:back', namespaces=NS)[0]
 
         # descend to the deepest AMD
         while div.get_ADMID() is None:
@@ -1051,5 +1050,5 @@ class Tei:
                           insert_node.tag.split('}')[-1])
         for sub_div in div.get_div():
             subtype = sub_div.get_TYPE() or sub_div.get_LABEL() or sub_div.get_ORDERLABEL() or ""
-            self.__add_div(new_div, sub_div, n+1, divtype=DIV_METS2DIV.get(subtype.lower(), ""))
+            self.__add_div(new_div, sub_div, n+1, divtype=DIV_METS2TEI.get(subtype.lower(), ""))
 
