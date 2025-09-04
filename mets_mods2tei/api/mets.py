@@ -1,54 +1,67 @@
 # -*- coding: utf-8 -*-
 
 from lxml import etree
-
 import os
 import logging
 import csv
 import babel
-
 from .mets_generateds import parseString as parse_mets
 from .mods_generateds import parseString as parse_mods
-
 from .util import resource_filename
 
 NS = {
-     'mets': "http://www.loc.gov/METS/",
-     'mods': "http://www.loc.gov/mods/v3",
-     'xlink': "http://www.w3.org/1999/xlink",
-     'dv': "http://dfg-viewer.de/",
+    'mets': "http://www.loc.gov/METS/",
+    'mods': "http://www.loc.gov/mods/v3",
+    'xlink': "http://www.w3.org/1999/xlink",
+    'dv': "http://dfg-viewer.de/",
 }
 METS = "{%s}" % NS['mets']
 XLINK = "{%s}" % NS['xlink']
 
+
 class Iso15924:
+    """A class to handle ISO 15924 script codes."""
 
     def __init__(self):
         """
-        The constructor.
+        Initialize the Iso15924 instance.
+
+        Loads the ISO 15924 script codes and their English names into a map.
         """
         self.map = {}
         with open(resource_filename('mets_mods2tei', 'data/iso15924-utf8-20180827.txt')) as filep:
-            reader = csv.DictReader(filter(lambda row: row[0]!='#', filep), delimiter=';', quoting=csv.QUOTE_NONE, fieldnames=['code','index','name_eng', 'name_fr', 'alias', 'Age', 'Date'])
+            reader = csv.DictReader(
+                filter(lambda row: row[0] != '#', filep),
+                delimiter=';',
+                quoting=csv.QUOTE_NONE,
+                fieldnames=['code', 'index', 'name_eng', 'name_fr', 'alias', 'Age', 'Date']
+            )
             for row in reader:
                 self.map[row['code']] = row['name_eng']
 
     def get(self, code):
         """
-        Return the description for the given code
-        :param str: An ISO 15924 code
+        Return the description for the given ISO 15924 code.
+
+        Args:
+            code (str): An ISO 15924 code.
+
+        Returns:
+            str: The English name of the script, or "Unknown" if the code is not found.
         """
         return self.map.get(code, "Unknown")
 
+
 class Mets:
+    """A class to handle METS (Metadata Encoding and Transmission Standard) files."""
 
     def __init__(self):
         """
-        The constructor.
+        Initialize the Mets instance.
+
+        Sets up the internal data structures and default values for handling METS files.
         """
-
         self.script_iso = Iso15924()
-
         self.tree = None
         self.mets = None
         self.mods = None
@@ -90,14 +103,19 @@ class Mets:
         self.extents = None
         self.series = None
 
-        # logging
+        # Logging
         self.logger = logging.getLogger(__name__)
 
     @classmethod
     def read(cls, source):
         """
-        Reads in METS from a given (file) source.
-        :param source: METS (file) source.
+        Read a METS file from a given source.
+
+        Args:
+            source: The METS file source, which can be a file path or a file-like object.
+
+        Returns:
+            Mets: An instance of the Mets class.
         """
         if hasattr(source, 'read'):
             return cls.from_file(source)
@@ -107,26 +125,42 @@ class Mets:
     @classmethod
     def from_file(cls, path):
         """
-        Reads in METS from a given file source.
-        :param str path: Path to a METS document.
+        Read a METS file from a given file path.
+
+        Args:
+            path (str): The path to the METS file.
+
+        Returns:
+            Mets: An instance of the Mets class.
         """
-        i = cls()
-        i.fromfile(path)
-        return i
+        instance = cls()
+        instance.fromfile(path)
+        return instance
 
     def fromfile(self, path):
         """
-        Reads in METS from a given file source.
-        :param str path: Path to a METS document.
+        Parse a METS file from a given file path.
+
+        Args:
+            path (str): The path to the METS file.
         """
         self.tree = etree.parse(path)
-        self.mets = parse_mets(etree.tostring(self.tree.getroot().xpath('//mets:mets', namespaces=NS)[0]), silence=True)
-        self.mods = parse_mods(self.mets.get_dmdSec()[0].get_mdWrap().get_xmlData().get_anytypeobjs_()[0], silence=True)
+        self.mets = parse_mets(
+            etree.tostring(self.tree.getroot().xpath('//mets:mets', namespaces=NS)[0]),
+            silence=True
+        )
+        self.mods = parse_mods(
+            self.mets.get_dmdSec()[0].get_mdWrap().get_xmlData().get_anytypeobjs_()[0],
+            silence=True
+        )
         self.__spur()
 
     def __spur(self):
         """
-        Initial interpretation of the METS/MODS file.
+        Perform the initial interpretation of the METS/MODS file.
+
+        This method extracts and normalizes metadata from the METS and MODS sections,
+        determining the structure and key information of the digital edition.
         """
 
         #
@@ -573,19 +607,19 @@ class Mets:
 
     def get_scripts(self):
         """
-        Returns information on the dominant fonts
+        Return information on the dominant fonts
         """
         return self.scripts
 
     def get_collections(self):
         """
-        Returns the name of the collections of the digital edition
+        Return the name of the collections of the digital edition
         """
         return self.collections
 
     def get_languages(self):
         """
-        Returns the languages used in the original manuscript
+        Return the languages used in the original manuscript
         """
         return self.languages
 

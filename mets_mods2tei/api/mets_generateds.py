@@ -8153,7 +8153,7 @@ def parseString(inString, silence=False):
     - inString -- A string.  This XML fragment should not start
       with an XML declaration containing an encoding.
     - silence -- A boolean.  If False, export the object.
-    Returns -- The root object in the tree.
+    Return -- The root object in the tree.
     '''
     parser = None
     rootNode= parsexmlstring_(inString, parser)
