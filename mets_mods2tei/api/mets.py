@@ -4,6 +4,7 @@ from lxml import etree
 import os
 import logging
 import csv
+from typing import Optional, Dict, List, Union, Any, IO
 import babel
 from .mets_generateds import parseString as parse_mets
 from .mods_generateds import parseString as parse_mods
@@ -22,13 +23,13 @@ XLINK = "{%s}" % NS['xlink']
 class Iso15924:
     """A class to handle ISO 15924 script codes."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Initialize the Iso15924 instance.
 
         Loads the ISO 15924 script codes and their English names into a map.
         """
-        self.map = {}
+        self.map: Dict[str, str] = {}
         with open(resource_filename('mets_mods2tei', 'data/iso15924-utf8-20180827.txt')) as filep:
             reader = csv.DictReader(
                 filter(lambda row: row[0] != '#', filep),
@@ -39,7 +40,7 @@ class Iso15924:
             for row in reader:
                 self.map[row['code']] = row['name_eng']
 
-    def get(self, code):
+    def get(self, code: str) -> str:
         """
         Return the description for the given ISO 15924 code.
 
@@ -55,59 +56,59 @@ class Iso15924:
 class Mets:
     """A class to handle METS (Metadata Encoding and Transmission Standard) files."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Initialize the Mets instance.
 
         Sets up the internal data structures and default values for handling METS files.
         """
-        self.script_iso = Iso15924()
-        self.tree = None
-        self.mets = None
-        self.mods = None
-        self.page_map = {}
-        self.order_map = {}
-        self.orderlabel_map = {}
-        self.img_map = {}
-        self.alto_map = {}
-        self.struct_links = {}
-        self.fulltext_group_name = 'FULLTEXT'
-        self.image_group_name = 'DEFAULT'
+        self.script_iso: Iso15924 = Iso15924()
+        self.tree: Optional[etree._ElementTree] = None
+        self.mets: Optional[Any] = None
+        self.mods: Optional[Any] = None
+        self.page_map: Dict[str, Any] = {}
+        self.order_map: Dict[str, str] = {}
+        self.orderlabel_map: Dict[str, str] = {}
+        self.img_map: Dict[str, str] = {}
+        self.alto_map: Dict[str, str] = {}
+        self.struct_links: Dict[str, List[str]] = {}
+        self.fulltext_group_name: str = 'FULLTEXT'
+        self.image_group_name: str = 'DEFAULT'
 
-        self.title = None
-        self.sub_titles = None
-        self.part_titles = None
-        self.volume_titles = None
-        self.authors = None
-        self.editors = None
-        self.places = None
-        self.dates = None
-        self.notes = None
-        self.publishers = None
-        self.edition = None
-        self.digital_origin = None
-        self.owner_digital = None
-        self.license = None
-        self.license_url = None
-        self.encoding_date = None
-        self.encoding_desc = None
-        self.location_phys = None
-        self.location_urls = None
-        self.shelf_locators = None
-        self.identifiers = None
-        self.scripts = None
-        self.collections = None
-        self.languages = None
-        self.classifications = None
-        self.subjects = None
-        self.extents = None
-        self.series = None
+        self.title: Optional[str] = None
+        self.sub_titles: Optional[List[str]] = None
+        self.part_titles: Optional[Dict[str, str]] = None
+        self.volume_titles: Optional[Dict[str, str]] = None
+        self.authors: Optional[List[Dict[str, str]]] = None
+        self.editors: Optional[List[Dict[str, str]]] = None
+        self.places: Optional[List[Dict[str, str]]] = None
+        self.dates: Optional[Dict[str, str]] = None
+        self.notes: Optional[List[str]] = None
+        self.publishers: Optional[List[str]] = None
+        self.edition: Optional[str] = None
+        self.digital_origin: Optional[str] = None
+        self.owner_digital: Optional[str] = None
+        self.license: Optional[str] = None
+        self.license_url: Optional[str] = None
+        self.encoding_date: Optional[str] = None
+        self.encoding_desc: Optional[str] = None
+        self.location_phys: Optional[str] = None
+        self.location_urls: Optional[List[str]] = None
+        self.shelf_locators: Optional[List[str]] = None
+        self.identifiers: Optional[Dict[str, str]] = None
+        self.scripts: Optional[List[str]] = None
+        self.collections: Optional[List[str]] = None
+        self.languages: Optional[Dict[str, str]] = None
+        self.classifications: Optional[Dict[str, List[str]]] = None
+        self.subjects: Optional[Dict[str, List[str]]] = None
+        self.extents: Optional[List[str]] = None
+        self.series: Optional[List[str]] = None
 
         # Logging
-        self.logger = logging.getLogger(__name__)
+        self.logger: logging.Logger = logging.getLogger(__name__)
 
     @classmethod
-    def read(cls, source):
+    def read(cls, source: Union[str, IO]) -> 'Mets':
         """
         Read a METS file from a given source.
 
@@ -123,7 +124,7 @@ class Mets:
             return cls.from_file(source)
 
     @classmethod
-    def from_file(cls, path):
+    def from_file(cls, path: Union[str, IO]) -> 'Mets':
         """
         Read a METS file from a given file path.
 
@@ -137,7 +138,7 @@ class Mets:
         instance.fromfile(path)
         return instance
 
-    def fromfile(self, path):
+    def fromfile(self, path: Union[str, IO]) -> None:
         """
         Parse a METS file from a given file path.
 
@@ -155,14 +156,12 @@ class Mets:
         )
         self.__spur()
 
-    def __spur(self):
+    def __spur(self) -> None:
         """
         Perform the initial interpretation of the METS/MODS file.
 
-        This method extracts and normalizes metadata from the METS and MODS sections,
-        determining the structure and key information of the digital edition.
+        This method extracts and organizes metadata from the METS/MODS file.
         """
-
         #
         # get publication level
         # get main and sub title from top-level logical div as a fallback
@@ -474,15 +473,23 @@ class Mets:
                 pages.append(physical)
 
     @property
-    def fulltext_group_name(self):
+    def fulltext_group_name(self) -> str:
         """
-        Return the currently configured full-text-related
-        file group use attribute.
+        Get the full-text-related file group use attribute.
+
+        Returns:
+            str: The full-text group name.
         """
         return self.__fulltext_group_name
 
     @fulltext_group_name.setter
-    def fulltext_group_name(self, fulltext_use):
+    def fulltext_group_name(self, fulltext_use: str) -> None:
+        """
+        Set the full-text-related file group use attribute.
+
+        Args:
+            fulltext_use (str): The new full-text group name.
+        """
         self.__fulltext_group_name = fulltext_use
 
     def get_main_title(self):
@@ -517,25 +524,25 @@ class Mets:
 
     def get_places(self):
         """
-        Return the place(s) of publication
+        Return the place(s) of publication.
         """
         return self.places
 
     def get_dates(self):
         """
-        Return the date(s) of publication
+        Return the date(s) of publication.
         """
         return self.dates
 
     def get_publishers(self):
         """
-        Return the publishers
+        Return the publishers.
         """
         return self.publishers
 
     def get_edition(self):
         """
-        Return the edition of the source manuscript
+        Return the edition of the source manuscript.
         """
         return self.edition
 
@@ -547,85 +554,85 @@ class Mets:
 
     def get_digital_origin(self):
         """
-        Return the digital origin
+        Return the digital origin.
         """
         return self.digital_origin
 
     def get_owner_digital(self):
         """
-        Return the owner of the digital edition
+        Return the owner of the digital edition.
         """
         return self.owner_digital
 
     def get_license(self):
         """
-        Return the license of the digital edition
+        Return the license of the digital edition.
         """
         return self.license
 
     def get_license_url(self):
         """
-        Return the url of the license of the digital edition
+        Return the url of the license of the digital edition.
         """
         return self.license_url
 
     def get_encoding_date(self):
         """
-        Return the date of encoding for the digital edition
+        Return the date of encoding for the digital edition.
         """
         return self.encoding_date
 
     def get_encoding_description(self):
         """
-        Return details on the encoding of the digital edition
+        Return details on the encoding of the digital edition.
         """
         return self.encoding_desc
 
     def get_location_phys(self):
         """
-        Return the physical location of the original manuscript
+        Return the physical location of the original manuscript.
         """
         return self.location_phys
 
     def get_location_urls(self):
         """
-        Return the URL location of the original manuscript
+        Return the URL location of the original manuscript.
         """
         return self.location_urls
 
     def get_shelf_locators(self):
         """
-        Return the shelf locators of the original manuscript
+        Return the shelf locators of the original manuscript.
         """
         return self.shelf_locators
 
     def get_identifiers(self):
         """
-        Return the (dict of) identifiers of the digital representation
+        Return the (dict of) identifiers of the digital representation.
         """
         return self.identifiers
 
     def get_scripts(self):
         """
-        Return information on the dominant fonts
+        Return information on the dominant fonts.
         """
         return self.scripts
 
     def get_collections(self):
         """
-        Return the name of the collections of the digital edition
+        Return the name of the collections of the digital edition.
         """
         return self.collections
 
     def get_languages(self):
         """
-        Return the languages used in the original manuscript
+        Return the languages used in the original manuscript.
         """
         return self.languages
 
     def get_page_structure(self):
         """
-        Return the div structure from the physical struct map
+        Return the div structure from the physical struct map.
         """
         for struct_map in self.mets.get_structMap():
             if struct_map.get_TYPE() == "PHYSICAL":
@@ -634,7 +641,7 @@ class Mets:
 
     def get_div_structure(self):
         """
-        Return the div structure from the logical struct map
+        Return the div structure from the logical struct map.
         """
         for struct_map in self.mets.get_structMap():
             if struct_map.get_TYPE() == "LOGICAL":
@@ -643,30 +650,30 @@ class Mets:
 
     def get_struct_links(self, log_id):
         """
-        Return the list of physical pages for a logical ID
+        Return the list of physical pages for a logical ID.
         """
         return self.struct_links.get(log_id, [])
 
     def get_img(self, phys_id):
         """
-        Return an image link for a given physical ID
+        Return an image link for a given physical ID.
         """
         return self.img_map.get(phys_id, "")
 
     def get_alto(self, phys_id):
         """
-        Return the ALTO link for a given physical ID
+        Return the ALTO link for a given physical ID.
         """
         return self.alto_map.get(phys_id, "")
 
     def get_order(self, phys_id):
         """
-        Return the logical (manually set) page number for a given physical ID
+        Return the logical (manually set) page number for a given physical ID.
         """
         return self.order_map.get(phys_id, "0")
 
     def get_orderlabel(self, phys_id):
         """
-        Return the logical (manually set) page label for a given physical ID
+        Return the logical (manually set) page label for a given physical ID.
         """
         return self.orderlabel_map.get(phys_id, "")

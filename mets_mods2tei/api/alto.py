@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from lxml import etree
-import os
+from rapidfuzz.distance import Levenshtein
+from typing import Optional, List, Dict, Union, IO
 import logging
 import re
-from rapidfuzz.distance import Levenshtein
 
 NS = {
     'xlink': "http://www.w3.org/1999/xlink",
@@ -19,24 +19,24 @@ norm_alto_ns_re = re.compile(rb'alto/ns-v.#')
 class Alto:
     """A class to handle ALTO (Analyzed Layout and Text Object) files."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Initialize the Alto instance.
 
         Sets up the internal data structures and default values for handling ALTO files.
         """
-        self.tree = None
-        self.insert_index = 0
-        self.last_inserted_elem = None
-        self.path = ""
-        self.text = ""
-        self.line_index_struct = {}
-        self.line_index = 0
+        self.tree: Optional[etree._ElementTree] = None
+        self.insert_index: int = 0
+        self.last_inserted_elem: Optional[etree._Element] = None
+        self.path: str = ""
+        self.text: str = ""
+        self.line_index_struct: Dict[int, str] = {}
+        self.line_index: int = 0
 
-        # Logging
+        # logging
         self.logger = logging.getLogger(__name__)
 
-    def write(self, stream):
+    def write(self, stream: IO) -> None:
         """
         Write the ALTO tree to a stream.
 
@@ -46,7 +46,7 @@ class Alto:
         stream.write(etree.tostring(self.tree.getroot(), encoding="utf-8"))
 
     @classmethod
-    def read(cls, source):
+    def read(cls, source: Union[str, IO]) -> 'Alto':
         """
         Read an ALTO file from a given source.
 
@@ -58,12 +58,12 @@ class Alto:
         """
         if hasattr(source, 'read'):
             return cls.fromfile(source)
-        if os.path.exists(source):
+        if isinstance(source, str):
             with open(source, 'rb') as f:
                 return cls.fromfile(f)
 
     @classmethod
-    def fromfile(cls, path):
+    def fromfile(cls, path: Union[str, IO]) -> 'Alto':
         """
         Read an ALTO file from a given file path.
 
@@ -77,7 +77,7 @@ class Alto:
         instance._fromfile(path)
         return instance
 
-    def _fromfile(self, path):
+    def _fromfile(self, path: Union[str, IO]) -> None:
         """
         Parse an ALTO file from a given file path.
 
@@ -88,48 +88,68 @@ class Alto:
         self.tree = etree.XML(norm_alto_ns_re.sub(b"alto/ns-v4#", path.read()), parser)
         self.path = path
 
-    def get_text_blocks(self):
+    def get_text_blocks(self) -> List[etree._Element]:
         """
-        Return an iterator on the text block elements.
-        """
-        for text_block in self.tree.xpath(".//alto:TextBlock", namespaces=NS):
-            yield text_block
+        Get all text blocks from the ALTO file.
 
-    def get_lines_in_text_block(self, text_block):
+        Returns:
+            List[etree._Element]: A list of text block elements.
         """
-        Return an iterator on the lines within a text block element.
-        :param Element text_block: The text block element to iterate on.
-        """
-        for line in text_block.xpath("./alto:TextLine", namespaces=NS):
-            yield line
+        return self.tree.xpath('//alto:TextBlock', namespaces=NS)
 
-    def get_text_in_line(self, line):
+    def get_lines_in_text_block(self, text_block: etree._Element) -> List[etree._Element]:
         """
-        Return the ALTO-encoded text .
-        :param Element line: The line to extract the text from.
+        Get all lines in a given text block.
+
+        Args:
+            text_block (etree._Element): The text block element.
+
+        Returns:
+            List[etree._Element]: A list of line elements.
         """
-        text = " ".join(element.get("CONTENT") for element in line.xpath("./alto:String", namespaces=NS))
+        return text_block.xpath('.//alto:TextLine', namespaces=NS)
+
+    def get_text_in_line(self, line: etree._Element) -> str:
+        """
+        Get the text content of a given line.
+
+        Args:
+            line (etree._Element): The line element.
+
+        Returns:
+            str: The text content of the line.
+        """
+        text = ' '.join(line.xpath('.//alto:String/@CONTENT', namespaces=NS))
         hyp = line.find("alto:HYP", namespaces=NS)
         if hyp is not None:
             text += hyp.get("CONTENT")
         return text
 
-    def __compute_fuzzy_distance(self, text1, text2):
+    def __compute_fuzzy_distance(self, text1: str, text2: str) -> int:
         """
-        Return a somewhat modified edit distance which respects certain
-        OCR characteristics.
-        :param String text1: A string.
-        :param String text2: Another string.
-        """
-        return Levenshtein.distance(text1.translate({ord(i): None for i in '. '}), text2.translate({ord(i): None for i in '. '}))
+        Compute the fuzzy distance between two strings.
 
-    def get_best_insert_index(self, label, lower=False):
+        Args:
+            text1 (str): The first string.
+            text2 (str): The second string.
+
+        Returns:
+            int: The Levenshtein distance between the two strings.
         """
-        Find the "closest" match (wrt. to Levenshtein distance)
-        for a given string within the ALTO text. Return -1 if a
-        given minimal string distance is not reached.
-        :param String label: The string to be placed.
-        :param Boolean lower: Compute the edit distance on lowercased strings.
+        text1 = text1.translate({ord(i): None for i in '. '})
+        text2 = text2.translate({ord(i): None for i in '. '})
+        return Levenshtein.distance(text1, text2)
+
+    def get_best_insert_index(self, label: str, lower: bool = False) -> int:
+        """
+        Get the best insert index for a given label.
+
+        Args:
+            label (str): The label to find the best insert index for.
+            lower (bool): Whether to convert the label to lowercase.
+
+        Returns:
+            int: The best insert index.
         """
         if lower:
             text = self.text.lower()
@@ -151,6 +171,7 @@ class Alto:
             if distance == 0:
                 break
         return (index, len(text[index:index+len(label)].strip()))
+
 
     def collect_text_nodes(self, begin, length):
         """
