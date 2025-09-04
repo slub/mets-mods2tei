@@ -2,6 +2,7 @@
 
 from lxml import etree
 from rapidfuzz.distance import Levenshtein
+from pathlib import Path
 from typing import Optional, List, Dict, Union, IO
 import logging
 import re
@@ -58,7 +59,7 @@ class Alto:
         """
         if hasattr(source, 'read'):
             return cls.fromfile(source)
-        if isinstance(source, str):
+        if Path(source).exists():
             with open(source, 'rb') as f:
                 return cls.fromfile(f)
 

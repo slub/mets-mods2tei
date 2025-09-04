@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from lxml import etree
-import os
+from pathlib import Path
 import logging
 import csv
 from typing import Optional, Dict, List, Union, Any, IO
@@ -120,7 +120,7 @@ class Mets:
         """
         if hasattr(source, 'read'):
             return cls.from_file(source)
-        if os.path.exists(source):
+        if Path(source).exists():
             return cls.from_file(source)
 
     @classmethod
