@@ -1,6 +1,6 @@
 # mets-mods2tei
 
-[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/rettinghaus/mets-mods2tei/ci.yml?logo=GitHub)](https://github.com/slub/mets-mods2tei/actions)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/slub/mets-mods2tei/ci.yml?logo=GitHub)](https://github.com/slub/mets-mods2tei/actions)
 [![CircleCI](https://img.shields.io/circleci/build/github/slub/mets-mods2tei?logo=CircleCI)](https://circleci.com/gh/slub/mets-mods2tei)
 [![Codecov](https://img.shields.io/codecov/c/github/slub/mets-mods2tei?logo=Codecov)](https://codecov.io/gh/slub/mets-mods2tei)
 [![PyPI - Version](https://img.shields.io/pypi/v/mets-mods2tei?logo=PyPI)](https://pypi.org/project/mets-mods2tei/)
