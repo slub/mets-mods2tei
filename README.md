@@ -27,7 +27,7 @@ For the TEI Header, the conversion is roughly based on the [*DTA base format*](h
 
 ## Installation
 
-`mets-mods2tei` is implemented in Python 3. In the following, we assume a working Python 3 (tested versions 3.9, 3.10 and 3.11) installation.
+`mets-mods2tei` is implemented in Python 3. In the following, we assume a working Python 3 installation.
 
 ### Setup Python
 
