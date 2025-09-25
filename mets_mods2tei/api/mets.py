@@ -2,6 +2,7 @@
 
 from lxml import etree
 from pathlib import Path
+import os
 import logging
 import csv
 from typing import Optional, Dict, List, Union, Any, IO
