@@ -14,7 +14,7 @@ setup(
     packages=find_packages(exclude=('tests', 'docs')),
     package_data={'mets_mods2tei' : ['data/tei_skeleton.xml', 'data/iso15924-utf8-20180827.txt']},
     install_requires=open('requirements.txt').read().split('\n'),
-    python_requires=">=3.7",
+    python_requires=">=3.9",
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Console',
@@ -23,7 +23,10 @@ setup(
         'Intended Audience :: Information Technology',
         'Intended Audience :: Science/Research',
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
-        'Programming Language :: Python',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
         'Topic :: Text Processing :: Markup :: XML',
     ],
     entry_points={

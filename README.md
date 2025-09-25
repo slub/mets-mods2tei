@@ -1,8 +1,10 @@
 # mets-mods2tei
 
-[![CircleCI](https://circleci.com/gh/slub/mets-mods2tei.svg?style=svg)](https://circleci.com/gh/slub/mets-mods2tei)
-[![codecov](https://codecov.io/gh/slub/mets-mods2tei/branch/master/graph/badge.svg)](https://codecov.io/gh/slub/mets-mods2tei)
-[![PyPI version](https://badge.fury.io/py/mets-mods2tei.svg)](https://badge.fury.io/py/mets-mods2tei)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/slub/mets-mods2tei/ci.yml?logo=GitHub)](https://github.com/slub/mets-mods2tei/actions)
+[![CircleCI](https://img.shields.io/circleci/build/github/slub/mets-mods2tei?logo=CircleCI)](https://circleci.com/gh/slub/mets-mods2tei)
+[![Codecov](https://img.shields.io/codecov/c/github/slub/mets-mods2tei?logo=Codecov)](https://codecov.io/gh/slub/mets-mods2tei)
+[![PyPI - Version](https://img.shields.io/pypi/v/mets-mods2tei?logo=PyPI)](https://pypi.org/project/mets-mods2tei/)
+[![GitHub License](https://img.shields.io/github/license/slub/mets-mods2tei)](LICENSE)
 
 Convert bibliographic meta data in METS/MODS format to TEI headers and optionally serialize linked ALTO-encoded OCR to TEI text.
 
@@ -27,8 +29,7 @@ For the TEI Header, the conversion is roughly based on the [*DTA base format*](h
 
 ## Installation
 
-`mets-mods2tei` is implemented in Python 3. In the following, we assume a working Python 3
-(tested versions 3.5, 3.6 and 3.7) installation.
+`mets-mods2tei` is implemented in Python 3. In the following, we assume a working Python 3 installation.
 
 ### Setup Python
 
