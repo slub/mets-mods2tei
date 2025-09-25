@@ -6,17 +6,17 @@
 [![PyPI - Version](https://img.shields.io/pypi/v/mets-mods2tei?logo=PyPI)](https://pypi.org/project/mets-mods2tei/)
 [![GitHub License](https://img.shields.io/github/license/slub/mets-mods2tei)](LICENSE)
 
-Convert bibliographic meta data in METS/MODS format to TEI headers and optionally serialize linked ALTO-encoded OCR to TEI text.
+Convert bibliographic metadata in METS/MODS format to TEI headers and optionally serialize linked ALTO-encoded OCR to TEI text.
 
 ## Background
 
 [MODS](http://www.loc.gov/standards/mods/) is the de-facto standard for encoding bibliographic
-meta data in libraries. It is usually included as a separate section into
+metadata in libraries. It is usually included as a separate section into
 [METS](http://www.loc.gov/standards/mets/) XML files. Physical and logical structure of a document
 are expressed in terms of structural mappings (`structMap` elements).
 
 [TEI](https://tei-c.org/) is the de-facto standard for representing digital text for research
-purposes. It usually includes detailed bibliographic meta data in its
+purposes. It usually includes detailed bibliographic metadata in its
 [header](https://tei-c.org/release/doc/tei-p5-doc/de/html/ref-teiHeader.html).
 
 Since these standards contain a considerable amount of degrees of freedom, the conversion uses

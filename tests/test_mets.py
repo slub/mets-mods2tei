@@ -91,7 +91,7 @@ def test_mappings(subtests, datadir):
 
 def test_data_assignment(subtests, datadir):
     """
-    Test the correct assignment of meta data
+    Test the correct assignment of metadata
     """
     f = open(datadir.join('test_mets.xml'))
     mets = Mets.read(f)
