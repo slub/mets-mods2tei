@@ -19,11 +19,11 @@ NS = {
 
 @pytest.fixture
 def datadir(tmpdir, request):
-    '''
+    """
     Fixture responsible for searching a folder with the same name of test
     module and, if available, moving all contents to a temporary directory so
     tests can use them freely.
-    '''
+    """
     filename = request.module.__file__
     test_dir, _ = os.path.splitext(filename)
 
@@ -33,16 +33,16 @@ def datadir(tmpdir, request):
     return tmpdir
 
 def test_constructor():
-    '''
+    """
     Test the creation of an empty Tei instance
-    '''
+    """
     tei = Tei()
     assert tei.tree is not None
 
 def test_reading_local_file(subtests, datadir):
-    '''
+    """
     Test reading from a local mets file
-    '''
+    """
     f = open(datadir.join('test_mets.xml'))
     mets = Mets.read(f)
     tei = Tei()
@@ -101,9 +101,9 @@ def test_string_dumping():
     assert tei.tostring().startswith(b"<")
 
 def test_data_assignment(subtests):
-    '''
+    """
     Test the correct assignment of meta data
-    '''
+    """
     tei = Tei()
 
     with subtests.test("Check main title"):
