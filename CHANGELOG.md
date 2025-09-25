@@ -6,6 +6,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.6] - 2025-09-25
+### Added
+- CI/CD via Github Actions, ht @rettinghaus #77
+- type hints and PEP257 conformity, ht @rettinghaus #75
+- support `file:` URIs for local FLocats (as from OCR)
+- add test covering METS without logical sub-divs, and only local ALTO (as from OCR)
+- add test covering remote METS
+- start mapping from DFG Strukturdatenset `mets:div/@TYPE` to DTABf `tei:div/@type`
+
+### Changed
+- update CI/CD via CircleCI rules
+
+### Fixed
+- timeout and retry when downloading ALTO files
+- downgrade loglevel error→warning if MODS has no encodingDesc
+- better differentiate between front/body/back (based on `mets:div/@TYPE` rules)
+
 ## [0.1.5] - 2025-02-03
 ### Added
 - Cover flat logical `structMap` with only top-level `@ADMID="AMD"` div  
