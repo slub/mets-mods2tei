@@ -46,3 +46,4 @@ coverage:
 	make test PYTHON="coverage run"
 	coverage report
 	coverage html
+	coverage xml

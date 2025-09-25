@@ -36,5 +36,8 @@
   </teiHeader>
   <facsimile/>
   <text>
+    <front/>
+    <body/>
+    <back/>
   </text>
 </TEI>

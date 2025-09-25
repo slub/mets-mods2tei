@@ -107,6 +107,48 @@ class Mets:
         # Logging
         self.logger: logging.Logger = logging.getLogger(__name__)
 
+        self.tree = None
+        self.wd = os.getcwd()
+        self.mets = None
+        self.mods = None
+        self.page_map = {}
+        self.order_map = {}
+        self.orderlabel_map = {}
+        self.img_map = {}
+        self.alto_map = {}
+        self.struct_links = {}
+        self.fulltext_group_name = 'FULLTEXT'
+        self.image_group_name = 'DEFAULT'
+
+        self.title = None
+        self.sub_titles = None
+        self.part_titles = None
+        self.volume_titles = None
+        self.authors = None
+        self.editors = None
+        self.places = None
+        self.dates = None
+        self.notes = None
+        self.publishers = None
+        self.edition = None
+        self.digital_origin = None
+        self.owner_digital = None
+        self.license = None
+        self.license_url = None
+        self.encoding_date = None
+        self.encoding_desc = None
+        self.location_phys = None
+        self.location_urls = None
+        self.shelf_locators = None
+        self.identifiers = None
+        self.scripts = None
+        self.collections = None
+        self.languages = None
+        self.classifications = None
+        self.subjects = None
+        self.extents = None
+        self.series = None
+
     @classmethod
     def read(cls, source: Union[str, IO]) -> 'Mets':
         """
@@ -145,6 +187,15 @@ class Mets:
         Args:
             path (str): The path to the METS file.
         """
+        if hasattr(path, 'read'):
+            if hasattr(path, 'name'):
+                # open file
+                self.wd = os.path.dirname(path.name)
+            else:
+                # download stream
+                pass # keep cwd
+        else:
+            self.wd = os.path.dirname(path)
         self.tree = etree.parse(path)
         self.mets = parse_mets(
             etree.tostring(self.tree.getroot().xpath('//mets:mets', namespaces=NS)[0]),
@@ -290,7 +341,7 @@ class Mets:
         #
         # languages and scripts
         languages = self.mods.get_language()
-        
+
         self.languages = {}
         self.scripts = []
         for language in languages:
@@ -383,7 +434,7 @@ class Mets:
         else:
             self.encoding_date = None
             self.encoding_desc = None
-        
+
         if self.encoding_date:
             self.encoding_date = self.encoding_date.isoformat()
         else:
@@ -392,7 +443,7 @@ class Mets:
             self.encoding_desc = self.encoding_desc[0] # or -1?
             # what about agent.get_OTHERROLE() and agent.get_note()?
         else:
-            self.logger.error("Found no mets:agent for encodingDesc")
+            self.logger.warning("Found no mets:agent for encodingDesc")
 
 	#
 	# location of manuscript

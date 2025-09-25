@@ -161,3 +161,15 @@ def test_mappings_only_phys(subtests, datadir):
 
     with subtests.test("Check IMG linkage"):
         assert mets.get_img('PHYS_0005') == 'https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000005.tif.original.jpg'
+
+def test_mappings_only_phys_local(subtests, datadir):
+    '''
+    Test the correct interpretation of local file references
+    '''
+    f = open(datadir.join('test_mets_nodiv_local.xml'))
+    mets = Mets()
+    mets.image_group_name = 'ORIGINAL'
+    mets.fromfile(f)
+
+    with subtests.test("Check ALTO linkage"):
+        assert mets.get_alto('PHYS_0005') == 'FULLTEXT/uuid-bea1c083-9bde-412a-beca-8a85e99a1a71.xml'

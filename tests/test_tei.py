@@ -56,6 +56,46 @@ def test_reading_local_file(subtests, datadir):
         assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:body//tei:div//tei:pb', namespaces=NS)) > 700
         assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:body//tei:div//tei:p//tei:lb', namespaces=NS)) > 8000
 
+def test_reading_local_file_local_ocr(subtests, datadir):
+    '''
+    Test reading from a local mets file, referencing local alto files
+    '''
+    f = open(datadir.join('test_mets_nodiv_local.xml'))
+    mets = Mets.read(f)
+    tei = Tei()
+    with subtests.test("Check TEI conversion"):
+        tei.fill_from_mets(mets, ocr=True)
+        assert tei.tree is not None
+        assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:body', namespaces=NS)) == 1
+        assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:body//tei:div//tei:pb', namespaces=NS)) > 55
+        assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:body//tei:div//tei:p//tei:lb', namespaces=NS)) > 800
+
+def test_reading_remote_url(tmpdir):
+    '''
+    Test reading from a remote mets link
+    '''
+    from urllib.request import urlopen
+    mets = Mets()
+    mets.fromfile(urlopen("https://digital.slub-dresden.de/oai/?verb=GetRecord&metadataPrefix=mets"
+                          "&identifier=oai:de:slub-dresden:db:id-453779263"))
+    tei = Tei()
+    tei.fill_from_mets(mets, ocr=True, refs=["page", "line"])
+    assert tei.tree is not None
+    assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:body', namespaces=NS)) == 1
+    # check pages
+    assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:front//tei:div//tei:pb', namespaces=NS)) > 1
+    assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:front/tei:titlePage', namespaces=NS)) == 1
+    assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:back//tei:div//tei:pb', namespaces=NS)) > 1
+    assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:body//tei:div//tei:pb', namespaces=NS)) >= 80
+    # check pb/@corresp refs
+    assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:body//tei:div//tei:pb/@corresp', namespaces=NS)) >= 80
+    # check idrefs for facsimlie/graphic/@id | pb/@n links:
+    assert len(tei.tree.xpath('/tei:TEI/tei:facsimile/tei:graphic[concat("#",@id)=/tei:TEI/tei:text/tei:body//tei:div//tei:pb/@facs]', namespaces=NS)) >= 80
+    # check lines
+    assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:body//tei:div//tei:p//tei:lb', namespaces=NS)) > 800
+    # check lb/@n refs
+    assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:body//tei:div//tei:p//tei:lb/@n', namespaces=NS)) > 800
+
 def test_string_dumping():
     tei = Tei()
     assert tei.tostring().startswith(b"<")

@@ -89,6 +89,24 @@ class Alto:
         self.tree = etree.XML(norm_alto_ns_re.sub(b"alto/ns-v4#", path.read()), parser)
         self.path = path
 
+    @classmethod
+    def frombytes(cls, content):
+        """
+        Reads in ALTO from a given byte string.
+        :param bytes content: Content of a ALTO document.
+        """
+        i = cls()
+        i._frombytes(content)
+        return i
+
+    def _frombytes(self, content):
+        """
+        Reads in ALTO from a given byte string.
+        :param bytes content: Content of a ALTO document.
+        """
+        parser = etree.XMLParser(remove_blank_text=True)
+        self.tree = etree.XML(norm_alto_ns_re.sub(b"alto/ns-v4#", content), parser)
+
     def get_text_blocks(self) -> List[etree._Element]:
         """
         Get all text blocks from the ALTO file.
