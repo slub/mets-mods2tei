@@ -530,7 +530,7 @@ except ImportError as exp:
     
     
     def getSubclassFromModule_(module, class_):
-        '''Get the subclass of a class from a specific module.'''
+        """Get the subclass of a class from a specific module."""
         name = class_.__name__ + 'Sub'
         if hasattr(module, name):
             return getattr(module, name)
@@ -8147,14 +8147,14 @@ def parseEtree(inFileName, silence=False):
 
 
 def parseString(inString, silence=False):
-    '''Parse a string, create the object tree, and export it.
+    """Parse a string, create the object tree, and export it.
 
     Arguments:
     - inString -- A string.  This XML fragment should not start
       with an XML declaration containing an encoding.
     - silence -- A boolean.  If False, export the object.
     Return -- The root object in the tree.
-    '''
+    """
     parser = None
     rootNode= parsexmlstring_(inString, parser)
     rootTag, rootClass = get_root_tag(rootNode)

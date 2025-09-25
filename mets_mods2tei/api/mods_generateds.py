@@ -640,7 +640,7 @@ except ImportError as exp:
     
     
     def getSubclassFromModule_(module, class_):
-        '''Get the subclass of a class from a specific module.'''
+        """Get the subclass of a class from a specific module."""
         name = class_.__name__ + 'Sub'
         if hasattr(module, name):
             return getattr(module, name)
@@ -14314,9 +14314,9 @@ def get_root_tag(node):
 
 
 def get_required_ns_prefix_defs(rootNode):
-    '''Get all name space prefix definitions required in this XML doc.
+    """Get all name space prefix definitions required in this XML doc.
     Return a dictionary of definitions and a char string of definitions.
-    '''
+    """
     nsmap = {
         prefix: uri
         for node in rootNode.iter()
@@ -14397,14 +14397,14 @@ def parseEtree(inFileName, silence=False, print_warnings=True):
 
 
 def parseString(inString, silence=False, print_warnings=True):
-    '''Parse a string, create the object tree, and export it.
+    """Parse a string, create the object tree, and export it.
 
     Arguments:
     - inString -- A string.  This XML fragment should not start
       with an XML declaration containing an encoding.
     - silence -- A boolean.  If False, export the object.
     Return -- The root object in the tree.
-    '''
+    """
     parser = None
     rootNode= parsexmlstring_(inString, parser)
     gds_collector = GdsCollector_()

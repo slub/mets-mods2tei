@@ -14,11 +14,11 @@ from mets_mods2tei import Mets
 
 @pytest.fixture
 def datadir(tmpdir, request):
-    '''
+    """
     Fixture responsible for searching a folder with the same name of test
     module and, if available, moving all contents to a temporary directory so
     tests can use them freely.
-    '''
+    """
     filename = request.module.__file__
     test_dir, _ = os.path.splitext(filename)
 
@@ -28,41 +28,41 @@ def datadir(tmpdir, request):
     return tmpdir
 
 def test_constructor():
-    '''
+    """
     Test the creation of an empty Mets instance
-    '''
+    """
     mets = Mets()
     assert mets.mets is None
 
 def test_reading_local_file(datadir):
-    '''
+    """
     Test reading a local mets file
-    '''
+    """
     f = open(datadir.join('test_mets.xml'))
     mets = Mets.read(f)
     assert mets.mets is not None
 
 def test_loading_local_file(datadir):
-    '''
+    """
     Test loading a local mets file
-    '''
+    """
     f = open(datadir.join('test_mets.xml'))
     mets = Mets.from_file(f)
     assert mets.mets is not None
 
 def test_intermediate_file_loading(datadir):
-    '''
+    """
     Test loading a local mets file
-    '''
+    """
     f = open(datadir.join('test_mets.xml'))
     mets = Mets()
     mets.fromfile(f)
     assert mets.mets is not None
 
 def test_fulltext_group_name(subtests, datadir):
-    '''
+    """
     Test getting and setting the full text group name
-    '''
+    """
     f = open(datadir.join('test_mets.xml'))
     mets = Mets.read(f)
 
@@ -74,9 +74,9 @@ def test_fulltext_group_name(subtests, datadir):
         assert mets.fulltext_group_name == "TEXT"
 
 def test_mappings(subtests, datadir):
-    '''
+    """
     Test the correct interpretation of the structural linking
-    '''
+    """
     f = open(datadir.join('test_mets.xml'))
     mets = Mets.read(f)
 
@@ -90,9 +90,9 @@ def test_mappings(subtests, datadir):
         assert mets.get_img('PHYS_0005') == 'https://digital.slub-dresden.de/data/kitodo/LoskGesc_497166623/LoskGesc_497166623_tif/jpegs/00000005.tif.medium.jpg'
 
 def test_data_assignment(subtests, datadir):
-    '''
+    """
     Test the correct assignment of meta data
-    '''
+    """
     f = open(datadir.join('test_mets.xml'))
     mets = Mets.read(f)
 
@@ -144,9 +144,9 @@ def test_data_assignment(subtests, datadir):
         assert mets.get_identifiers()["vd18"] == 'VD18 11413883'
 
 def test_mappings_only_phys(subtests, datadir):
-    '''
+    """
     Test the correct interpretation of the structural linking
-    '''
+    """
     f = open(datadir.join('test_mets_nodiv.xml'))
     mets = Mets()
     mets.image_group_name = 'ORIGINAL'
