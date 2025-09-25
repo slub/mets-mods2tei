@@ -102,7 +102,7 @@ def test_string_dumping():
 
 def test_data_assignment(subtests):
     """
-    Test the correct assignment of meta data
+    Test the correct assignment of metadata
     """
     tei = Tei()
 
