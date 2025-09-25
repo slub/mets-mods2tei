@@ -29,14 +29,13 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run: pip install -U pip
+      - run: pip install -U pip build
       - run: make install
-      - run: python setup.py sdist bdist_wheel
+      - run: python -m build .
       - store_artifacts:
           path: dist/
           destination: artifacts
       - run: |
-          pip install -U pip
           pip install twine
           twine upload dist/*
 
@@ -47,7 +46,7 @@ workflows:
       - test:
           matrix:
             parameters:
-              version: [3.7.17, 3.8.18, 3.9.18, 3.10.13, 3.11.7]
+              version: [3.8, 3.9, 3.10, 3.11]
   deploy:
     jobs:
       - pypi:
