@@ -50,6 +50,7 @@ class Mets:
         self.script_iso = Iso15924()
 
         self.tree = None
+        self.wd = os.getcwd()
         self.mets = None
         self.mods = None
         self.page_map = {}
@@ -119,6 +120,15 @@ class Mets:
         Reads in METS from a given file source.
         :param str path: Path to a METS document.
         """
+        if hasattr(path, 'read'):
+            if hasattr(path, 'name'):
+                # open file
+                self.wd = os.path.dirname(path.name)
+            else:
+                # download stream
+                pass # keep cwd
+        else:
+            self.wd = os.path.dirname(path)
         self.tree = etree.parse(path)
         self.mets = parse_mets(etree.tostring(self.tree.getroot().xpath('//mets:mets', namespaces=NS)[0]), silence=True)
         self.mods = parse_mods(self.mets.get_dmdSec()[0].get_mdWrap().get_xmlData().get_anytypeobjs_()[0], silence=True)
@@ -257,7 +267,7 @@ class Mets:
         #
         # languages and scripts
         languages = self.mods.get_language()
-        
+
         self.languages = {}
         self.scripts = []
         for language in languages:
@@ -350,7 +360,7 @@ class Mets:
         else:
             self.encoding_date = None
             self.encoding_desc = None
-        
+
         if self.encoding_date:
             self.encoding_date = self.encoding_date.isoformat()
         else:
@@ -359,7 +369,7 @@ class Mets:
             self.encoding_desc = self.encoding_desc[0] # or -1?
             # what about agent.get_OTHERROLE() and agent.get_note()?
         else:
-            self.logger.error("Found no mets:agent for encodingDesc")
+            self.logger.warning("Found no mets:agent for encodingDesc")
 
 	#
 	# location of manuscript

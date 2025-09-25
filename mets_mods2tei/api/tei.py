@@ -8,8 +8,8 @@ import copy
 import re
 import mimetypes
 
-from contextlib import closing
-from urllib.request import urlopen
+import requests
+from requests.adapters import HTTPAdapter, Retry
 from urllib.parse import urlparse
 
 from .util import resource_filename
@@ -19,6 +19,49 @@ NS = {
      'tei': "http://www.tei-c.org/ns/1.0",
 }
 TEI = "{%s}" % NS['tei']
+
+# FIXME: add more structural mappings from METS-Anwendungsprofil (DFG Strukturdatenset) to TEI-P5 tagset (DTAbf)
+DIV_METS2TEI = {
+    "article": "chapter",
+    # misfit...
+    "contained_work": "chapter",
+    "contents": "contents",
+    "corrigenda": "corrigenda",
+    "dedication": "dedication",
+    "index": "index",
+    "imprint": "imprint",
+    # not in DFG Strukturdatenset, but maybe used as @(ORDER)LABEL:
+    "Imprimatur": "imprimatur",
+    "privileges": "copyright",
+    "provenance": "",
+    # not in DFG Strukturdatenset, but maybe used as @(ORDER)LABEL:
+    "appendix": "appendix",
+    "additional": "appendix",
+    "addendum": "appendix",
+    "attached_work": "appendix",
+    "advertising": "advertisement",
+    "preface": "preface",
+    "epilogue": "postface",
+    "chapter": "chapter",
+    "letter": "letter",
+    "verse": "poem",
+    "?": "diaryEntry",
+    "?": "recipe",
+    "?": "scene",
+    "?": "act",
+    "engraved_titlepage": "frontispiece",
+    "?": "bibliography",
+    "list_illustrations?": "figures",
+    "?": "abbreviations",
+    "?": "edition",
+    "cover": "",
+    "cover_front": "",
+    "cover_back": "",
+    "table": "appendix?",
+    "manuscript": "?",
+    "illustration": "?",
+    "section": "chapter?",
+}
 
 class Tei:
 
@@ -742,6 +785,29 @@ class Tei:
         # a header will always be on the first page of a div
         first = True
 
+        retries = Retry(total=3,
+                        status_forcelist=[
+                            # probably too wide (only transient failures):
+                            408, # Request Timeout
+                            409, # Conflict
+                            412, # Precondition Failed
+                            417, # Expectation Failed
+                            423, # Locked
+                            424, # Fail
+                            425, # Too Early
+                            426, # Upgrade Required
+                            428, # Precondition Required
+                            429, # Too Many Requests
+                            440, # Login Timeout
+                            500, # Internal Server Error
+                            503, # Service Unavailable
+                            504, # Gateway Timeout
+                            509, # Bandwidth Limit Exceeded
+                            529, # Site Overloaded
+                            598, # Proxy Read Timeout
+                            599, # Proxy Connect Timeout
+                        ])
+        adapter = HTTPAdapter(max_retries=retries)
         # iterate over all struct links for a div
         for struct_link in struct_links:
             alto_link = mets.get_alto(struct_link)
@@ -759,8 +825,39 @@ class Tei:
                     mod_link = alto_link
                 self.logger.debug(mod_link)
 
-                with closing(urlopen(mod_link)) as f:
-                    alto = Alto.read(f)
+                if mod_link.startswith('file:'):
+                    fpath = mod_link[5:]
+                    if fpath.startswith('///'):
+                        # support condensed file://localhost/path
+                        fpath = fpath[3:]
+                        if not fpath.startswith('/'):
+                            fpath = os.path.join(mets.wd, fpath)
+                    elif fpath.startswith('//'):
+                        # support non-standard file://path
+                        fpath = fpath[2:]
+                        fpath = os.path.join(mets.wd, fpath)
+                    elif fpath.startswith('/'):
+                        # support file:/path
+                        fpath = fpath[1:]
+                        fpath = os.path.join(mets.wd, fpath)
+                    else:
+                        fpath = os.path.join(mets.wd, fpath)
+                    try:
+                        with open(fpath, 'rb') as file:
+                            alto = Alto.fromfile(file)
+                    except FileNotFoundError as e:
+                        self.logger.error("cannot open OCR result for '%s': %s", mod_link, e)
+                        continue
+                else:
+                    with requests.Session() as session:
+                        session.mount('http://', adapter)
+                        session.mount('https://', adapter)
+                        try:
+                            response = session.get(mod_link, timeout=3, stream=True)
+                        except requests.exceptions.RetryError as e:
+                            self.logger.error("cannot fetch OCR result for '%s': %s", mod_link, e)
+                            continue
+                        alto = Alto.frombytes(response.content)
 
                 # save original link!
                 self.alto_map[alto_link] = alto
@@ -852,71 +949,72 @@ class Tei:
         """
 
         # div structure has to be added to text
-        text = self.tree.xpath('//tei:text', namespaces=NS)[0]
-        front = etree.SubElement(text, "%sfront" % TEI)
-        body = etree.SubElement(text, "%sbody" % TEI)
-        back = etree.SubElement(text, "%sback" % TEI)
+        front = self.tree.xpath('//tei:front', namespaces=NS)[0]
+        body = self.tree.xpath('//tei:body', namespaces=NS)[0]
+        back = self.tree.xpath('//tei:back', namespaces=NS)[0]
 
         # descend to the deepest AMD
         while div.get_ADMID() is None:
             self.logger.debug("Found logical outer div type %s: %s", div.get_TYPE(), div.get_ID())
             div = div.get_div()[0]
+        # we want to dive into multivolume_work, periodical, newspaper, year, month...
+        # we are looking for issue, volume, monograph, lecture, dossier, act, judgement, study, paper, *_thesis, report, register, file, fragment, manuscript...
         start_div = div
         while start_div.get_div() and start_div.get_div()[0].get_ADMID() is not None:
             self.logger.debug("Found logical inner div type %s: %s", start_div.get_TYPE(), start_div.get_ID())
             div = start_div
             start_div = start_div.get_div()[0]
 
-        entry_point = front
-
+        # start search
+        has_frontmatter = (any(1 for sub_div in div.get_div()
+                               if sub_div.get_TYPE() in [
+                                       # FIXME: what are the exact criteria for the presence of front-matter in DFG METS?
+                                       "title_page",
+                                       "preface",
+                                       "dedication",
+                                       "engraved_titlepage",
+                               ]) and
+                           # no front if document has multiple title_page (e.g. multiple contained_work):
+                           not sum(1 for sub_div in div.get_div()
+                                   if sub_div.get_TYPE() == "title_page") > 1)
+        entry_point = front if has_frontmatter else body
         for sub_div in div.get_div():
-            if sub_div.get_TYPE() == "binding" or sub_div.get_TYPE() == "colour_checker":
+            subtype = sub_div.get_TYPE() or sub_div.get_LABEL() or sub_div.get_ORDERLABEL() or ""
+            divtype = DIV_METS2TEI.get(subtype.lower(), "")
+            if (subtype == "binding" or
+                subtype == "colour_checker" or
+                subtype == "spine" or
+                subtype == "paste_down" or
+                subtype == "endsheet" or
+                subtype.startswith("cover")):
                 continue
-            elif sub_div.get_TYPE() == "title_page":
-                self.__add_div(entry_point, sub_div, 1, "titlePage")
+            elif entry_point is front and subtype == "title_page":
+                self.__add_div(entry_point, sub_div, 1, tag="titlePage")
             else:
-                # FIXME: if title_page gets preceded by figure/preface/contents/..., they *all* will end up in body
-                entry_point = body
-                self.__add_div(entry_point, sub_div, 1)
-            # FIXME: add more structural mappings from METS-Anwendungsprofil (DFG Strukturdatenset) to TEI-P5 tagset (DTAbf)
-            # ...for example:
-            # contents → contents
-            # corrigenda → corrigenda
-            # dedication → dedication
-            # index → index
-            # imprint → imprint
-            # ? → imprimatur
-            # priviledges? → copyright
-            # provenance → ?
-            # ? → appendix
-            # ? → advertisement
-            # preface → preface
-            # ? → postface
-            # chapter → chapter
-            # letter → letter
-            # verse → poem
-            # ? → diaryEntry
-            # ? → recipe
-            # ? → scene
-            # ? → act
-            # ? → frontispiece
-            # ? → bibliography
-            # list_illustrations? → figures
-            # ? → abbreviations
-            # ? → edition
-            # cover → ?
-            # cover_front → ?
-            # cover_back → ?
-            # table → ?
-            # manuscript → ?
-            # illustration → ?
-            # section → ?
-            # article → ?
-            # issue → ?
-            # day → ?
-            # month → ?
-            # volume → ?
-            # year → ?
+                if has_frontmatter and entry_point is front and subtype in [
+                        # FIXME: what are the exact criteria for the end of front-matter in DFG METS?
+                        "article",
+                        "chapter",
+                        "section",
+                        "part",
+                        "fascicle",
+                        "other",
+                        ]:
+                    entry_point = body
+                elif entry_point is body and subtype in [
+                        # FIXME: what are the exact criteria for the start of back-matter in DFG METS?
+                        "epilogue",
+                        "index",
+                        "corrigenda",
+                        #"contents", # can also be in front
+                        "imprint",
+                        "dedication",
+                        "appendix",
+                        "additional",
+                        "attached_work",
+                ]:
+                    entry_point = back
+                self.__add_div(entry_point, sub_div, 1, divtype=divtype)
 
     def add_physical_pages(self, pages):
         """
@@ -930,20 +1028,27 @@ class Tei:
             self.logger.debug("Found physical page %s", page.get_ID())
             self.__add_div(body, page, 1)
 
-    def __add_div(self, insert_node, div, n, tag="div"):
+    def __add_div(self, insert_node, div, n, tag="div", divtype=""):
         """
         Add div element to a given node and recursively add children too
         """
+        div_id = div.get_ID()
         new_div = etree.SubElement(insert_node, "%s%s" % (TEI, tag))
-        new_div.set("id", div.get_ID())
-        if div.get_LABEL():
+        new_div.set("id", div_id)
+        label = div.get_LABEL()
+        if label:
             new_div.set("n", str(n))
             #head = etree.SubElement(new_div, "%s%s" % (TEI, "head"))
-            #head.text = div.get_LABEL()
-            new_div.set("rend", div.get_LABEL())
-        self.logger.debug("Adding %s[@id=%s,@n=%d,@rend=%s] for %s",
-                          tag, div.get_ID(), n, div.get_LABEL() or "",
+            #head.text = label
+            new_div.set("rend", label)
+        if tag == "div" and divtype:
+            new_div.set("type", divtype)
+        self.logger.debug("Adding %s[@id=%s,@n=%d%s%s] for %s",
+                          tag, div_id, n,
+                          ",@rend=%s" % label if label else "",
+                          ",@type=%s" % divtype if divtype else "",
                           insert_node.tag.split('}')[-1])
         for sub_div in div.get_div():
-            self.__add_div(new_div, sub_div, n+1)
+            subtype = sub_div.get_TYPE() or sub_div.get_LABEL() or sub_div.get_ORDERLABEL() or ""
+            self.__add_div(new_div, sub_div, n+1, divtype=DIV_METS2TEI.get(subtype.lower(), ""))
 
