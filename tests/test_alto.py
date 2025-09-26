@@ -29,14 +29,14 @@ def datadir(tmpdir, request):
 
 def test_constructor():
     """
-    Test the creation of an empty Alto instance
+    Test the creation of an empty Alto instance.
     """
     alto = Alto()
     assert(alto.tree is None)
 
 def test_reading_local_file(datadir):
     """
-    Test reading a local alto file
+    Test reading a local ALTO file.
     """
     with open(datadir.join('test_alto.xml'), 'rb') as f:
         alto = Alto.read(f)
@@ -44,7 +44,7 @@ def test_reading_local_file(datadir):
 
 def test_loading_local_file(datadir):
     """
-    Test loading a local alto file
+    Test loading a local ALTO file.
     """
     with open(datadir.join('test_alto.xml'), 'rb') as f:
         alto = Alto.read(f)
@@ -52,7 +52,7 @@ def test_loading_local_file(datadir):
 
 def test_text_block_extraction(datadir):
     """
-    Test the extraction of text blocks
+    Test the extraction of text blocks.
     """
     with open(datadir.join('test_alto.xml'), 'rb') as f:
         alto = Alto.read(f)
@@ -60,7 +60,7 @@ def test_text_block_extraction(datadir):
 
 def test_text_line_extraction(datadir):
     """
-    Test the extraction of text lines
+    Test the extraction of text lines.
     """
     with open(datadir.join('test_alto.xml'), 'rb') as f:
         alto = Alto.read(f)
@@ -69,7 +69,7 @@ def test_text_line_extraction(datadir):
 
 def test_text_line_text_extraction(datadir):
     """
-    Test the extraction of text from text lines
+    Test the extraction of text from text lines.
     """
     with open(datadir.join('test_alto.xml'), 'rb') as f:
         alto = Alto.read(f)
@@ -79,7 +79,7 @@ def test_text_line_text_extraction(datadir):
 
 def test_index_assingment(datadir):
     """
-    Test the identifcation of the most likely insertion index
+    Test the identification of the most likely insertion index.
     """
     with open(datadir.join('test_alto.xml'), 'rb') as f:
         alto = Alto.read(f)
