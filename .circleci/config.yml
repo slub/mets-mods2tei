@@ -24,7 +24,7 @@ jobs:
       - codecov/upload
   pypi:
     docker:
-      - image: cimg/python:3.8
+      - image: cimg/python:3.9
     working_directory: ~/repo
     steps:
       - checkout
@@ -46,7 +46,7 @@ workflows:
       - test:
           matrix:
             parameters:
-              version: ['3.8', '3.9', '3.10', '3.11']
+              version: ['3.9', '3.10', '3.11']
   deploy:
     jobs:
       - pypi:
