@@ -57,9 +57,9 @@ def test_reading_local_file(subtests, datadir):
         assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:body//tei:div//tei:p//tei:lb', namespaces=NS)) > 8000
 
 def test_reading_local_file_local_ocr(subtests, datadir):
-    '''
+    """
     Test reading from a local mets file, referencing local alto files
-    '''
+    """
     f = open(datadir.join('test_mets_nodiv_local.xml'))
     mets = Mets.read(f)
     tei = Tei()
@@ -71,9 +71,9 @@ def test_reading_local_file_local_ocr(subtests, datadir):
         assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:body//tei:div//tei:p//tei:lb', namespaces=NS)) > 800
 
 def test_reading_remote_url(tmpdir):
-    '''
+    """
     Test reading from a remote mets link
-    '''
+    """
     from urllib.request import urlopen
     mets = Mets()
     mets.fromfile(urlopen("https://digital.slub-dresden.de/oai/?verb=GetRecord&metadataPrefix=mets"
