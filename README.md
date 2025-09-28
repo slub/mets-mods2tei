@@ -213,8 +213,6 @@ Options:
   -u, --url-prefix TEXT    URL prefix to add to path before storing references
                            (or else keep local file refs)
   --help                   Show this message and exit.
-
-
 ```
 
 </p></details>
