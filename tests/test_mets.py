@@ -29,14 +29,14 @@ def datadir(tmpdir, request):
 
 def test_constructor():
     """
-    Test the creation of an empty Mets instance
+    Test the creation of an empty METS instance.
     """
     mets = Mets()
     assert mets.mets is None
 
 def test_reading_local_file(datadir):
     """
-    Test reading a local mets file
+    Test reading a local METS file.
     """
     f = open(datadir.join('test_mets.xml'))
     mets = Mets.read(f)
@@ -44,7 +44,7 @@ def test_reading_local_file(datadir):
 
 def test_loading_local_file(datadir):
     """
-    Test loading a local mets file
+    Test loading a local METS file.
     """
     f = open(datadir.join('test_mets.xml'))
     mets = Mets.from_file(f)
@@ -52,7 +52,7 @@ def test_loading_local_file(datadir):
 
 def test_intermediate_file_loading(datadir):
     """
-    Test loading a local mets file
+    Test loading a local METS file.
     """
     f = open(datadir.join('test_mets.xml'))
     mets = Mets()
@@ -61,7 +61,7 @@ def test_intermediate_file_loading(datadir):
 
 def test_fulltext_group_name(subtests, datadir):
     """
-    Test getting and setting the full text group name
+    Test getting and setting the full text group name.
     """
     f = open(datadir.join('test_mets.xml'))
     mets = Mets.read(f)
@@ -75,7 +75,7 @@ def test_fulltext_group_name(subtests, datadir):
 
 def test_mappings(subtests, datadir):
     """
-    Test the correct interpretation of the structural linking
+    Test the correct interpretation of the structural linking.
     """
     f = open(datadir.join('test_mets.xml'))
     mets = Mets.read(f)
@@ -91,7 +91,7 @@ def test_mappings(subtests, datadir):
 
 def test_data_assignment(subtests, datadir):
     """
-    Test the correct assignment of meta data
+    Test the correct assignment of metadata.
     """
     f = open(datadir.join('test_mets.xml'))
     mets = Mets.read(f)
@@ -145,7 +145,7 @@ def test_data_assignment(subtests, datadir):
 
 def test_mappings_only_phys(subtests, datadir):
     """
-    Test the correct interpretation of the structural linking
+    Test the correct interpretation of the structural linking.
     """
     f = open(datadir.join('test_mets_nodiv.xml'))
     mets = Mets()
@@ -163,9 +163,9 @@ def test_mappings_only_phys(subtests, datadir):
         assert mets.get_img('PHYS_0005') == 'https://digital.slub-dresden.de/data/kitodo/BurgAbha_1852685697/BurgAbha_1852685697_tif/jpegs/00000005.tif.original.jpg'
 
 def test_mappings_only_phys_local(subtests, datadir):
-    '''
-    Test the correct interpretation of local file references
-    '''
+    """
+    Test the correct interpretation of local file references.
+    """
     f = open(datadir.join('test_mets_nodiv_local.xml'))
     mets = Mets()
     mets.image_group_name = 'ORIGINAL'

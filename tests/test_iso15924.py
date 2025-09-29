@@ -11,14 +11,14 @@ def test_constructor():
 
 def test_existing_script():
     """
-    Test requesting the script name for an existing code
+    Test requesting the script name for an existing code.
     """
     iso = Iso15924()
     assert(iso.get('Latf') == "Latin (Fraktur variant)")
 
 def test_non_existing_script():
     """
-    Test requesting the script name for a non-existing code
+    Test requesting the script name for a non-existing code.
     """
     iso = Iso15924()
     assert(iso.get('kkk') == "Unknown")
