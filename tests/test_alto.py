@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import os
+from pathlib import Path
+
 import pytest
-import shutil
 
 from mets_mods2tei import Alto
 
@@ -13,12 +13,13 @@ def datadir(tmpdir, request):
     module and, if available, moving all contents to a temporary directory so
     tests can use them freely.
     """
-    filename = request.module.__file__
-    test_dir, _ = os.path.splitext(filename)
-
-    if os.path.isdir(test_dir):
-        shutil.copytree(test_dir, str(tmpdir), dirs_exist_ok=True)
-
+    src = Path(request.module.__file__).with_suffix('')
+    if src.is_dir():
+        for src_path in src.glob('**/*'):
+            if src_path.is_file():
+                dest_path = Path(str(tmpdir)) / src_path.relative_to(src)
+                dest_path.parent.mkdir(parents=True, exist_ok=True)
+                dest_path.write_bytes(src_path.read_bytes())
     return tmpdir
 
 def test_constructor():
