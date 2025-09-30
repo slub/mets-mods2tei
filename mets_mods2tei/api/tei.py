@@ -479,9 +479,9 @@ class Tei:
         """
         Set the level of publication:
         - 'm': (monographic) the title applies to a monograph such as a book
-               or other item considered to be a distinct publication, 
+               or other item considered to be a distinct publication,
                including single volumes of multi-volume works
-        - 'a': (analytic) the title applies to an analytic item, such as an article, 
+        - 'a': (analytic) the title applies to an analytic item, such as an article,
                poem, or other work published as part of a larger item.
         - 'j': (journal) the title applies to any serial or periodical publication
                such as a journal, magazine, or newspaper
