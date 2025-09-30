@@ -2,13 +2,7 @@
 
 import os
 import pytest
-import warnings
-
-# the import of dir_util introduces a deprecation warning
-# we can't do much about it
-with warnings.catch_warnings():
-    warnings.simplefilter("ignore")
-    from distutils import dir_util
+import shutil
 
 from mets_mods2tei import Alto
 
@@ -23,7 +17,7 @@ def datadir(tmpdir, request):
     test_dir, _ = os.path.splitext(filename)
 
     if os.path.isdir(test_dir):
-        dir_util.copy_tree(test_dir, str(tmpdir))
+        shutil.copytree(test_dir, str(tmpdir), dirs_exist_ok=True)
 
     return tmpdir
 
