@@ -1,8 +1,6 @@
 click
 lxml
 babel
-importlib_resources ; python_version < '3.10'
 generateDS
 rapidfuzz
-more-itertools
 ocrd >= 2.59
