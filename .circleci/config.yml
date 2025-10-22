@@ -1,11 +1,11 @@
 # Python CircleCI 2.1 configuration file
 # for mets-mods2tei
 #
-# Check https://circleci.com/docs/2.0/language-python/ for more details
+# Check https://circleci.com/docs/guides/getting-started/language-python/ for more details
 #
 version: 2.1
 orbs:
-  codecov: codecov/codecov@1.0.5
+  codecov: codecov/codecov@5.4.3
 jobs:
   test:
     parameters:
@@ -24,7 +24,7 @@ jobs:
       - codecov/upload
   pypi:
     docker:
-      - image: cimg/python:3.9
+      - image: cimg/python:3.11
     working_directory: ~/repo
     steps:
       - checkout
