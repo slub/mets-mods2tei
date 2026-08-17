@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 
-import sys
-import os
 import logging
-import click
+import os
+import sys
 from urllib.request import urlopen
 
-from mets_mods2tei import Mets
-from mets_mods2tei import Tei
+import click
+
+from mets_mods2tei import Mets, Tei
 
 
 @click.command(context_settings={"help_option_names": ["-h", "--help"]})

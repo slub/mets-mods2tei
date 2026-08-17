@@ -1,19 +1,18 @@
 # -*- coding: utf-8 -*-
 
-from lxml import etree
-
-import os
-import logging
 import copy
-import re
+import logging
 import mimetypes
-
-import requests
-from requests.adapters import HTTPAdapter, Retry
+import os
+import re
 from urllib.parse import urlparse
 
-from .util import resource_filename
+import requests
+from lxml import etree
+from requests.adapters import HTTPAdapter, Retry
+
 from .alto import Alto
+from .util import resource_filename
 
 NS = {
     "tei": "http://www.tei-c.org/ns/1.0",

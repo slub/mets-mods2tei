@@ -1,6 +1,6 @@
 from click.testing import CliRunner
-# -*- coding: utf-8 -*-
 
+# -*- coding: utf-8 -*-
 from mets_mods2tei import cli
 
 

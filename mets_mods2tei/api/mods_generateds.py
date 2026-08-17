@@ -20,13 +20,14 @@
 #   mets-mods2teiHeader
 #
 
-from six.moves import zip_longest
-import os
-import sys
-import re as re_
 import base64
 import datetime as datetime_
 import decimal as decimal_
+import os
+import re as re_
+import sys
+
+from six.moves import zip_longest
 
 try:
     from lxml import etree as etree_

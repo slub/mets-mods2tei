@@ -6,19 +6,21 @@ from __future__ import absolute_import
 
 import os
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
+
 import click
 
 # from lxml.isoschematron import Schematron
 from lxml import etree as ET
+from ocrd import Resolver, Workspace, WorkspaceBackupManager, WorkspaceValidator
 from ocrd.decorators import ocrd_loglevel
-from ocrd import Resolver, Workspace, WorkspaceValidator, WorkspaceBackupManager
-from ocrd_utils import getLogger, initLogging, remove_non_path_from_url, MIME_TO_EXT, VERSION
 
 # from ocrd_models import OcrdXmlDocument
-from ocrd_models import OcrdMets, OcrdAgent
-from ocrd_models.constants import NAMESPACES as NS, TAG_METS_FLOCAT, TAG_METS_FILE, TAG_METS_AGENT, TAG_METS_METSHDR
+from ocrd_models import OcrdAgent, OcrdMets
+from ocrd_models.constants import NAMESPACES as NS
+from ocrd_models.constants import TAG_METS_AGENT, TAG_METS_FILE, TAG_METS_FLOCAT, TAG_METS_METSHDR
+from ocrd_utils import MIME_TO_EXT, VERSION, getLogger, initLogging, remove_non_path_from_url
 
 
 class WorkspaceCtx:

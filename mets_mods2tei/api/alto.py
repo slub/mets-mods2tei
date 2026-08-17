@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from lxml import etree
-from rapidfuzz.distance import Levenshtein
-from pathlib import Path
-from typing import Optional, List, Dict, Union, IO
 import logging
 import re
+from pathlib import Path
+from typing import IO, Dict, List, Optional, Union
+
+from lxml import etree
+from rapidfuzz.distance import Levenshtein
 
 NS = {
     "xlink": "http://www.w3.org/1999/xlink",

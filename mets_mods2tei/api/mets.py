@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from lxml import etree
-from pathlib import Path
-import os
-import logging
 import csv
-from typing import Optional, Dict, List, Union, Any, IO
+import logging
+import os
+from pathlib import Path
+from typing import IO, Any, Dict, List, Optional, Union
+
 import babel
+from lxml import etree
+
 from .mets_generateds import parseString as parse_mets
 from .mods_generateds import parseString as parse_mods
 from .util import resource_filename

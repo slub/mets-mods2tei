@@ -20,13 +20,13 @@
 #   mets-mods2teiHeader
 #
 
-import os
-import sys
-import re as re_
 import base64
 import datetime as datetime_
-import warnings as warnings_
 import decimal as decimal_
+import os
+import re as re_
+import sys
+import warnings as warnings_
 
 try:
     from lxml import etree as etree_

@@ -4,8 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from mets_mods2tei import Tei
-from mets_mods2tei import Mets
+from mets_mods2tei import Mets, Tei
 
 NS = {"tei": "http://www.tei-c.org/ns/1.0"}
 
