@@ -36,7 +36,7 @@ class Iso15924:
                 filter(lambda row: row[0] != '#', filep),
                 delimiter=';',
                 quoting=csv.QUOTE_NONE,
-                fieldnames=['code', 'index', 'name_eng', 'name_fr', 'alias', 'Age', 'Date']
+                fieldnames=['code', 'index', 'name_eng', 'name_fr', 'alias', 'Age', 'Date'],
             )
             for row in reader:
                 self.map[row['code']] = row['name_eng']
@@ -153,18 +153,12 @@ class Mets:
                 self.wd = os.path.dirname(path.name)
             else:
                 # download stream
-                pass # keep cwd
+                pass  # keep cwd
         else:
             self.wd = os.path.dirname(path)
         self.tree = etree.parse(path)
-        self.mets = parse_mets(
-            etree.tostring(self.tree.getroot().xpath('//mets:mets', namespaces=NS)[0]),
-            silence=True
-        )
-        self.mods = parse_mods(
-            self.mets.get_dmdSec()[0].get_mdWrap().get_xmlData().get_anytypeobjs_()[0],
-            silence=True
-        )
+        self.mets = parse_mets(etree.tostring(self.tree.getroot().xpath('//mets:mets', namespaces=NS)[0]), silence=True)
+        self.mods = parse_mods(self.mets.get_dmdSec()[0].get_mdWrap().get_xmlData().get_anytypeobjs_()[0], silence=True)
         self.__spur()
 
     def __spur(self) -> None:
@@ -181,43 +175,73 @@ class Mets:
         self.bibtype = None
         div = self.get_div_structure()
         if div:
-            self.title = div.get_LABEL() # overridden by any titleInfo
+            self.title = div.get_LABEL()  # overridden by any titleInfo
             div_type = div.get_TYPE()
             # differentiate between analytic and closed, periodic and singular, dependent and indepenent types
             # (for use in bibl/@type and biblFull//title/@level):
             # FIXME: verify this ruleset is correct/standardized (but criteria do not look orthogonal, e.g. "issue" and "proceeding")
-            if div_type in ["bachelor_thesis", "diploma_thesis", "magister_thesis", "master_thesis", "doctoral_thesis", "habilitation_thesis", "file", "register", "research_paper", "report", "atlas", "album", "letter", "document", "leaflet", "manuscript", "poster", "plan", "study", "judgement", "preprint", "dossier", "paper"]:
-                self.biblevel = 'u' # unpublished
-                self.bibtype = 'M' # monograph
-            elif div_type in ["contained_work", "folder", ]:
+            if div_type in [
+                "bachelor_thesis",
+                "diploma_thesis",
+                "magister_thesis",
+                "master_thesis",
+                "doctoral_thesis",
+                "habilitation_thesis",
+                "file",
+                "register",
+                "research_paper",
+                "report",
+                "atlas",
+                "album",
+                "letter",
+                "document",
+                "leaflet",
+                "manuscript",
+                "poster",
+                "plan",
+                "study",
+                "judgement",
+                "preprint",
+                "dossier",
+                "paper",
+            ]:
+                self.biblevel = 'u'  # unpublished
+                self.bibtype = 'M'  # monograph
+            elif div_type in [
+                "contained_work",
+                "folder",
+            ]:
                 self.biblevel = 'a'
-                self.bibtype = 'DM' # dependent part of monograph
+                self.bibtype = 'DM'  # dependent part of monograph
                 # ? or 'DS' # dependent part of series
             elif div_type in ["article"]:
-                self.biblevel = 'a' # analytic
-                self.bibtype = 'JA' # journal article
+                self.biblevel = 'a'  # analytic
+                self.bibtype = 'JA'  # journal article
             elif div_type in ["periodical", "newspaper"]:
-                self.biblevel = 'j' # journal
-                self.bibtype = 'J' # journal
+                self.biblevel = 'j'  # journal
+                self.bibtype = 'J'  # journal
             elif div_type in ["lecture"]:
-                self.biblevel = 's' # series
-                self.bibtype = '' # ?
-            elif div_type in ["monograph", ]:
-                self.biblevel = 'm' # monograph
-                self.bibtype = 'M' # monograph
+                self.biblevel = 's'  # series
+                self.bibtype = ''  # ?
+            elif div_type in [
+                "monograph",
+            ]:
+                self.biblevel = 'm'  # monograph
+                self.bibtype = 'M'  # monograph
             elif div_type in ["multivolume_work", "volume"]:
-                self.biblevel = 'm' # monograph
-                self.bibtype = 'MM' # monograph within multi-volume monograph
+                self.biblevel = 'm'  # monograph
+                self.bibtype = 'MM'  # monograph within multi-volume monograph
                 # ? or 'MS' # monograph within series
                 # ? or 'MMS' # monograph within multi-volume monograph series
 
         #
         # titleInfo (main, sub, part/volume)
-        self.sub_titles = [] # subtitle (mods:titleInfo[mods:subTitle]
-        self.part_titles = dict() # part title of multipart subseries (mods:titleInfo[mods:partNumber|mods:partName])
-        self.volume_titles = dict() # volume title in multivolume monograph (mods:part[mods:detail])
+        self.sub_titles = []  # subtitle (mods:titleInfo[mods:subTitle]
+        self.part_titles = dict()  # part title of multipart subseries (mods:titleInfo[mods:partNumber|mods:partName])
+        self.volume_titles = dict()  # volume title in multivolume monograph (mods:part[mods:detail])
         title_infos = self.mods.get_titleInfo()
         if len(title_infos):
+
             def norm_title_first(titleInfo):
                 if not titleInfo.get_type() or titleInfo.get_type() == 'simple':
                     # prefer untyped entry ('simple' most likely is from generateDS)
@@ -225,6 +249,7 @@ class Mets:
                 if titleInfo.get_type() == 'uniform':
                     return 0
                 return 1
+
             title_info = sorted(title_infos, key=norm_title_first)[0]
             if title_info.get_title():
                 self.title = title_info.get_title()[0].get_valueOf_().strip()
@@ -238,8 +263,12 @@ class Mets:
             order = str(part_info.get_order() or 0)
             for detail in part_info.get_detail():
                 typ = detail.get_type()
-                val = ', '.join([title.get_valueOf_().strip()
-                                 for title in detail.get_number() + detail.get_caption() + detail.get_title()])
+                val = ', '.join(
+                    [
+                        title.get_valueOf_().strip()
+                        for title in detail.get_number() + detail.get_caption() + detail.get_title()
+                    ]
+                )
                 self.volume_titles[order, typ] = val
 
         #
@@ -307,7 +336,9 @@ class Mets:
         for language in languages:
             for language_term in language.get_languageTerm():
                 try:
-                    self.languages[language_term.get_valueOf_()] = babel.Locale.parse(language_term.get_valueOf_()).get_language_name('de')
+                    self.languages[language_term.get_valueOf_()] = babel.Locale.parse(
+                        language_term.get_valueOf_()
+                    ).get_language_name('de')
                 except babel.core.UnknownLocaleError as err:
                     self.logger.error("{0}. Falling back to 'Unbekannt'".format(err))
                     self.languages[language_term.get_valueOf_()] = "Unbekannt"
@@ -388,9 +419,11 @@ class Mets:
             # encoding date
             self.encoding_date = header.get_CREATEDATE()
             # encoding description
-            self.encoding_desc = [agent.get_name()
-                                  for agent in header.get_agent()
-                                  if agent.get_TYPE() == "OTHER" and agent.get_OTHERTYPE() == "SOFTWARE"]
+            self.encoding_desc = [
+                agent.get_name()
+                for agent in header.get_agent()
+                if agent.get_TYPE() == "OTHER" and agent.get_OTHERTYPE() == "SOFTWARE"
+            ]
         else:
             self.encoding_date = None
             self.encoding_desc = None
@@ -400,20 +433,22 @@ class Mets:
         else:
             self.logger.error("Found no @CREATEDATE for publicationStmt/date")
         if self.encoding_desc:
-            self.encoding_desc = self.encoding_desc[0] # or -1?
+            self.encoding_desc = self.encoding_desc[0]  # or -1?
             # what about agent.get_OTHERROLE() and agent.get_note()?
         else:
             self.logger.warning("Found no mets:agent for encodingDesc")
 
-	#
-	# location of manuscript
+        #
+        # location of manuscript
 
         # location-related elements are optional or conditional
         self.shelf_locators = []
         if self.mods.get_location():
             location = self.mods.get_location()[0]
             if location.get_shelfLocator():
-                self.shelf_locators.extend([shelf_locator.get_valueOf_() for shelf_locator in location.get_shelfLocator()])
+                self.shelf_locators.extend(
+                    [shelf_locator.get_valueOf_() for shelf_locator in location.get_shelfLocator()]
+                )
             if location.get_physicalLocation():
                 self.location_phys = location.get_physicalLocation()[0].get_valueOf_()
             if location.get_url():

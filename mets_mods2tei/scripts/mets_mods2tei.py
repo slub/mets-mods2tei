@@ -11,6 +11,7 @@ from urllib.error import URLError
 from mets_mods2tei import Mets
 from mets_mods2tei import Tei
 
+
 @click.command(context_settings={'help_option_names': ['-h', '--help']})
 @click.argument('mets', required=True)
 @click.option('-O', '--output', default="-", type=click.File("wb", lazy=False), help="File path to write TEI output to")

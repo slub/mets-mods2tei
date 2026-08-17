@@ -12,7 +12,7 @@ setup(
     author_email='kay-michael.wuerzner@slub-dresden.de',
     license_files=('LICENSE',),
     packages=find_packages(exclude=('tests', 'docs')),
-    package_data={'mets_mods2tei' : ['data/tei_skeleton.xml', 'data/iso15924-utf8-20180827.txt']},
+    package_data={'mets_mods2tei': ['data/tei_skeleton.xml', 'data/iso15924-utf8-20180827.txt']},
     install_requires=open('requirements.txt').read().split('\n'),
     python_requires=">=3.10",
     classifiers=[
@@ -32,9 +32,9 @@ setup(
         'Topic :: Text Processing :: Markup :: XML',
     ],
     entry_points={
-          'console_scripts': [
-              'mm2tei=mets_mods2tei.scripts.mets_mods2tei:cli',
-              'mm-update=mets_mods2tei.scripts.update:cli',
-          ]
+        'console_scripts': [
+            'mm2tei=mets_mods2tei.scripts.mets_mods2tei:cli',
+            'mm-update=mets_mods2tei.scripts.update:cli',
+        ]
     },
 )

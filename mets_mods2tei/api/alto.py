@@ -182,15 +182,14 @@ class Alto:
         index = -1
         # the moving window
         for k in range(self.insert_index, len(text) - len(label)):
-            distance = self.__compute_fuzzy_distance(label, text[k:k+len(label)])
+            distance = self.__compute_fuzzy_distance(label, text[k : k + len(label)])
             if distance <= minimum:
                 minimum = distance
                 index = k
-                self.logger.debug("New best match at index %i: %s" % (index, text[index:index+len(label)].strip()))
+                self.logger.debug("New best match at index %i: %s" % (index, text[index : index + len(label)].strip()))
             if distance == 0:
                 break
-        return (index, len(text[index:index+len(label)].strip()))
-
+        return (index, len(text[index : index + len(label)].strip()))
 
     def collect_text_nodes(self, begin, length):
         """
