@@ -65,6 +65,7 @@ class Mets:
         """
         self.script_iso: Iso15924 = Iso15924()
         self.tree: Optional[etree._ElementTree] = None
+        self.wd: str = os.getcwd()
         self.mets: Optional[Any] = None
         self.mods: Optional[Any] = None
         self.page_map: Dict[str, Any] = {}
@@ -107,48 +108,6 @@ class Mets:
 
         # Logging
         self.logger: logging.Logger = logging.getLogger(__name__)
-
-        self.tree = None
-        self.wd = os.getcwd()
-        self.mets = None
-        self.mods = None
-        self.page_map = {}
-        self.order_map = {}
-        self.orderlabel_map = {}
-        self.img_map = {}
-        self.alto_map = {}
-        self.struct_links = {}
-        self.fulltext_group_name = 'FULLTEXT'
-        self.image_group_name = 'DEFAULT'
-
-        self.title = None
-        self.sub_titles = None
-        self.part_titles = None
-        self.volume_titles = None
-        self.authors = None
-        self.editors = None
-        self.places = None
-        self.dates = None
-        self.notes = None
-        self.publishers = None
-        self.edition = None
-        self.digital_origin = None
-        self.owner_digital = None
-        self.license = None
-        self.license_url = None
-        self.encoding_date = None
-        self.encoding_desc = None
-        self.location_phys = None
-        self.location_urls = None
-        self.shelf_locators = None
-        self.identifiers = None
-        self.scripts = None
-        self.collections = None
-        self.languages = None
-        self.classifications = None
-        self.subjects = None
-        self.extents = None
-        self.series = None
 
     @classmethod
     def read(cls, source: Union[str, IO]) -> 'Mets':

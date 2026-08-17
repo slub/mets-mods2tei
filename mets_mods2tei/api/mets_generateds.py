@@ -133,7 +133,7 @@ except ImportError:
 try:
     from generatedssuper import GeneratedsSuper
 except ImportError as exp:
-    
+
     class GeneratedsSuper(object):
         tzoff_pattern = re_.compile(r'(\+|-)((0\d|1[0-3]):[0-5]\d|14:00)$')
         class _FixedOffsetTZ(datetime_.tzinfo):
@@ -527,8 +527,7 @@ except ImportError as exp:
             return 0, None
         def gds_sqa_etl_transform_db_obj(self, dbobj):
             pass
-    
-    
+
     def getSubclassFromModule_(module, class_):
         """Get the subclass of a class from a specific module."""
         name = class_.__name__ + 'Sub'
