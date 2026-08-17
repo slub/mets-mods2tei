@@ -284,7 +284,7 @@ class Mets:
         self.dates = {}
         if origin_info:
             for date_issued in origin_info[0].get_dateIssued():
-                date_type = date_issued.get_point() if date_issued.get_point() != None else "unspecified"
+                date_type = date_issued.get_point() if date_issued.get_point() is not None else "unspecified"
                 self.dates[date_type] = date_issued.get_valueOf_()
 
         # publishers
@@ -561,7 +561,7 @@ class Mets:
         """
         Element "digitalOrigin" present?
         """
-        return self.digital_origin != None
+        return self.digital_origin is not None
 
     def get_digital_origin(self):
         """

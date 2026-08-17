@@ -3,7 +3,6 @@ multi-purpose METS editing and file handling tool purposed for DFG Viewer
 """
 from __future__ import absolute_import
 
-import os
 import sys
 from pathlib import Path
 from datetime import datetime
@@ -11,14 +10,13 @@ import click
 #from lxml.isoschematron import Schematron
 from lxml import etree as ET
 from ocrd.decorators import ocrd_loglevel
-from ocrd import Resolver, Workspace, WorkspaceValidator, WorkspaceBackupManager
+from ocrd import Resolver, Workspace, WorkspaceValidator
 from ocrd_utils import getLogger, initLogging, remove_non_path_from_url, MIME_TO_EXT, VERSION
 #from ocrd_models import OcrdXmlDocument
 from ocrd_models import OcrdMets, OcrdAgent
 from ocrd_models.constants import (
     NAMESPACES as NS,
     TAG_METS_FLOCAT,
-    TAG_METS_FILE,
     TAG_METS_AGENT,
     TAG_METS_METSHDR
 )

@@ -6,6 +6,7 @@ import os
 import logging
 import click
 from urllib.request import urlopen
+from urllib.error import URLError
 
 from mets_mods2tei import Mets
 from mets_mods2tei import Tei
@@ -44,7 +45,7 @@ def cli(mets, output, ocr, text_group, img_group, add_refs, log_level):
     # interpret mets argument
     try:
         f = urlopen(mets)
-    except:
+    except (ValueError, URLError):
         f = open(mets, "rb")
         # physical file: enter METS directory for relative FLocat refs
         os.chdir(os.path.normpath(os.path.dirname(mets)))

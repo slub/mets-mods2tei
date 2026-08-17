@@ -21,6 +21,7 @@ NS = {
 TEI = "{%s}" % NS['tei']
 
 # FIXME: add more structural mappings from METS-Anwendungsprofil (DFG Strukturdatenset) to TEI-P5 tagset (DTAbf)
+# ruff: disable[F601]
 DIV_METS2TEI = {
     "article": "chapter",
     # misfit...
@@ -62,6 +63,7 @@ DIV_METS2TEI = {
     "illustration": "?",
     "section": "chapter?",
 }
+# ruff: enable[F601]
 
 class Tei:
 
@@ -812,10 +814,10 @@ class Tei:
         for struct_link in struct_links:
             alto_link = mets.get_alto(struct_link)
             # only collect ocr from a file once!
-            if not alto_link in self.alto_map:
+            if alto_link not in self.alto_map:
                 try:
                     sections = urlparse(alto_link)
-                except:
+                except ValueError:
                     continue
 
                 # use urlopen for both paths and URLs
