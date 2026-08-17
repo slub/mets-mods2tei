@@ -2,7 +2,6 @@
 multi-purpose METS editing and file handling tool purposed for DFG Viewer
 """
 
-from __future__ import absolute_import
 
 import sys
 from datetime import datetime
@@ -108,14 +107,14 @@ def download_cli(ctx, file_grp, page_id, path_names, url_prefix, reference):
             subdir, _, basename = path.rpartition('/')
         else:
             subdir = f.fileGrp
-            basename = '%s%s' % (f.ID, MIME_TO_EXT.get(f.mimetype, '')) if f.ID else f.basename
+            basename = f.ID + MIME_TO_EXT.get(f.mimetype, '') if f.ID else f.basename
         path = ctx.resolver.download_to_directory(ctx.directory, f.url, subdir=subdir, basename=basename)
         if reference != 'no-change':
             # todo: as soon as OcrdFile provides a mechanism to manage multiple FLocats, use that instead
             newref = ET.Element(TAG_METS_FLOCAT)
             newref.set('LOCTYPE', 'OTHER')
             newref.set('OTHERLOCTYPE', 'FILE')
-            newref.set("{%s}href" % NS["xlink"], path)
+            newref.set("{" + NS["xlink"] + "}href", path)
             oldref = f._el.find('mets:FLocat', NS)
             if reference == 'replace-by-local':
                 f._el.replace(oldref, newref)
@@ -172,9 +171,9 @@ def remove_file_cli(ctx, url_prefix, path):
     if url_prefix:
         if not url_prefix.endswith('/'):
             url_prefix += '/'
-        kwargs = dict(url=url_prefix + path)
+        kwargs = {'url': url_prefix + path}
     else:
-        kwargs = dict(local_filename=path)
+        kwargs = {'local_filename': path}
     files = list(workspace.find_files(**kwargs))
     ctx.log.info("removing references for %d files", len(files))
     for file_ in files:
@@ -210,14 +209,14 @@ def add_file_cli(ctx, file_grp, mimetype, page_id, url_prefix, path):
     ctx.log.info("mets_target=%s", workspace.mets_target)
     assert page_id in workspace.mets.physical_pages
     page_nr = 1 + workspace.mets.physical_pages.index(page_id)
-    file_id = 'FILE_' + '%04d' % page_nr + '_' + file_grp
+    file_id = f'FILE_{page_nr:04d}_{file_grp}'
     path = str(Path(path).absolute().relative_to(Path(ctx.directory)))
     if url_prefix:
         if not url_prefix.endswith('/'):
             url_prefix += '/'
-        kwargs = dict(url=url_prefix + path, loctype='URL')
+        kwargs = {'url': url_prefix + path, 'loctype': 'URL'}
     else:
-        kwargs = dict(local_filename=path, loctype='OTHER')
+        kwargs = {'local_filename': path, 'loctype': 'OTHER'}
     workspace.add_file(file_grp, file_id=file_id, mimetype=mimetype, page_id=page_id, **kwargs)
     workspace.save_mets()
 
@@ -239,7 +238,7 @@ def add_agent_cli(ctx, mets):
         agents = []
     agents.append(
         OcrdAgent(
-            _type="OTHER", othertype="SOFTWARE", role="OTHER", otherrole="publication", name="ocrd/core v%s" % VERSION
+            _type="OTHER", othertype="SOFTWARE", role="OTHER", otherrole="publication", name=f"ocrd/core v{VERSION}"
         )
     )
     el_metsHdr = workspace.mets._tree.getroot().find('./mets:metsHdr', NS)
@@ -296,7 +295,7 @@ def validate_cli(ctx, url_prefix):
     if url_prefix:
         for f in workspace.find_files():
             if not f.url.startswith(url_prefix):
-                report.add_error("File '%s' mets:FLocat/@href has different URL prefix" % f.ID)
+                report.add_error(f"File '{f.ID}' mets:FLocat/@href has different URL prefix")
     if report.is_valid:
         ctx.log.info(report.to_xml())
     else:

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import absolute_import
 
 import logging
 import os
@@ -47,7 +45,7 @@ def cli(mets, output, ocr, text_group, img_group, add_refs, log_level):
     try:
         f = urlopen(mets)
     except (ValueError, URLError):
-        f = open(mets, "rb")
+        f = open(mets, "rb")  # noqa: SIM115
         # physical file: enter METS directory for relative FLocat refs
         os.chdir(os.path.normpath(os.path.dirname(mets)))
 
@@ -56,7 +54,8 @@ def cli(mets, output, ocr, text_group, img_group, add_refs, log_level):
     mets = Mets()
     mets.fulltext_group_name = text_group
     mets.image_group_name = img_group
-    mets.fromfile(f)
+    with f as mets_file:
+        mets.fromfile(mets_file)
 
     #
     # create TEI (from skeleton)

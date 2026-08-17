@@ -1,19 +1,13 @@
-# -*- coding: utf-8 -*-
 
 import logging
 import re
 from pathlib import Path
-from typing import IO, Dict, List, Optional, Union
+from typing import IO
 
 from lxml import etree
 from rapidfuzz.distance import Levenshtein
 
-NS = {
-    'xlink': "http://www.w3.org/1999/xlink",
-    'alto': "http://www.loc.gov/standards/alto/ns-v4#",
-}
-XLINK = "{%s}" % NS['xlink']
-ALTO = "{%s}" % NS['alto']
+from .util import NS
 
 norm_alto_ns_re = re.compile(rb'alto/ns-v.#')
 
@@ -27,12 +21,12 @@ class Alto:
 
         Sets up the internal data structures and default values for handling ALTO files.
         """
-        self.tree: Optional[etree._ElementTree] = None
+        self.tree: etree._ElementTree | None = None
         self.insert_index: int = 0
-        self.last_inserted_elem: Optional[etree._Element] = None
+        self.last_inserted_elem: etree._Element | None = None
         self.path: str = ""
         self.text: str = ""
-        self.line_index_struct: Dict[int, str] = {}
+        self.line_index_struct: dict[int, str] = {}
         self.line_index: int = 0
 
         # logging
@@ -48,7 +42,7 @@ class Alto:
         stream.write(etree.tostring(self.tree.getroot(), encoding="utf-8"))
 
     @classmethod
-    def read(cls, source: Union[str, IO]) -> 'Alto':
+    def read(cls, source: str | IO) -> 'Alto':
         """
         Read an ALTO file from a given source.
 
@@ -65,7 +59,7 @@ class Alto:
                 return cls.fromfile(f)
 
     @classmethod
-    def fromfile(cls, path: Union[str, IO]) -> 'Alto':
+    def fromfile(cls, path: str | IO) -> 'Alto':
         """
         Read an ALTO file from a given file path.
 
@@ -79,7 +73,7 @@ class Alto:
         instance._fromfile(path)
         return instance
 
-    def _fromfile(self, path: Union[str, IO]) -> None:
+    def _fromfile(self, path: str | IO) -> None:
         """
         Parse an ALTO file from a given file path.
 
@@ -108,7 +102,7 @@ class Alto:
         parser = etree.XMLParser(remove_blank_text=True)
         self.tree = etree.XML(norm_alto_ns_re.sub(b"alto/ns-v4#", content), parser)
 
-    def get_text_blocks(self) -> List[etree._Element]:
+    def get_text_blocks(self) -> list[etree._Element]:
         """
         Get all text blocks from the ALTO file.
 
@@ -117,7 +111,7 @@ class Alto:
         """
         return self.tree.xpath('//alto:TextBlock', namespaces=NS)
 
-    def get_lines_in_text_block(self, text_block: etree._Element) -> List[etree._Element]:
+    def get_lines_in_text_block(self, text_block: etree._Element) -> list[etree._Element]:
         """
         Get all lines in a given text block.
 
@@ -187,7 +181,7 @@ class Alto:
             if distance <= minimum:
                 minimum = distance
                 index = k
-                self.logger.debug("New best match at index %i: %s" % (index, text[index : index + len(label)].strip()))
+                self.logger.debug(f"New best match at index {index}: {text[index : index + len(label)].strip()}")
             if distance == 0:
                 break
         return (index, len(text[index : index + len(label)].strip()))

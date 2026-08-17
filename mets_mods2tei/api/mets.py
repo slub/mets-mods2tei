@@ -1,26 +1,16 @@
-# -*- coding: utf-8 -*-
 
 import csv
 import logging
 import os
 from pathlib import Path
-from typing import IO, Any, Dict, List, Optional, Union
+from typing import IO, Any
 
 import babel
 from lxml import etree
 
 from .mets_generateds import parseString as parse_mets
 from .mods_generateds import parseString as parse_mods
-from .util import resource_filename
-
-NS = {
-    'mets': "http://www.loc.gov/METS/",
-    'mods': "http://www.loc.gov/mods/v3",
-    'xlink': "http://www.w3.org/1999/xlink",
-    'dv': "http://dfg-viewer.de/",
-}
-METS = "{%s}" % NS['mets']
-XLINK = "{%s}" % NS['xlink']
+from .util import NS, PX, resource_filename
 
 
 class Iso15924:
@@ -32,7 +22,7 @@ class Iso15924:
 
         Loads the ISO 15924 script codes and their English names into a map.
         """
-        self.map: Dict[str, str] = {}
+        self.map: dict[str, str] = {}
         with open(resource_filename('mets_mods2tei', 'data/iso15924-utf8-20180827.txt')) as filep:
             reader = csv.DictReader(
                 filter(lambda row: row[0] != '#', filep),
@@ -66,53 +56,53 @@ class Mets:
         Sets up the internal data structures and default values for handling METS files.
         """
         self.script_iso: Iso15924 = Iso15924()
-        self.tree: Optional[etree._ElementTree] = None
+        self.tree: etree._ElementTree | None = None
         self.wd: str = os.getcwd()
-        self.mets: Optional[Any] = None
-        self.mods: Optional[Any] = None
-        self.page_map: Dict[str, Any] = {}
-        self.order_map: Dict[str, str] = {}
-        self.orderlabel_map: Dict[str, str] = {}
-        self.img_map: Dict[str, str] = {}
-        self.alto_map: Dict[str, str] = {}
-        self.struct_links: Dict[str, List[str]] = {}
+        self.mets: Any | None = None
+        self.mods: Any | None = None
+        self.page_map: dict[str, Any] = {}
+        self.order_map: dict[str, str] = {}
+        self.orderlabel_map: dict[str, str] = {}
+        self.img_map: dict[str, str] = {}
+        self.alto_map: dict[str, str] = {}
+        self.struct_links: dict[str, list[str]] = {}
         self.fulltext_group_name: str = 'FULLTEXT'
         self.image_group_name: str = 'DEFAULT'
 
-        self.title: Optional[str] = None
-        self.sub_titles: Optional[List[str]] = None
-        self.part_titles: Optional[Dict[str, str]] = None
-        self.volume_titles: Optional[Dict[str, str]] = None
-        self.authors: Optional[List[Dict[str, str]]] = None
-        self.editors: Optional[List[Dict[str, str]]] = None
-        self.places: Optional[List[Dict[str, str]]] = None
-        self.dates: Optional[Dict[str, str]] = None
-        self.notes: Optional[List[str]] = None
-        self.publishers: Optional[List[str]] = None
-        self.edition: Optional[str] = None
-        self.digital_origin: Optional[str] = None
-        self.owner_digital: Optional[str] = None
-        self.license: Optional[str] = None
-        self.license_url: Optional[str] = None
-        self.encoding_date: Optional[str] = None
-        self.encoding_desc: Optional[str] = None
-        self.location_phys: Optional[str] = None
-        self.location_urls: Optional[List[str]] = None
-        self.shelf_locators: Optional[List[str]] = None
-        self.identifiers: Optional[Dict[str, str]] = None
-        self.scripts: Optional[List[str]] = None
-        self.collections: Optional[List[str]] = None
-        self.languages: Optional[Dict[str, str]] = None
-        self.classifications: Optional[Dict[str, List[str]]] = None
-        self.subjects: Optional[Dict[str, List[str]]] = None
-        self.extents: Optional[List[str]] = None
-        self.series: Optional[List[str]] = None
+        self.title: str | None = None
+        self.sub_titles: list[str] | None = None
+        self.part_titles: dict[str, str] | None = None
+        self.volume_titles: dict[str, str] | None = None
+        self.authors: list[dict[str, str]] | None = None
+        self.editors: list[dict[str, str]] | None = None
+        self.places: list[dict[str, str]] | None = None
+        self.dates: dict[str, str] | None = None
+        self.notes: list[str] | None = None
+        self.publishers: list[str] | None = None
+        self.edition: str | None = None
+        self.digital_origin: str | None = None
+        self.owner_digital: str | None = None
+        self.license: str | None = None
+        self.license_url: str | None = None
+        self.encoding_date: str | None = None
+        self.encoding_desc: str | None = None
+        self.location_phys: str | None = None
+        self.location_urls: list[str] | None = None
+        self.shelf_locators: list[str] | None = None
+        self.identifiers: dict[str, str] | None = None
+        self.scripts: list[str] | None = None
+        self.collections: list[str] | None = None
+        self.languages: dict[str, str] | None = None
+        self.classifications: dict[str, list[str]] | None = None
+        self.subjects: dict[str, list[str]] | None = None
+        self.extents: list[str] | None = None
+        self.series: list[str] | None = None
 
         # Logging
         self.logger: logging.Logger = logging.getLogger(__name__)
 
     @classmethod
-    def read(cls, source: Union[str, IO]) -> 'Mets':
+    def read(cls, source: str | IO) -> 'Mets':
         """
         Read a METS file from a given source.
 
@@ -128,7 +118,7 @@ class Mets:
             return cls.from_file(source)
 
     @classmethod
-    def from_file(cls, path: Union[str, IO]) -> 'Mets':
+    def from_file(cls, path: str | IO) -> 'Mets':
         """
         Read a METS file from a given file path.
 
@@ -142,7 +132,7 @@ class Mets:
         instance.fromfile(path)
         return instance
 
-    def fromfile(self, path: Union[str, IO]) -> None:
+    def fromfile(self, path: str | IO) -> None:
         """
         Parse a METS file from a given file path.
 
@@ -239,8 +229,8 @@ class Mets:
         #
         # titleInfo (main, sub, part/volume)
         self.sub_titles = []  # subtitle (mods:titleInfo[mods:subTitle]
-        self.part_titles = dict()  # part title of multipart subseries (mods:titleInfo[mods:partNumber|mods:partName])
-        self.volume_titles = dict()  # volume title in multivolume monograph (mods:part[mods:detail])
+        self.part_titles = {}  # part title of multipart subseries (mods:titleInfo[mods:partNumber|mods:partName])
+        self.volume_titles = {}  # volume title in multivolume monograph (mods:part[mods:detail])
         title_infos = self.mods.get_titleInfo()
         if len(title_infos):
 
@@ -252,7 +242,7 @@ class Mets:
                     return 0
                 return 1
 
-            title_info = sorted(title_infos, key=norm_title_first)[0]
+            title_info = min(title_infos, key=norm_title_first)
             if title_info.get_title():
                 self.title = title_info.get_title()[0].get_valueOf_().strip()
             for sub_title in title_info.get_subTitle():
@@ -342,7 +332,7 @@ class Mets:
                         language_term.get_valueOf_()
                     ).get_language_name('de')
                 except babel.core.UnknownLocaleError as err:
-                    self.logger.error("{0}. Falling back to 'Unbekannt'".format(err))
+                    self.logger.error(f"{err}. Falling back to 'Unbekannt'")
                     self.languages[language_term.get_valueOf_()] = "Unbekannt"
             for script_term in language.get_scriptTerm():
                 self.scripts.append(self.script_iso.get(script_term.get_valueOf_()))
@@ -354,16 +344,16 @@ class Mets:
         #
         # classifications and subjects
         classifications = self.mods.get_classification()
-        self.classifications = dict()
+        self.classifications = {}
         if classifications:
             for classification in classifications:
-                codes = self.classifications.setdefault(classification.get_authority(), list())
+                codes = self.classifications.setdefault(classification.get_authority(), [])
                 codes.append(classification.get_valueOf_())
         subjects = self.mods.get_subject()
-        self.subjects = dict()
+        self.subjects = {}
         if subjects:
             for subject in subjects:
-                keywords = self.subjects.setdefault(subject.get_authority(), list())
+                keywords = self.subjects.setdefault(subject.get_authority(), [])
                 for topic in subject.topic:
                     keywords.append(('topic', topic.get_valueOf_()))
                 for geographic in subject.geographic:
@@ -458,7 +448,7 @@ class Mets:
 
         #
         # URN and VD ID
-        self.identifiers = dict()
+        self.identifiers = {}
         identifiers = self.mods.get_identifier()
         if len(identifiers):
             for identifier in identifiers:
@@ -478,20 +468,20 @@ class Mets:
 
         # fulltext
         fulltext_map = {}
-        fulltext_group = self.tree.xpath("//mets:fileGrp[@USE='%s']" % self.fulltext_group_name, namespaces=NS)
+        fulltext_group = self.tree.xpath(f"//mets:fileGrp[@USE='{self.fulltext_group_name}']", namespaces=NS)
         if fulltext_group:
             fulltext_map = {}
             for entry in fulltext_group[0].xpath("./mets:file", namespaces=NS):
-                url = entry.find("./" + METS + "FLocat").get("%shref" % XLINK)
+                url = entry.find("./" + PX['mets'] + "FLocat").get(PX['xlink'] + "href")
                 self.logger.debug("Found full-text file: %s", url)
                 fulltext_map[entry.get("ID")] = url
 
         # image
         image_map = {}
-        image_group = self.tree.xpath("//mets:fileGrp[@USE='%s']" % self.image_group_name, namespaces=NS)
+        image_group = self.tree.xpath(f"//mets:fileGrp[@USE='{self.image_group_name}']", namespaces=NS)
         if image_group:
             for entry in image_group[0].xpath("./mets:file", namespaces=NS):
-                url = entry.find("./" + METS + "FLocat").get("%shref" % XLINK)
+                url = entry.find("./" + PX['mets'] + "FLocat").get(PX['xlink'] + "href")
                 self.logger.debug("Found image file: %s", url)
                 image_map[entry.get("ID")] = url
 
@@ -513,11 +503,11 @@ class Mets:
         # struct links
         structlinks = self.tree.xpath("//mets:structLink/*", namespaces=NS)
         for sm_link in structlinks:
-            logical = sm_link.get("%sfrom" % XLINK)
-            physical = sm_link.get("%sto" % XLINK)
+            logical = sm_link.get(PX['xlink'] + "from")
+            physical = sm_link.get(PX['xlink'] + "to")
             if physical in self.alto_map:
                 self.logger.debug("Found structLink from %s to physical page: %s", logical, physical)
-                pages = self.struct_links.setdefault(logical, list())
+                pages = self.struct_links.setdefault(logical, [])
                 pages.append(physical)
 
     @property

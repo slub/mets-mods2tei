@@ -2,6 +2,9 @@ line-length = 120
 indent-width = 4
 extend-exclude = ["tests", "*_generateds.py"]
 
+[lint]
+ignore = ["DTZ005"]
+
 [format]
 indent-style = "space"
 quote-style = "preserve"
