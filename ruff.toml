@@ -3,5 +3,6 @@ indent-width = 4
 
 [format]
 indent-style = "space"
+quote-style = "preserve"
 line-ending = "auto"
 docstring-code-line-length = "dynamic"
