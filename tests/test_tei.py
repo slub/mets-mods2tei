@@ -34,14 +34,14 @@ def datadir(tmpdir, request):
 
 def test_constructor():
     """
-    Test the creation of an empty Tei instance
+    Test the creation of an empty TEI instance.
     """
     tei = Tei()
     assert tei.tree is not None
 
 def test_reading_local_file(subtests, datadir):
     """
-    Test reading from a local mets file
+    Test reading from a local METS file.
     """
     f = open(datadir.join('test_mets.xml'))
     mets = Mets.read(f)
@@ -58,7 +58,7 @@ def test_reading_local_file(subtests, datadir):
 
 def test_reading_local_file_local_ocr(subtests, datadir):
     """
-    Test reading from a local mets file, referencing local alto files
+    Test reading from a local METS file, referencing local ALTO files.
     """
     f = open(datadir.join('test_mets_nodiv_local.xml'))
     mets = Mets.read(f)
@@ -72,7 +72,7 @@ def test_reading_local_file_local_ocr(subtests, datadir):
 
 def test_reading_remote_url(tmpdir):
     """
-    Test reading from a remote mets link
+    Test reading from a remote METS link.
     """
     from urllib.request import urlopen
     mets = Mets()
@@ -102,7 +102,7 @@ def test_string_dumping():
 
 def test_data_assignment(subtests):
     """
-    Test the correct assignment of meta data
+    Test the correct assignment of metadata.
     """
     tei = Tei()
 

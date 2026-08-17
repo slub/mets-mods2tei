@@ -31,7 +31,7 @@ def cli(mets, output, ocr, text_group, img_group, add_refs, log_level):
     if `--add-refs` contains `page`, then reference the corresponding
     base image files (by file name) from `--img-group`. Likewise,
     if `--add-refs` contains `line`, then reference the corresponding
-    textline segments (by XML ID) from `--text-group`.
+    text line segments (by XML ID) from `--text-group`.
 
     Output XML to `--output (use '-' for stdout), log to stderr.`
     """
