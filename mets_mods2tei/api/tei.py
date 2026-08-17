@@ -16,9 +16,9 @@ from .util import resource_filename
 from .alto import Alto
 
 NS = {
-     'tei': "http://www.tei-c.org/ns/1.0",
+    "tei": "http://www.tei-c.org/ns/1.0",
 }
-TEI = "{%s}" % NS['tei']
+TEI = "{%s}" % NS["tei"]
 
 # FIXME: add more structural mappings from METS-Anwendungsprofil (DFG Strukturdatenset) to TEI-P5 tagset (DTAbf)
 DIV_METS2TEI = {
@@ -63,14 +63,14 @@ DIV_METS2TEI = {
     "section": "chapter?",
 }
 
-class Tei:
 
+class Tei:
     def __init__(self):
         """
         The constructor.
         """
 
-        with open(resource_filename('mets_mods2tei', 'data/tei_skeleton.xml')) as skeleton:
+        with open(resource_filename("mets_mods2tei", "data/tei_skeleton.xml")) as skeleton:
             self.tree = etree.parse(skeleton)
         self.alto_map = {}
 
@@ -84,7 +84,7 @@ class Tei:
         """
         # needs lxml>=4.5:
         etree.indent(self.tree, space="  ")
-        for lb in self.tree.xpath('//tei:lb', namespaces=NS):
+        for lb in self.tree.xpath("//tei:lb", namespaces=NS):
             prefix = lb.getparent().text
             lb.tail += "  " + prefix
         return etree.tostring(self.tree, pretty_print=True, encoding="utf-8")
@@ -110,11 +110,11 @@ class Tei:
         self.init_biblFull()
 
         # publication level
-        self.set_publication_level(mets.biblevel or 'u')
+        self.set_publication_level(mets.biblevel or "u")
 
         # authors
         for typ, author in mets.get_authors():
-            self.add_author(author,typ)
+            self.add_author(author, typ)
 
         # notes
         for note in mets.notes:
@@ -187,7 +187,7 @@ class Tei:
 
         # type description
         if mets.get_scripts():
-            self.set_type_desc('\n'.join(script for script in mets.get_scripts()))
+            self.set_type_desc("\n".join(script for script in mets.get_scripts()))
 
         # languages
         for ident_name in mets.get_languages().items():
@@ -222,14 +222,13 @@ class Tei:
         if div is not None:
             self.logger.debug("Found logical structMap for %s", div.get_TYPE())
             self.add_div_structure(div)
-        if (not len(self.tree.xpath('//tei:text/tei:body/tei:div', namespaces=NS))
-            and any(mets.alto_map)):
+        if not len(self.tree.xpath("//tei:text/tei:body/tei:div", namespaces=NS)) and any(mets.alto_map):
             self.logger.warning("Found no logical structMap divs, falling back to physical")
             pages = mets.alto_map.keys()
             if any(mets.order_map.values()):
                 pages = sorted(pages, key=mets.get_order)
             self.add_physical_pages(map(mets.page_map.get, pages))
-        if not len(self.tree.xpath('//tei:text/tei:body/tei:div', namespaces=NS)):
+        if not len(self.tree.xpath("//tei:text/tei:body/tei:div", namespaces=NS)):
             self.logger.error("Found no logical or physical structMap div")
 
         # OCR
@@ -250,7 +249,10 @@ class Tei:
         Return information on the subtitle(s) of the work represented
         by the TEI Header.
         """
-        return [subtitle.text for subtitle in self.tree.xpath('//tei:fileDesc/tei:titleStmt/tei:title[@type="sub"]', namespaces=NS)]
+        return [
+            subtitle.text
+            for subtitle in self.tree.xpath('//tei:fileDesc/tei:titleStmt/tei:title[@type="sub"]', namespaces=NS)
+        ]
 
     @property
     def authors(self):
@@ -259,8 +261,8 @@ class Tei:
         by the TEI Header.
         """
         authors = []
-        for author in self.tree.xpath('//tei:fileDesc/tei:titleStmt/tei:author', namespaces=NS):
-            authors.append(", ".join(author.xpath('descendant-or-self::*/text()')))
+        for author in self.tree.xpath("//tei:fileDesc/tei:titleStmt/tei:author", namespaces=NS):
+            authors.append(", ".join(author.xpath("descendant-or-self::*/text()")))
         return authors
 
     @property
@@ -268,7 +270,9 @@ class Tei:
         """
         Return the level of publication ('monographic' vs. 'analytic')
         """
-        return self.tree.xpath('//tei:sourceDesc/tei:biblFull/tei:titleStmt/tei:title[@type="main"]', namespaces=NS)[0].get("level")
+        return self.tree.xpath('//tei:sourceDesc/tei:biblFull/tei:titleStmt/tei:title[@type="main"]', namespaces=NS)[
+            0
+        ].get("level")
 
     @property
     def dates(self):
@@ -276,7 +280,12 @@ class Tei:
         Return information on the publication date(s) of the work represented
         by the TEI Header.
         """
-        return [date.text for date in self.tree.xpath('//tei:fileDesc/tei:sourceDesc/tei:biblFull/tei:publicationStmt/tei:date', namespaces=NS)]
+        return [
+            date.text
+            for date in self.tree.xpath(
+                "//tei:fileDesc/tei:sourceDesc/tei:biblFull/tei:publicationStmt/tei:date", namespaces=NS
+            )
+        ]
 
     @property
     def places(self):
@@ -284,7 +293,12 @@ class Tei:
         Return information on the publication place(s) of the work represented
         by the TEI Header.
         """
-        return ["%s:%s" % (place.get("corresp"), place.text) for place in self.tree.xpath('//tei:fileDesc/tei:sourceDesc/tei:biblFull/tei:publicationStmt/tei:pubPlace', namespaces=NS)]
+        return [
+            "%s:%s" % (place.get("corresp"), place.text)
+            for place in self.tree.xpath(
+                "//tei:fileDesc/tei:sourceDesc/tei:biblFull/tei:publicationStmt/tei:pubPlace", namespaces=NS
+            )
+        ]
 
     @property
     def publishers(self):
@@ -292,7 +306,12 @@ class Tei:
         Return information on the publishers of the source work represented
         by the TEI Header.
         """
-        return [publisher.text for publisher in self.tree.xpath('//tei:fileDesc/tei:sourceDesc/tei:biblFull/tei:publicationStmt/tei:publisher/tei:name', namespaces=NS)]
+        return [
+            publisher.text
+            for publisher in self.tree.xpath(
+                "//tei:fileDesc/tei:sourceDesc/tei:biblFull/tei:publicationStmt/tei:publisher/tei:name", namespaces=NS
+            )
+        ]
 
     @property
     def hosters(self):
@@ -300,7 +319,10 @@ class Tei:
         Return information on the publishers of the digitalized work represented
         by the TEI Header.
         """
-        return [publisher.text for publisher in self.tree.xpath('//tei:fileDesc/tei:publicationStmt/tei:publisher', namespaces=NS)]
+        return [
+            publisher.text
+            for publisher in self.tree.xpath("//tei:fileDesc/tei:publicationStmt/tei:publisher", namespaces=NS)
+        ]
 
     @property
     def availability(self):
@@ -308,7 +330,7 @@ class Tei:
         Return information on the availability status represented
         by the TEI Header.
         """
-        return self.tree.xpath('//tei:fileDesc/tei:publicationStmt/tei:availability', namespaces=NS)[0].get("status")
+        return self.tree.xpath("//tei:fileDesc/tei:publicationStmt/tei:availability", namespaces=NS)[0].get("status")
 
     @property
     def licence(self):
@@ -316,7 +338,7 @@ class Tei:
         Return information on the licencing conditions represented
         by the TEI Header.
         """
-        licence = self.tree.xpath('//tei:fileDesc/tei:publicationStmt/tei:availability/tei:licence', namespaces=NS)
+        licence = self.tree.xpath("//tei:fileDesc/tei:publicationStmt/tei:availability/tei:licence", namespaces=NS)
         if licence:
             return licence[0].text
         else:
@@ -328,7 +350,12 @@ class Tei:
         Return information on the editions of the source work represented
         by the TEI Header.
         """
-        return [source_edition.text for source_edition in self.tree.xpath('//tei:fileDesc/tei:sourceDesc/tei:biblFull/tei:editionStmt/tei:edition', namespaces=NS)]
+        return [
+            source_edition.text
+            for source_edition in self.tree.xpath(
+                "//tei:fileDesc/tei:sourceDesc/tei:biblFull/tei:editionStmt/tei:edition", namespaces=NS
+            )
+        ]
 
     @property
     def digital_editions(self):
@@ -336,7 +363,10 @@ class Tei:
         Return information on the editions of the digitalized work represented
         by the TEI Header.
         """
-        return [digital_edition.text for digital_edition in self.tree.xpath('//tei:fileDesc/tei:editionStmt/tei:edition', namespaces=NS)]
+        return [
+            digital_edition.text
+            for digital_edition in self.tree.xpath("//tei:fileDesc/tei:editionStmt/tei:edition", namespaces=NS)
+        ]
 
     @property
     def encoding_dates(self):
@@ -344,8 +374,10 @@ class Tei:
         Return information on the publishing dates of the digitalized work represented
         by the TEI Header.
         """
-        return ["%s:%s" % (encoding_date.get("type"), encoding_date.text) for encoding_date in self.tree.xpath('//tei:fileDesc/tei:publicationStmt/tei:date', namespaces=NS)]
-
+        return [
+            "%s:%s" % (encoding_date.get("type"), encoding_date.text)
+            for encoding_date in self.tree.xpath("//tei:fileDesc/tei:publicationStmt/tei:date", namespaces=NS)
+        ]
 
     @property
     def encoding_description(self):
@@ -353,7 +385,7 @@ class Tei:
         Return information on the manners of creation of the digitalized work represented
         by the TEI Header.
         """
-        return "".join(self.tree.xpath('//tei:encodingDesc', namespaces=NS)[0].itertext()).strip()
+        return "".join(self.tree.xpath("//tei:encodingDesc", namespaces=NS)[0].itertext()).strip()
 
     @property
     def repositories(self):
@@ -361,14 +393,22 @@ class Tei:
         Return information on the repositories storing the work represented
         by the TEI Header.
         """
-        return [repository.text for repository in self.tree.xpath('//tei:msDesc/tei:msIdentifier/tei:repository', namespaces=NS)]
+        return [
+            repository.text
+            for repository in self.tree.xpath("//tei:msDesc/tei:msIdentifier/tei:repository", namespaces=NS)
+        ]
 
     @property
     def shelfmarks(self):
         """
         Return information on the TEI-Header-represented work's (library) shelfmarks.
         """
-        return [shelfmark.text for shelfmark in self.tree.xpath('//tei:msDesc/tei:msIdentifier/tei:idno/tei:idno[@type="shelfmark"]', namespaces=NS)]
+        return [
+            shelfmark.text
+            for shelfmark in self.tree.xpath(
+                '//tei:msDesc/tei:msIdentifier/tei:idno/tei:idno[@type="shelfmark"]', namespaces=NS
+            )
+        ]
 
     @property
     def purl(self):
@@ -409,7 +449,12 @@ class Tei:
         Return information on the extent of the work represented
         by the TEI Header.
         """
-        return [extent.text for extent in self.tree.xpath('//tei:msDesc/tei:physDesc/tei:objectDesc/tei:supportDesc/tei:extent', namespaces=NS)]
+        return [
+            extent.text
+            for extent in self.tree.xpath(
+                "//tei:msDesc/tei:physDesc/tei:objectDesc/tei:supportDesc/tei:extent", namespaces=NS
+            )
+        ]
 
     @property
     def collections(self):
@@ -417,7 +462,10 @@ class Tei:
         Return information on the collections of the work represented
         by the TEI Header.
         """
-        return [collection.text for collection in self.tree.xpath('//tei:msDesc/tei:msIdentifier/tei:collection', namespaces=NS)]
+        return [
+            collection.text
+            for collection in self.tree.xpath("//tei:msDesc/tei:msIdentifier/tei:collection", namespaces=NS)
+        ]
 
     @property
     def bibl(self):
@@ -431,7 +479,7 @@ class Tei:
         """
         Set the main title of the tei:titleStmt.
         """
-        titleStmt = self.tree.xpath('//tei:titleStmt', namespaces=NS)[0]
+        titleStmt = self.tree.xpath("//tei:titleStmt", namespaces=NS)[0]
         for node in titleStmt.xpath('tei:title[@type="main"]', namespaces=NS):
             node.text = string
 
@@ -439,7 +487,7 @@ class Tei:
         """
         Add a sub-title of the tei:titleStmt.
         """
-        titleStmt = self.tree.xpath('//tei:titleStmt', namespaces=NS)[0]
+        titleStmt = self.tree.xpath("//tei:titleStmt", namespaces=NS)[0]
         node = etree.Element("%stitle" % TEI)
         node.set("type", "sub")
         node.text = string
@@ -449,7 +497,7 @@ class Tei:
         """
         Add a part title of the tei:titleStmt.
         """
-        titleStmt = self.tree.xpath('//tei:titleStmt', namespaces=NS)[0]
+        titleStmt = self.tree.xpath("//tei:titleStmt", namespaces=NS)[0]
         node = etree.Element("%stitle" % TEI)
         node.set("type", "part")
         node.set("n", number)
@@ -460,7 +508,7 @@ class Tei:
         """
         Add a volume title of the tei:titleStmt.
         """
-        titleStmt = self.tree.xpath('//tei:titleStmt', namespaces=NS)[0]
+        titleStmt = self.tree.xpath("//tei:titleStmt", namespaces=NS)[0]
         node = etree.Element("%stitle" % TEI)
         node.set("type", typ)
         node.set("n", number)
@@ -471,8 +519,8 @@ class Tei:
         """
         Set the main, sub, and part/volume titles of the tei:biblFull by copying from tei:titleStmt.
         """
-        titleStmt = self.tree.xpath('//tei:titleStmt', namespaces=NS)[0]
-        bibl = self.tree.xpath('//tei:sourceDesc/tei:biblFull', namespaces=NS)[0]
+        titleStmt = self.tree.xpath("//tei:titleStmt", namespaces=NS)[0]
+        bibl = self.tree.xpath("//tei:sourceDesc/tei:biblFull", namespaces=NS)[0]
         bibl.append(copy.deepcopy(titleStmt))
 
     def set_publication_level(self, level):
@@ -490,8 +538,8 @@ class Tei:
         - 'u': (unpublished) the title applies to any unpublished material
                (including theses and dissertations unless published by a commercial press)
         """
-        assert level in ['m', 'a', 'j', 's', 'u']
-        for title in self.tree.xpath('//tei:sourceDesc/tei:biblFull/tei:titleStmt/tei:title', namespaces=NS):
+        assert level in ["m", "a", "j", "s", "u"]
+        for title in self.tree.xpath("//tei:sourceDesc/tei:biblFull/tei:titleStmt/tei:title", namespaces=NS):
             title.set("level", level)
 
     def add_author(self, person, typ):
@@ -516,18 +564,18 @@ class Tei:
         elif typ == "corporate":
             org_name = etree.SubElement(author, "%sorgName" % TEI)
             org_name.text = " ".join(person[key] for key in person)
-        for title_stmt in self.tree.xpath('//tei:titleStmt', namespaces=NS):
+        for title_stmt in self.tree.xpath("//tei:titleStmt", namespaces=NS):
             title_stmt.append(copy.deepcopy(author))
 
     def add_note(self, note):
         """
         Add a note with details about the document.
         """
-        fileDesc = self.tree.xpath('//tei:fileDesc', namespaces=NS)[0]
-        if not fileDesc.xpath('/tei:notesStmt', namespaces=NS):
+        fileDesc = self.tree.xpath("//tei:fileDesc", namespaces=NS)[0]
+        if not fileDesc.xpath("/tei:notesStmt", namespaces=NS):
             notes = etree.SubElement(fileDesc, "%snotesStmt" % TEI)
         else:
-            notes = fileDesc.xpath('/tei:notesStmt', namespaces=NS)[0]
+            notes = fileDesc.xpath("/tei:notesStmt", namespaces=NS)[0]
         node = etree.SubElement(notes, "%snote" % TEI)
         node.text = note
         node.set("type", "remarkDocument")
@@ -536,7 +584,9 @@ class Tei:
         """
         Add a publication place to the publication statement.
         """
-        publication_stmt = self.tree.xpath('//tei:fileDesc/tei:sourceDesc/tei:biblFull/tei:publicationStmt', namespaces=NS)[0]
+        publication_stmt = self.tree.xpath(
+            "//tei:fileDesc/tei:sourceDesc/tei:biblFull/tei:publicationStmt", namespaces=NS
+        )[0]
         pub_place = etree.SubElement(publication_stmt, "%spubPlace" % TEI)
         for key in place:
             if key == "text":
@@ -548,7 +598,9 @@ class Tei:
         """
         Add a publication date to the publication statement.
         """
-        publication_stmt = self.tree.xpath('//tei:fileDesc/tei:sourceDesc/tei:biblFull/tei:publicationStmt', namespaces=NS)[0]
+        publication_stmt = self.tree.xpath(
+            "//tei:fileDesc/tei:sourceDesc/tei:biblFull/tei:publicationStmt", namespaces=NS
+        )[0]
         for key in date:
             pub_date = etree.SubElement(publication_stmt, "%sdate" % TEI)
             pub_date.set("type", "publication")
@@ -560,7 +612,9 @@ class Tei:
         """
         Adds a publisher to the publication statement.
         """
-        publication_stmt = self.tree.xpath('//tei:fileDesc/tei:sourceDesc/tei:biblFull/tei:publicationStmt', namespaces=NS)[0]
+        publication_stmt = self.tree.xpath(
+            "//tei:fileDesc/tei:sourceDesc/tei:biblFull/tei:publicationStmt", namespaces=NS
+        )[0]
         publisher_node = etree.Element("%spublisher" % TEI)
         name = etree.SubElement(publisher_node, "%sname" % TEI)
         name.text = publisher
@@ -570,7 +624,7 @@ class Tei:
         """
         Add an edition statement with details on the source manuscript.
         """
-        bibl_full = self.tree.xpath('//tei:fileDesc/tei:sourceDesc/tei:biblFull', namespaces=NS)[0]
+        bibl_full = self.tree.xpath("//tei:fileDesc/tei:sourceDesc/tei:biblFull", namespaces=NS)[0]
         edition_stmt = etree.SubElement(bibl_full, "%seditionStmt" % TEI)
         edition = etree.SubElement(edition_stmt, "%sedition" % TEI)
         edition.text = manuscript_edition
@@ -579,7 +633,7 @@ class Tei:
         """
         Add an edition statement with details on the digital edition.
         """
-        title_stmt = self.tree.xpath('//tei:fileDesc', namespaces=NS)[0]
+        title_stmt = self.tree.xpath("//tei:fileDesc", namespaces=NS)[0]
         edition_stmt = etree.SubElement(title_stmt, "%seditionStmt" % TEI)
         edition = etree.SubElement(edition_stmt, "%sedition" % TEI)
         edition.text = digital_edition
@@ -588,7 +642,7 @@ class Tei:
         """
         Add a publisher of the digital edition
         """
-        publication_stmt = self.tree.xpath('//tei:publicationStmt', namespaces=NS)[0]
+        publication_stmt = self.tree.xpath("//tei:publicationStmt", namespaces=NS)[0]
         publisher = etree.SubElement(publication_stmt, "%spublisher" % TEI)
         publisher.text = hoster
 
@@ -596,8 +650,8 @@ class Tei:
         """
         Set the availability conditions of the digital edition
         """
-        publication_stmt = self.tree.xpath('//tei:publicationStmt', namespaces=NS)[0]
-        availability = publication_stmt.find('%savailability' % TEI)
+        publication_stmt = self.tree.xpath("//tei:publicationStmt", namespaces=NS)[0]
+        availability = publication_stmt.find("%savailability" % TEI)
         if availability is not None:
             availability.clear()
         else:
@@ -625,7 +679,7 @@ class Tei:
         """
         Add the date of encoding for the digital edition
         """
-        publication_stmt = self.tree.xpath('//tei:publicationStmt', namespaces=NS)[0]
+        publication_stmt = self.tree.xpath("//tei:publicationStmt", namespaces=NS)[0]
         encoding_date = etree.SubElement(publication_stmt, "%sdate" % TEI)
         encoding_date.set("type", "publication")
         if date:
@@ -635,7 +689,7 @@ class Tei:
         """
         Set some details on the encoding of the digital edition
         """
-        encoding_desc = self.tree.xpath('//tei:encodingDesc', namespaces=NS)[0]
+        encoding_desc = self.tree.xpath("//tei:encodingDesc", namespaces=NS)[0]
         if creator:
             encoding_desc_details = etree.SubElement(encoding_desc, "%sp" % TEI)
             encoding_desc_details.text = "Encoded with the help of %s." % creator
@@ -644,7 +698,7 @@ class Tei:
         """
         Add the repository of the (original) manuscript
         """
-        ms_ident = self.tree.xpath('//tei:msDesc/tei:msIdentifier', namespaces=NS)[0]
+        ms_ident = self.tree.xpath("//tei:msDesc/tei:msIdentifier", namespaces=NS)[0]
         repository = etree.SubElement(ms_ident, "%srepository" % TEI)
         repository.text = name
 
@@ -652,7 +706,7 @@ class Tei:
         """
         Add the URN, PURL, VD ID, shelfmark etc. of the digital edition
         """
-        ms_ident = self.tree.xpath('//tei:msDesc/tei:msIdentifier/tei:idno', namespaces=NS)[0]
+        ms_ident = self.tree.xpath("//tei:msDesc/tei:msIdentifier/tei:idno", namespaces=NS)[0]
         # FIXME: URN, DTAID, ... should go to /tei:fileDesc/tei:publicationStmt/tei:idno instead
         idno = etree.SubElement(ms_ident, "%sidno" % TEI)
         idno.set("type", type_)
@@ -662,9 +716,9 @@ class Tei:
         """
         Set the type description
         """
-        phys_desc = self.tree.xpath('//tei:msDesc/tei:physDesc', namespaces=NS)[0]
+        phys_desc = self.tree.xpath("//tei:msDesc/tei:physDesc", namespaces=NS)[0]
         type_desc = etree.SubElement(phys_desc, "%stypeDesc" % TEI)
-        for line in description.split('\n'):
+        for line in description.split("\n"):
             par = etree.SubElement(type_desc, "%sp" % TEI)
             par.text = line
 
@@ -672,11 +726,11 @@ class Tei:
         """
         Add a document classification code.
         """
-        profile_desc = self.tree.xpath('//tei:profileDesc', namespaces=NS)[0]
-        if not profile_desc.xpath('/tei:textClass', namespaces=NS):
+        profile_desc = self.tree.xpath("//tei:profileDesc", namespaces=NS)[0]
+        if not profile_desc.xpath("/tei:textClass", namespaces=NS):
             textclass = etree.SubElement(profile_desc, "%stextClass" % TEI)
         else:
-            textclass = profile_desc.xpath('/tei:textClass', namespaces=NS)[0]
+            textclass = profile_desc.xpath("/tei:textClass", namespaces=NS)[0]
         classcode = etree.SubElement(textclass, "%sclassCode" % TEI)
         classcode.set("scheme", scheme)
         classcode.text = code
@@ -685,11 +739,11 @@ class Tei:
         """
         Add a document classification list of terms.
         """
-        profile_desc = self.tree.xpath('//tei:profileDesc', namespaces=NS)[0]
-        if not profile_desc.xpath('/tei:textClass', namespaces=NS):
+        profile_desc = self.tree.xpath("//tei:profileDesc", namespaces=NS)[0]
+        if not profile_desc.xpath("/tei:textClass", namespaces=NS):
             textclass = etree.SubElement(profile_desc, "%stextClass" % TEI)
         else:
-            textclass = profile_desc.xpath('/tei:textClass', namespaces=NS)[0]
+            textclass = profile_desc.xpath("/tei:textClass", namespaces=NS)[0]
         keywords = etree.SubElement(textclass, "%skeywords" % TEI)
         keywords.set("scheme", scheme)
         for type_, term in terms:
@@ -702,7 +756,7 @@ class Tei:
         """
         Add a language of the source document
         """
-        lang_usage = self.tree.xpath('//tei:profileDesc/tei:langUsage', namespaces=NS)[0]
+        lang_usage = self.tree.xpath("//tei:profileDesc/tei:langUsage", namespaces=NS)[0]
         lang = etree.SubElement(lang_usage, "%slanguage" % TEI)
         lang.set("ident", language[0])
         lang.text = language[1]
@@ -711,12 +765,12 @@ class Tei:
         """
         Add information on the extent of the source document
         """
-        phys_desc = self.tree.xpath('//tei:msDesc/tei:physDesc', namespaces=NS)[0]
-        if not phys_desc.xpath('/tei:objectDesc/tei:supportDesc', namespaces=NS):
+        phys_desc = self.tree.xpath("//tei:msDesc/tei:physDesc", namespaces=NS)[0]
+        if not phys_desc.xpath("/tei:objectDesc/tei:supportDesc", namespaces=NS):
             obj_desc = etree.SubElement(phys_desc, "%sobjectDesc" % TEI)
             support_desc = etree.SubElement(obj_desc, "%ssupportDesc" % TEI)
         else:
-            support_desc = phys_desc.xpath('/tei:objectDesc/tei:supportDesc', namespaces=NS)[0]
+            support_desc = phys_desc.xpath("/tei:objectDesc/tei:supportDesc", namespaces=NS)[0]
         extent_elem = etree.SubElement(support_desc, "%sextent" % TEI)
         extent_elem.text = extent
 
@@ -724,7 +778,7 @@ class Tei:
         """
         Add a (free-text) collection of the digital document
         """
-        profile_desc = self.tree.xpath('//tei:msDesc/tei:msIdentifier', namespaces=NS)[0]
+        profile_desc = self.tree.xpath("//tei:msDesc/tei:msIdentifier", namespaces=NS)[0]
         coll = etree.SubElement(profile_desc, "%scollection" % TEI)
         coll.text = collection
 
@@ -755,9 +809,9 @@ class Tei:
         Add OCR text from FULLTEXT file group to the single divs
         """
         # the text-holding elements
-        front = self.tree.xpath('//tei:front', namespaces=NS)
-        body = self.tree.xpath('//tei:body', namespaces=NS)
-        back = self.tree.xpath('//tei:back', namespaces=NS)
+        front = self.tree.xpath("//tei:front", namespaces=NS)
+        body = self.tree.xpath("//tei:body", namespaces=NS)
+        back = self.tree.xpath("//tei:back", namespaces=NS)
 
         if front:
             for node in front[0].iterchildren():
@@ -785,28 +839,30 @@ class Tei:
         # a header will always be on the first page of a div
         first = True
 
-        retries = Retry(total=3,
-                        status_forcelist=[
-                            # probably too wide (only transient failures):
-                            408, # Request Timeout
-                            409, # Conflict
-                            412, # Precondition Failed
-                            417, # Expectation Failed
-                            423, # Locked
-                            424, # Fail
-                            425, # Too Early
-                            426, # Upgrade Required
-                            428, # Precondition Required
-                            429, # Too Many Requests
-                            440, # Login Timeout
-                            500, # Internal Server Error
-                            503, # Service Unavailable
-                            504, # Gateway Timeout
-                            509, # Bandwidth Limit Exceeded
-                            529, # Site Overloaded
-                            598, # Proxy Read Timeout
-                            599, # Proxy Connect Timeout
-                        ])
+        retries = Retry(
+            total=3,
+            status_forcelist=[
+                # probably too wide (only transient failures):
+                408,  # Request Timeout
+                409,  # Conflict
+                412,  # Precondition Failed
+                417,  # Expectation Failed
+                423,  # Locked
+                424,  # Fail
+                425,  # Too Early
+                426,  # Upgrade Required
+                428,  # Precondition Required
+                429,  # Too Many Requests
+                440,  # Login Timeout
+                500,  # Internal Server Error
+                503,  # Service Unavailable
+                504,  # Gateway Timeout
+                509,  # Bandwidth Limit Exceeded
+                529,  # Site Overloaded
+                598,  # Proxy Read Timeout
+                599,  # Proxy Connect Timeout
+            ],
+        )
         adapter = HTTPAdapter(max_retries=retries)
         # iterate over all struct links for a div
         for struct_link in struct_links:
@@ -820,38 +876,38 @@ class Tei:
 
                 # use urlopen for both paths and URLs
                 if not sections.scheme:
-                    mod_link = 'file:' + alto_link
+                    mod_link = "file:" + alto_link
                 else:
                     mod_link = alto_link
                 self.logger.debug(mod_link)
 
-                if mod_link.startswith('file:'):
+                if mod_link.startswith("file:"):
                     fpath = mod_link[5:]
-                    if fpath.startswith('///'):
+                    if fpath.startswith("///"):
                         # support condensed file://localhost/path
                         fpath = fpath[3:]
-                        if not fpath.startswith('/'):
+                        if not fpath.startswith("/"):
                             fpath = os.path.join(mets.wd, fpath)
-                    elif fpath.startswith('//'):
+                    elif fpath.startswith("//"):
                         # support non-standard file://path
                         fpath = fpath[2:]
                         fpath = os.path.join(mets.wd, fpath)
-                    elif fpath.startswith('/'):
+                    elif fpath.startswith("/"):
                         # support file:/path
                         fpath = fpath[1:]
                         fpath = os.path.join(mets.wd, fpath)
                     else:
                         fpath = os.path.join(mets.wd, fpath)
                     try:
-                        with open(fpath, 'rb') as file:
+                        with open(fpath, "rb") as file:
                             alto = Alto.fromfile(file)
                     except FileNotFoundError as e:
                         self.logger.error("cannot open OCR result for '%s': %s", mod_link, e)
                         continue
                 else:
                     with requests.Session() as session:
-                        session.mount('http://', adapter)
-                        session.mount('https://', adapter)
+                        session.mount("http://", adapter)
+                        session.mount("https://", adapter)
                         try:
                             response = session.get(mod_link, timeout=3, stream=True)
                         except requests.exceptions.RetryError as e:
@@ -873,12 +929,12 @@ class Tei:
                 orderlabel = mets.get_orderlabel(struct_link) or mets.get_order(struct_link)
                 if orderlabel:
                     pb.set("n", str(orderlabel))
-                if 'page' in self.refs:
+                if "page" in self.refs:
                     if self.purl:
                         pb.set("corresp", self.purl + "/" + pageid[1:])
                     img_url = mets.get_img(struct_link)
                     if img_url:
-                        facsimile = self.tree.xpath('//tei:facsimile', namespaces=NS)[0]
+                        facsimile = self.tree.xpath("//tei:facsimile", namespaces=NS)[0]
                         # facsimile.set("base", ...common url_prefix...)
                         # todo: DTABf seems to use "graphic" directly, but other dialects wrap them inside a "surface"
                         graphic = etree.SubElement(facsimile, "%sgraphic" % TEI)
@@ -891,11 +947,11 @@ class Tei:
                     p = etree.SubElement(node, "%sp" % TEI)
                     for line in alto.get_lines_in_text_block(text_block):
                         lb = etree.SubElement(p, "%slb" % TEI)
-                        if 'line' in self.refs:
+                        if "line" in self.refs:
                             line_id = line.get("ID")
                             if not line_id:
                                 block = line.getparent()
-                                line_id = block.get("ID") + '_%04d' % block.index(line)
+                                line_id = block.get("ID") + "_%04d" % block.index(line)
                             lb.set("n", line_id)
                         line_text = alto.get_text_in_line(line)
                         if line_text:
@@ -939,7 +995,7 @@ class Tei:
                     # realize correct div assigment in cases where a structure does not start a page
                     if pars[0].getparent().get("id") != node.get("id"):
                         self.logger.debug("Replace head for div %s (%s)" % (node.get("id"), node.get("rend")))
-                        for par in reversed(pars[0].getparent()[pars[0].getparent().index(pars[0]):]):
+                        for par in reversed(pars[0].getparent()[pars[0].getparent().index(pars[0]) :]):
                             node.insert(0, par)
             first = False
 
@@ -949,9 +1005,9 @@ class Tei:
         """
 
         # div structure has to be added to text
-        front = self.tree.xpath('//tei:front', namespaces=NS)[0]
-        body = self.tree.xpath('//tei:body', namespaces=NS)[0]
-        back = self.tree.xpath('//tei:back', namespaces=NS)[0]
+        front = self.tree.xpath("//tei:front", namespaces=NS)[0]
+        body = self.tree.xpath("//tei:body", namespaces=NS)[0]
+        back = self.tree.xpath("//tei:back", namespaces=NS)[0]
 
         # descend to the deepest AMD
         while div.get_ADMID() is None:
@@ -966,32 +1022,44 @@ class Tei:
             start_div = start_div.get_div()[0]
 
         # start search
-        has_frontmatter = (any(1 for sub_div in div.get_div()
-                               if sub_div.get_TYPE() in [
-                                       # FIXME: what are the exact criteria for the presence of front-matter in DFG METS?
-                                       "title_page",
-                                       "preface",
-                                       "dedication",
-                                       "engraved_titlepage",
-                               ]) and
-                           # no front if document has multiple title_page (e.g. multiple contained_work):
-                           not sum(1 for sub_div in div.get_div()
-                                   if sub_div.get_TYPE() == "title_page") > 1)
+        has_frontmatter = (
+            any(
+                1
+                for sub_div in div.get_div()
+                if sub_div.get_TYPE()
+                in [
+                    # FIXME: what are the exact criteria for the presence of front-matter in DFG METS?
+                    "title_page",
+                    "preface",
+                    "dedication",
+                    "engraved_titlepage",
+                ]
+            )
+            and
+            # no front if document has multiple title_page (e.g. multiple contained_work):
+            not sum(1 for sub_div in div.get_div() if sub_div.get_TYPE() == "title_page") > 1
+        )
         entry_point = front if has_frontmatter else body
         for sub_div in div.get_div():
             subtype = sub_div.get_TYPE() or sub_div.get_LABEL() or sub_div.get_ORDERLABEL() or ""
             divtype = DIV_METS2TEI.get(subtype.lower(), "")
-            if (subtype == "binding" or
-                subtype == "colour_checker" or
-                subtype == "spine" or
-                subtype == "paste_down" or
-                subtype == "endsheet" or
-                subtype.startswith("cover")):
+            if (
+                subtype == "binding"
+                or subtype == "colour_checker"
+                or subtype == "spine"
+                or subtype == "paste_down"
+                or subtype == "endsheet"
+                or subtype.startswith("cover")
+            ):
                 continue
             elif entry_point is front and subtype == "title_page":
                 self.__add_div(entry_point, sub_div, 1, tag="titlePage")
             else:
-                if has_frontmatter and entry_point is front and subtype in [
+                if (
+                    has_frontmatter
+                    and entry_point is front
+                    and subtype
+                    in [
                         # FIXME: what are the exact criteria for the end of front-matter in DFG METS?
                         "article",
                         "chapter",
@@ -999,19 +1067,20 @@ class Tei:
                         "part",
                         "fascicle",
                         "other",
-                        ]:
+                    ]
+                ):
                     entry_point = body
                 elif entry_point is body and subtype in [
-                        # FIXME: what are the exact criteria for the start of back-matter in DFG METS?
-                        "epilogue",
-                        "index",
-                        "corrigenda",
-                        #"contents", # can also be in front
-                        "imprint",
-                        "dedication",
-                        "appendix",
-                        "additional",
-                        "attached_work",
+                    # FIXME: what are the exact criteria for the start of back-matter in DFG METS?
+                    "epilogue",
+                    "index",
+                    "corrigenda",
+                    # "contents", # can also be in front
+                    "imprint",
+                    "dedication",
+                    "appendix",
+                    "additional",
+                    "attached_work",
                 ]:
                     entry_point = back
                 self.__add_div(entry_point, sub_div, 1, divtype=divtype)
@@ -1022,7 +1091,7 @@ class Tei:
         """
 
         # div structure has to be added to text
-        body = self.tree.xpath('//tei:body', namespaces=NS)[0]
+        body = self.tree.xpath("//tei:body", namespaces=NS)[0]
 
         for page in pages:
             self.logger.debug("Found physical page %s", page.get_ID())
@@ -1038,17 +1107,20 @@ class Tei:
         label = div.get_LABEL()
         if label:
             new_div.set("n", str(n))
-            #head = etree.SubElement(new_div, "%s%s" % (TEI, "head"))
-            #head.text = label
+            # head = etree.SubElement(new_div, "%s%s" % (TEI, "head"))
+            # head.text = label
             new_div.set("rend", label)
         if tag == "div" and divtype:
             new_div.set("type", divtype)
-        self.logger.debug("Adding %s[@id=%s,@n=%d%s%s] for %s",
-                          tag, div_id, n,
-                          ",@rend=%s" % label if label else "",
-                          ",@type=%s" % divtype if divtype else "",
-                          insert_node.tag.split('}')[-1])
+        self.logger.debug(
+            "Adding %s[@id=%s,@n=%d%s%s] for %s",
+            tag,
+            div_id,
+            n,
+            ",@rend=%s" % label if label else "",
+            ",@type=%s" % divtype if divtype else "",
+            insert_node.tag.split("}")[-1],
+        )
         for sub_div in div.get_div():
             subtype = sub_div.get_TYPE() or sub_div.get_LABEL() or sub_div.get_ORDERLABEL() or ""
-            self.__add_div(new_div, sub_div, n+1, divtype=DIV_METS2TEI.get(subtype.lower(), ""))
-
+            self.__add_div(new_div, sub_div, n + 1, divtype=DIV_METS2TEI.get(subtype.lower(), ""))

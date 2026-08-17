@@ -8,13 +8,13 @@ import logging
 import re
 
 NS = {
-    'xlink': "http://www.w3.org/1999/xlink",
-    'alto': "http://www.loc.gov/standards/alto/ns-v4#",
+    "xlink": "http://www.w3.org/1999/xlink",
+    "alto": "http://www.loc.gov/standards/alto/ns-v4#",
 }
-XLINK = "{%s}" % NS['xlink']
-ALTO = "{%s}" % NS['alto']
+XLINK = "{%s}" % NS["xlink"]
+ALTO = "{%s}" % NS["alto"]
 
-norm_alto_ns_re = re.compile(rb'alto/ns-v.#')
+norm_alto_ns_re = re.compile(rb"alto/ns-v.#")
 
 
 class Alto:
@@ -47,7 +47,7 @@ class Alto:
         stream.write(etree.tostring(self.tree.getroot(), encoding="utf-8"))
 
     @classmethod
-    def read(cls, source: Union[str, IO]) -> 'Alto':
+    def read(cls, source: Union[str, IO]) -> "Alto":
         """
         Read an ALTO file from a given source.
 
@@ -57,14 +57,14 @@ class Alto:
         Returns:
             Alto: An instance of the Alto class.
         """
-        if hasattr(source, 'read'):
+        if hasattr(source, "read"):
             return cls.fromfile(source)
         if Path(source).exists():
-            with open(source, 'rb') as f:
+            with open(source, "rb") as f:
                 return cls.fromfile(f)
 
     @classmethod
-    def fromfile(cls, path: Union[str, IO]) -> 'Alto':
+    def fromfile(cls, path: Union[str, IO]) -> "Alto":
         """
         Read an ALTO file from a given file path.
 
@@ -114,7 +114,7 @@ class Alto:
         Returns:
             List[etree._Element]: A list of text block elements.
         """
-        return self.tree.xpath('//alto:TextBlock', namespaces=NS)
+        return self.tree.xpath("//alto:TextBlock", namespaces=NS)
 
     def get_lines_in_text_block(self, text_block: etree._Element) -> List[etree._Element]:
         """
@@ -126,7 +126,7 @@ class Alto:
         Returns:
             List[etree._Element]: A list of line elements.
         """
-        return text_block.xpath('.//alto:TextLine', namespaces=NS)
+        return text_block.xpath(".//alto:TextLine", namespaces=NS)
 
     def get_text_in_line(self, line: etree._Element) -> str:
         """
@@ -138,7 +138,7 @@ class Alto:
         Returns:
             str: The text content of the line.
         """
-        text = ' '.join(line.xpath('.//alto:String/@CONTENT', namespaces=NS))
+        text = " ".join(line.xpath(".//alto:String/@CONTENT", namespaces=NS))
         hyp = line.find("alto:HYP", namespaces=NS)
         if hyp is not None:
             text += hyp.get("CONTENT")
@@ -155,8 +155,8 @@ class Alto:
         Returns:
             int: The Levenshtein distance between the two strings.
         """
-        text1 = text1.translate({ord(i): None for i in '. '})
-        text2 = text2.translate({ord(i): None for i in '. '})
+        text1 = text1.translate({ord(i): None for i in ". "})
+        text2 = text2.translate({ord(i): None for i in ". "})
         return Levenshtein.distance(text1, text2)
 
     def get_best_insert_index(self, label: str, lower: bool = False) -> int:
@@ -182,15 +182,14 @@ class Alto:
         index = -1
         # the moving window
         for k in range(self.insert_index, len(text) - len(label)):
-            distance = self.__compute_fuzzy_distance(label, text[k:k+len(label)])
+            distance = self.__compute_fuzzy_distance(label, text[k : k + len(label)])
             if distance <= minimum:
                 minimum = distance
                 index = k
-                self.logger.debug("New best match at index %i: %s" % (index, text[index:index+len(label)].strip()))
+                self.logger.debug("New best match at index %i: %s" % (index, text[index : index + len(label)].strip()))
             if distance == 0:
                 break
-        return (index, len(text[index:index+len(label)].strip()))
-
+        return (index, len(text[index : index + len(label)].strip()))
 
     def collect_text_nodes(self, begin, length):
         """

@@ -7,9 +7,8 @@ import pytest
 from mets_mods2tei import Tei
 from mets_mods2tei import Mets
 
-NS = {
-    'tei': 'http://www.tei-c.org/ns/1.0'
-}
+NS = {"tei": "http://www.tei-c.org/ns/1.0"}
+
 
 @pytest.fixture
 def datadir(tmpdir, request):
@@ -18,14 +17,15 @@ def datadir(tmpdir, request):
     module and, if available, moving all contents to a temporary directory so
     tests can use them freely.
     """
-    src = Path(request.module.__file__).with_suffix('')
+    src = Path(request.module.__file__).with_suffix("")
     if src.is_dir():
-        for src_path in src.glob('**/*'):
+        for src_path in src.glob("**/*"):
             if src_path.is_file():
                 dest_path = Path(str(tmpdir)) / src_path.relative_to(src)
                 dest_path.parent.mkdir(parents=True, exist_ok=True)
                 dest_path.write_bytes(src_path.read_bytes())
     return tmpdir
+
 
 def test_constructor():
     """
@@ -34,66 +34,84 @@ def test_constructor():
     tei = Tei()
     assert tei.tree is not None
 
+
 def test_reading_local_file(subtests, datadir):
     """
     Test reading from a local METS file.
     """
-    f = open(datadir.join('test_mets.xml'))
+    f = open(datadir.join("test_mets.xml"))
     mets = Mets.read(f)
     tei = Tei()
     with subtests.test("Check TEI conversion"):
         tei.fill_from_mets(mets, ocr=False)
         assert tei.tree is not None
-        assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:body', namespaces=NS)) == 1
-        assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:body//tei:div//tei:pb', namespaces=NS)) == 0
+        assert len(tei.tree.xpath("/tei:TEI/tei:text/tei:body", namespaces=NS)) == 1
+        assert len(tei.tree.xpath("/tei:TEI/tei:text/tei:body//tei:div//tei:pb", namespaces=NS)) == 0
     with subtests.test("Check TEI conversion with OCR"):
         tei.add_ocr_text(mets)
-        assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:body//tei:div//tei:pb', namespaces=NS)) > 700
-        assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:body//tei:div//tei:p//tei:lb', namespaces=NS)) > 8000
+        assert len(tei.tree.xpath("/tei:TEI/tei:text/tei:body//tei:div//tei:pb", namespaces=NS)) > 700
+        assert len(tei.tree.xpath("/tei:TEI/tei:text/tei:body//tei:div//tei:p//tei:lb", namespaces=NS)) > 8000
+
 
 def test_reading_local_file_local_ocr(subtests, datadir):
     """
     Test reading from a local METS file, referencing local ALTO files.
     """
-    f = open(datadir.join('test_mets_nodiv_local.xml'))
+    f = open(datadir.join("test_mets_nodiv_local.xml"))
     mets = Mets.read(f)
     tei = Tei()
     with subtests.test("Check TEI conversion"):
         tei.fill_from_mets(mets, ocr=True)
         assert tei.tree is not None
-        assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:body', namespaces=NS)) == 1
-        assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:body//tei:div//tei:pb', namespaces=NS)) > 55
-        assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:body//tei:div//tei:p//tei:lb', namespaces=NS)) > 800
+        assert len(tei.tree.xpath("/tei:TEI/tei:text/tei:body", namespaces=NS)) == 1
+        assert len(tei.tree.xpath("/tei:TEI/tei:text/tei:body//tei:div//tei:pb", namespaces=NS)) > 55
+        assert len(tei.tree.xpath("/tei:TEI/tei:text/tei:body//tei:div//tei:p//tei:lb", namespaces=NS)) > 800
+
 
 def test_reading_remote_url(tmpdir):
     """
     Test reading from a remote METS link.
     """
     from urllib.request import urlopen
+
     mets = Mets()
-    mets.fromfile(urlopen("https://digital.slub-dresden.de/oai/?verb=GetRecord&metadataPrefix=mets"
-                          "&identifier=oai:de:slub-dresden:db:id-453779263"))
+    mets.fromfile(
+        urlopen(
+            "https://digital.slub-dresden.de/oai/?verb=GetRecord&metadataPrefix=mets"
+            "&identifier=oai:de:slub-dresden:db:id-453779263"
+        )
+    )
     tei = Tei()
     tei.fill_from_mets(mets, ocr=True, refs=["page", "line"])
     assert tei.tree is not None
-    assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:body', namespaces=NS)) == 1
+    assert len(tei.tree.xpath("/tei:TEI/tei:text/tei:body", namespaces=NS)) == 1
     # check pages
-    assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:front//tei:div//tei:pb', namespaces=NS)) > 1
-    assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:front/tei:titlePage', namespaces=NS)) == 1
-    assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:back//tei:div//tei:pb', namespaces=NS)) > 1
-    assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:body//tei:div//tei:pb', namespaces=NS)) >= 80
+    assert len(tei.tree.xpath("/tei:TEI/tei:text/tei:front//tei:div//tei:pb", namespaces=NS)) > 1
+    assert len(tei.tree.xpath("/tei:TEI/tei:text/tei:front/tei:titlePage", namespaces=NS)) == 1
+    assert len(tei.tree.xpath("/tei:TEI/tei:text/tei:back//tei:div//tei:pb", namespaces=NS)) > 1
+    assert len(tei.tree.xpath("/tei:TEI/tei:text/tei:body//tei:div//tei:pb", namespaces=NS)) >= 80
     # check pb/@corresp refs
-    assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:body//tei:div//tei:pb/@corresp', namespaces=NS)) >= 80
+    assert len(tei.tree.xpath("/tei:TEI/tei:text/tei:body//tei:div//tei:pb/@corresp", namespaces=NS)) >= 80
     # check idrefs for facsimlie/graphic/@id | pb/@n links:
-    assert len(tei.tree.xpath('/tei:TEI/tei:facsimile/tei:graphic[concat("#",@id)=/tei:TEI/tei:text/tei:body//tei:div//tei:pb/@facs]', namespaces=NS)) >= 80
+    assert (
+        len(
+            tei.tree.xpath(
+                '/tei:TEI/tei:facsimile/tei:graphic[concat("#",@id)=/tei:TEI/tei:text/tei:body//tei:div//tei:pb/@facs]',
+                namespaces=NS,
+            )
+        )
+        >= 80
+    )
     # check lines
-    assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:body//tei:div//tei:p//tei:lb', namespaces=NS)) > 800
+    assert len(tei.tree.xpath("/tei:TEI/tei:text/tei:body//tei:div//tei:p//tei:lb", namespaces=NS)) > 800
     # check lb/@n refs
-    assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:body//tei:div//tei:p//tei:lb/@n', namespaces=NS)) > 800
+    assert len(tei.tree.xpath("/tei:TEI/tei:text/tei:body//tei:div//tei:p//tei:lb/@n", namespaces=NS)) > 800
+
 
 def test_string_dumping():
     tei = Tei()
     assert tei.tostring().startswith(b"<")
+
 
 def test_data_assignment(subtests):
     """
@@ -119,11 +137,11 @@ def test_data_assignment(subtests):
         assert tei.publication_level == "m"
 
     with subtests.test("Check first author"):
-        tei.add_author({'family': 'Mustermann', 'given': 'Max', 'date': '12.10.1956', 'title': 'Dr.'}, "personal")
+        tei.add_author({"family": "Mustermann", "given": "Max", "date": "12.10.1956", "title": "Dr."}, "personal")
         assert tei.authors == ["Mustermann, Max, Dr."]
 
     with subtests.test("Check further author (organisation)"):
-        tei.add_author({'family': 'Mustermann', 'given': 'Max', 'date': '12.10.1956', 'title': 'Dr.'}, "corporate")
+        tei.add_author({"family": "Mustermann", "given": "Max", "date": "12.10.1956", "title": "Dr."}, "corporate")
         assert tei.authors == ["Mustermann, Max, Dr.", "Mustermann Max 12.10.1956 Dr."]
 
     with subtests.test("Check date(s)"):
@@ -205,5 +223,7 @@ def test_data_assignment(subtests):
         assert tei.collections == ["LDP"]
 
     with subtests.test("Check bibl"):
-        tei.compile_bibl('M')
-        assert tei.bibl.text == "Mustermann, Max, Dr.; Mustermann Max 12.10.1956 Dr.: Testbuch. Dresden u. a., 01.01.1823."
+        tei.compile_bibl("M")
+        assert (
+            tei.bibl.text == "Mustermann, Max, Dr.; Mustermann Max 12.10.1956 Dr.: Testbuch. Dresden u. a., 01.01.1823."
+        )

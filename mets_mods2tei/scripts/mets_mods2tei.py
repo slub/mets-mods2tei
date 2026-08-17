@@ -10,14 +10,15 @@ from urllib.request import urlopen
 from mets_mods2tei import Mets
 from mets_mods2tei import Tei
 
-@click.command(context_settings={'help_option_names': ['-h', '--help']})
-@click.argument('mets', required=True)
-@click.option('-O', '--output', default="-", type=click.File("wb", lazy=False), help="File path to write TEI output to")
-@click.option('-o', '--ocr', is_flag=True, default=False, help="Serialize OCR into resulting TEI")
-@click.option('-T', '--text-group', default="FULLTEXT", help="File group which contains the full-text")
-@click.option('-I', '--img-group', default="DEFAULT", help="File group which contains the images")
-@click.option('-r', '--add-refs', type=click.Choice(['page', 'line']), multiple=True, default=['page'])
-@click.option('-l', '--log-level', type=click.Choice(['DEBUG', 'INFO', 'WARN', 'ERROR', 'OFF']), default='WARN')
+
+@click.command(context_settings={"help_option_names": ["-h", "--help"]})
+@click.argument("mets", required=True)
+@click.option("-O", "--output", default="-", type=click.File("wb", lazy=False), help="File path to write TEI output to")
+@click.option("-o", "--ocr", is_flag=True, default=False, help="Serialize OCR into resulting TEI")
+@click.option("-T", "--text-group", default="FULLTEXT", help="File group which contains the full-text")
+@click.option("-I", "--img-group", default="DEFAULT", help="File group which contains the images")
+@click.option("-r", "--add-refs", type=click.Choice(["page", "line"]), multiple=True, default=["page"])
+@click.option("-l", "--log-level", type=click.Choice(["DEBUG", "INFO", "WARN", "ERROR", "OFF"]), default="WARN")
 def cli(mets, output, ocr, text_group, img_group, add_refs, log_level):
     """METS: File containing or URL pointing to the METS/MODS XML to be converted
 
@@ -65,5 +66,5 @@ def cli(mets, output, ocr, text_group, img_group, add_refs, log_level):
     output.write(tei.tostring())
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cli()

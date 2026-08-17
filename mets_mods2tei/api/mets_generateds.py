@@ -27,6 +27,7 @@ import base64
 import datetime as datetime_
 import warnings as warnings_
 import decimal as decimal_
+
 try:
     from lxml import etree as etree_
 except ImportError:
@@ -57,6 +58,7 @@ def parsexml_(infile, parser=None, **kwargs):
     doc = etree_.parse(infile, parser=parser, **kwargs)
     return doc
 
+
 def parsexmlstring_(instring, parser=None, **kwargs):
     if parser is None:
         # Use the lxml ElementTree compatible parser so that, e.g.,
@@ -68,6 +70,7 @@ def parsexmlstring_(instring, parser=None, **kwargs):
             parser = etree_.XMLParser()
     element = etree_.fromstring(instring, parser=parser, **kwargs)
     return element
+
 
 #
 # Namespace prefix definition table (and other attributes, too)
@@ -135,151 +138,184 @@ try:
 except ImportError as exp:
 
     class GeneratedsSuper(object):
-        tzoff_pattern = re_.compile(r'(\+|-)((0\d|1[0-3]):[0-5]\d|14:00)$')
+        tzoff_pattern = re_.compile(r"(\+|-)((0\d|1[0-3]):[0-5]\d|14:00)$")
+
         class _FixedOffsetTZ(datetime_.tzinfo):
             def __init__(self, offset, name):
                 self.__offset = datetime_.timedelta(minutes=offset)
                 self.__name = name
+
             def utcoffset(self, dt):
                 return self.__offset
+
             def tzname(self, dt):
                 return self.__name
+
             def dst(self, dt):
                 return None
-        def gds_format_string(self, input_data, input_name=''):
+
+        def gds_format_string(self, input_data, input_name=""):
             return input_data
-        def gds_parse_string(self, input_data, node=None, input_name=''):
+
+        def gds_parse_string(self, input_data, node=None, input_name=""):
             return input_data
-        def gds_validate_string(self, input_data, node=None, input_name=''):
+
+        def gds_validate_string(self, input_data, node=None, input_name=""):
             if not input_data:
-                return ''
+                return ""
             else:
                 return input_data
-        def gds_format_base64(self, input_data, input_name=''):
+
+        def gds_format_base64(self, input_data, input_name=""):
             return base64.b64encode(input_data)
-        def gds_validate_base64(self, input_data, node=None, input_name=''):
+
+        def gds_validate_base64(self, input_data, node=None, input_name=""):
             return input_data
-        def gds_format_integer(self, input_data, input_name=''):
-            return '%d' % input_data
-        def gds_parse_integer(self, input_data, node=None, input_name=''):
+
+        def gds_format_integer(self, input_data, input_name=""):
+            return "%d" % input_data
+
+        def gds_parse_integer(self, input_data, node=None, input_name=""):
             try:
                 ival = int(input_data)
             except (TypeError, ValueError) as exp:
-                raise_parse_error(node, 'requires integer: %s' % exp)
+                raise_parse_error(node, "requires integer: %s" % exp)
             return ival
-        def gds_validate_integer(self, input_data, node=None, input_name=''):
+
+        def gds_validate_integer(self, input_data, node=None, input_name=""):
             return input_data
-        def gds_format_integer_list(self, input_data, input_name=''):
-            return '%s' % ' '.join(input_data)
-        def gds_validate_integer_list(
-                self, input_data, node=None, input_name=''):
+
+        def gds_format_integer_list(self, input_data, input_name=""):
+            return "%s" % " ".join(input_data)
+
+        def gds_validate_integer_list(self, input_data, node=None, input_name=""):
             values = input_data.split()
             for value in values:
                 try:
                     int(value)
                 except (TypeError, ValueError):
-                    raise_parse_error(node, 'Requires sequence of integers')
+                    raise_parse_error(node, "Requires sequence of integers")
             return values
-        def gds_format_float(self, input_data, input_name=''):
-            return ('%.15f' % input_data).rstrip('0')
-        def gds_parse_float(self, input_data, node=None, input_name=''):
+
+        def gds_format_float(self, input_data, input_name=""):
+            return ("%.15f" % input_data).rstrip("0")
+
+        def gds_parse_float(self, input_data, node=None, input_name=""):
             try:
                 fval_ = float(input_data)
             except (TypeError, ValueError) as exp:
-                raise_parse_error(node, 'requires float or double: %s' % exp)
+                raise_parse_error(node, "requires float or double: %s" % exp)
             return fval_
-        def gds_validate_float(self, input_data, node=None, input_name=''):
+
+        def gds_validate_float(self, input_data, node=None, input_name=""):
             try:
                 value = float(input_data)
             except (TypeError, ValueError):
-                raise_parse_error(node, 'Requires sequence of floats')
+                raise_parse_error(node, "Requires sequence of floats")
             return value
-        def gds_format_float_list(self, input_data, input_name=''):
-            return '%s' % ' '.join(input_data)
-        def gds_validate_float_list(
-                self, input_data, node=None, input_name=''):
+
+        def gds_format_float_list(self, input_data, input_name=""):
+            return "%s" % " ".join(input_data)
+
+        def gds_validate_float_list(self, input_data, node=None, input_name=""):
             values = input_data.split()
             for value in values:
                 try:
                     float(value)
                 except (TypeError, ValueError):
-                    raise_parse_error(node, 'Requires sequence of floats')
+                    raise_parse_error(node, "Requires sequence of floats")
             return values
-        def gds_format_decimal(self, input_data, input_name=''):
-            return ('%0.10f' % input_data).rstrip('0')
-        def gds_parse_decimal(self, input_data, node=None, input_name=''):
+
+        def gds_format_decimal(self, input_data, input_name=""):
+            return ("%0.10f" % input_data).rstrip("0")
+
+        def gds_parse_decimal(self, input_data, node=None, input_name=""):
             try:
                 decimal_.Decimal(input_data)
             except (TypeError, ValueError):
-                raise_parse_error(node, 'Requires decimal value')
+                raise_parse_error(node, "Requires decimal value")
             return input_data
-        def gds_validate_decimal(self, input_data, node=None, input_name=''):
+
+        def gds_validate_decimal(self, input_data, node=None, input_name=""):
             try:
                 value = decimal_.Decimal(input_data)
             except (TypeError, ValueError):
-                raise_parse_error(node, 'Requires decimal value')
+                raise_parse_error(node, "Requires decimal value")
             return value
-        def gds_format_decimal_list(self, input_data, input_name=''):
-            return '%s' % ' '.join(input_data)
-        def gds_validate_decimal_list(
-                self, input_data, node=None, input_name=''):
+
+        def gds_format_decimal_list(self, input_data, input_name=""):
+            return "%s" % " ".join(input_data)
+
+        def gds_validate_decimal_list(self, input_data, node=None, input_name=""):
             values = input_data.split()
             for value in values:
                 try:
                     decimal_.Decimal(value)
                 except (TypeError, ValueError):
-                    raise_parse_error(node, 'Requires sequence of decimal values')
+                    raise_parse_error(node, "Requires sequence of decimal values")
             return values
-        def gds_format_double(self, input_data, input_name=''):
-            return '%e' % input_data
-        def gds_parse_double(self, input_data, node=None, input_name=''):
+
+        def gds_format_double(self, input_data, input_name=""):
+            return "%e" % input_data
+
+        def gds_parse_double(self, input_data, node=None, input_name=""):
             try:
                 fval_ = float(input_data)
             except (TypeError, ValueError) as exp:
-                raise_parse_error(node, 'requires float or double: %s' % exp)
+                raise_parse_error(node, "requires float or double: %s" % exp)
             return fval_
-        def gds_validate_double(self, input_data, node=None, input_name=''):
+
+        def gds_validate_double(self, input_data, node=None, input_name=""):
             return input_data
-        def gds_format_double_list(self, input_data, input_name=''):
-            return '%s' % ' '.join(input_data)
-        def gds_validate_double_list(
-                self, input_data, node=None, input_name=''):
+
+        def gds_format_double_list(self, input_data, input_name=""):
+            return "%s" % " ".join(input_data)
+
+        def gds_validate_double_list(self, input_data, node=None, input_name=""):
             values = input_data.split()
             for value in values:
                 try:
                     float(value)
                 except (TypeError, ValueError):
-                    raise_parse_error(node, 'Requires sequence of doubles')
+                    raise_parse_error(node, "Requires sequence of doubles")
             return values
-        def gds_format_boolean(self, input_data, input_name=''):
-            return ('%s' % input_data).lower()
-        def gds_parse_boolean(self, input_data, node=None, input_name=''):
-            if input_data in ('true', '1'):
+
+        def gds_format_boolean(self, input_data, input_name=""):
+            return ("%s" % input_data).lower()
+
+        def gds_parse_boolean(self, input_data, node=None, input_name=""):
+            if input_data in ("true", "1"):
                 bval = True
-            elif input_data in ('false', '0'):
+            elif input_data in ("false", "0"):
                 bval = False
             else:
-                raise_parse_error(node, 'requires boolean')
+                raise_parse_error(node, "requires boolean")
             return bval
-        def gds_validate_boolean(self, input_data, node=None, input_name=''):
+
+        def gds_validate_boolean(self, input_data, node=None, input_name=""):
             return input_data
-        def gds_format_boolean_list(self, input_data, input_name=''):
-            return '%s' % ' '.join(input_data)
-        def gds_validate_boolean_list(
-                self, input_data, node=None, input_name=''):
+
+        def gds_format_boolean_list(self, input_data, input_name=""):
+            return "%s" % " ".join(input_data)
+
+        def gds_validate_boolean_list(self, input_data, node=None, input_name=""):
             values = input_data.split()
             for value in values:
-                if value not in ('true', '1', 'false', '0', ):
-                    raise_parse_error(
-                        node,
-                        'Requires sequence of booleans '
-                        '("true", "1", "false", "0")')
+                if value not in (
+                    "true",
+                    "1",
+                    "false",
+                    "0",
+                ):
+                    raise_parse_error(node, 'Requires sequence of booleans ("true", "1", "false", "0")')
             return values
-        def gds_validate_datetime(self, input_data, node=None, input_name=''):
+
+        def gds_validate_datetime(self, input_data, node=None, input_name=""):
             return input_data
-        def gds_format_datetime(self, input_data, input_name=''):
+
+        def gds_format_datetime(self, input_data, input_name=""):
             if input_data.microsecond == 0:
-                _svalue = '%04d-%02d-%02dT%02d:%02d:%02d' % (
+                _svalue = "%04d-%02d-%02dT%02d:%02d:%02d" % (
                     input_data.year,
                     input_data.month,
                     input_data.day,
@@ -288,63 +324,65 @@ except ImportError as exp:
                     input_data.second,
                 )
             else:
-                _svalue = '%04d-%02d-%02dT%02d:%02d:%02d.%s' % (
+                _svalue = "%04d-%02d-%02dT%02d:%02d:%02d.%s" % (
                     input_data.year,
                     input_data.month,
                     input_data.day,
                     input_data.hour,
                     input_data.minute,
                     input_data.second,
-                    ('%f' % (float(input_data.microsecond) / 1000000))[2:],
+                    ("%f" % (float(input_data.microsecond) / 1000000))[2:],
                 )
             if input_data.tzinfo is not None:
                 tzoff = input_data.tzinfo.utcoffset(input_data)
                 if tzoff is not None:
                     total_seconds = tzoff.seconds + (86400 * tzoff.days)
                     if total_seconds == 0:
-                        _svalue += 'Z'
+                        _svalue += "Z"
                     else:
                         if total_seconds < 0:
-                            _svalue += '-'
+                            _svalue += "-"
                             total_seconds *= -1
                         else:
-                            _svalue += '+'
+                            _svalue += "+"
                         hours = total_seconds // 3600
                         minutes = (total_seconds - (hours * 3600)) // 60
-                        _svalue += '{0:02d}:{1:02d}'.format(hours, minutes)
+                        _svalue += "{0:02d}:{1:02d}".format(hours, minutes)
             return _svalue
+
         @classmethod
         def gds_parse_datetime(cls, input_data):
             tz = None
-            if input_data[-1] == 'Z':
-                tz = GeneratedsSuper._FixedOffsetTZ(0, 'UTC')
+            if input_data[-1] == "Z":
+                tz = GeneratedsSuper._FixedOffsetTZ(0, "UTC")
                 input_data = input_data[:-1]
             else:
                 results = GeneratedsSuper.tzoff_pattern.search(input_data)
                 if results is not None:
-                    tzoff_parts = results.group(2).split(':')
+                    tzoff_parts = results.group(2).split(":")
                     tzoff = int(tzoff_parts[0]) * 60 + int(tzoff_parts[1])
-                    if results.group(1) == '-':
+                    if results.group(1) == "-":
                         tzoff *= -1
-                    tz = GeneratedsSuper._FixedOffsetTZ(
-                        tzoff, results.group(0))
+                    tz = GeneratedsSuper._FixedOffsetTZ(tzoff, results.group(0))
                     input_data = input_data[:-6]
-            time_parts = input_data.split('.')
+            time_parts = input_data.split(".")
             if len(time_parts) > 1:
-                micro_seconds = int(float('0.' + time_parts[1]) * 1000000)
-                input_data = '%s.%s' % (
-                    time_parts[0], "{}".format(micro_seconds).rjust(6, "0"), )
-                dt = datetime_.datetime.strptime(
-                    input_data, '%Y-%m-%dT%H:%M:%S.%f')
+                micro_seconds = int(float("0." + time_parts[1]) * 1000000)
+                input_data = "%s.%s" % (
+                    time_parts[0],
+                    "{}".format(micro_seconds).rjust(6, "0"),
+                )
+                dt = datetime_.datetime.strptime(input_data, "%Y-%m-%dT%H:%M:%S.%f")
             else:
-                dt = datetime_.datetime.strptime(
-                    input_data, '%Y-%m-%dT%H:%M:%S')
+                dt = datetime_.datetime.strptime(input_data, "%Y-%m-%dT%H:%M:%S")
             dt = dt.replace(tzinfo=tz)
             return dt
-        def gds_validate_date(self, input_data, node=None, input_name=''):
+
+        def gds_validate_date(self, input_data, node=None, input_name=""):
             return input_data
-        def gds_format_date(self, input_data, input_name=''):
-            _svalue = '%04d-%02d-%02d' % (
+
+        def gds_format_date(self, input_data, input_name=""):
+            _svalue = "%04d-%02d-%02d" % (
                 input_data.year,
                 input_data.month,
                 input_data.day,
@@ -355,71 +393,73 @@ except ImportError as exp:
                     if tzoff is not None:
                         total_seconds = tzoff.seconds + (86400 * tzoff.days)
                         if total_seconds == 0:
-                            _svalue += 'Z'
+                            _svalue += "Z"
                         else:
                             if total_seconds < 0:
-                                _svalue += '-'
+                                _svalue += "-"
                                 total_seconds *= -1
                             else:
-                                _svalue += '+'
+                                _svalue += "+"
                             hours = total_seconds // 3600
                             minutes = (total_seconds - (hours * 3600)) // 60
-                            _svalue += '{0:02d}:{1:02d}'.format(
-                                hours, minutes)
+                            _svalue += "{0:02d}:{1:02d}".format(hours, minutes)
             except AttributeError:
                 pass
             return _svalue
+
         @classmethod
         def gds_parse_date(cls, input_data):
             tz = None
-            if input_data[-1] == 'Z':
-                tz = GeneratedsSuper._FixedOffsetTZ(0, 'UTC')
+            if input_data[-1] == "Z":
+                tz = GeneratedsSuper._FixedOffsetTZ(0, "UTC")
                 input_data = input_data[:-1]
             else:
                 results = GeneratedsSuper.tzoff_pattern.search(input_data)
                 if results is not None:
-                    tzoff_parts = results.group(2).split(':')
+                    tzoff_parts = results.group(2).split(":")
                     tzoff = int(tzoff_parts[0]) * 60 + int(tzoff_parts[1])
-                    if results.group(1) == '-':
+                    if results.group(1) == "-":
                         tzoff *= -1
-                    tz = GeneratedsSuper._FixedOffsetTZ(
-                        tzoff, results.group(0))
+                    tz = GeneratedsSuper._FixedOffsetTZ(tzoff, results.group(0))
                     input_data = input_data[:-6]
-            dt = datetime_.datetime.strptime(input_data, '%Y-%m-%d')
+            dt = datetime_.datetime.strptime(input_data, "%Y-%m-%d")
             dt = dt.replace(tzinfo=tz)
             return dt.date()
-        def gds_validate_time(self, input_data, node=None, input_name=''):
+
+        def gds_validate_time(self, input_data, node=None, input_name=""):
             return input_data
-        def gds_format_time(self, input_data, input_name=''):
+
+        def gds_format_time(self, input_data, input_name=""):
             if input_data.microsecond == 0:
-                _svalue = '%02d:%02d:%02d' % (
+                _svalue = "%02d:%02d:%02d" % (
                     input_data.hour,
                     input_data.minute,
                     input_data.second,
                 )
             else:
-                _svalue = '%02d:%02d:%02d.%s' % (
+                _svalue = "%02d:%02d:%02d.%s" % (
                     input_data.hour,
                     input_data.minute,
                     input_data.second,
-                    ('%f' % (float(input_data.microsecond) / 1000000))[2:],
+                    ("%f" % (float(input_data.microsecond) / 1000000))[2:],
                 )
             if input_data.tzinfo is not None:
                 tzoff = input_data.tzinfo.utcoffset(input_data)
                 if tzoff is not None:
                     total_seconds = tzoff.seconds + (86400 * tzoff.days)
                     if total_seconds == 0:
-                        _svalue += 'Z'
+                        _svalue += "Z"
                     else:
                         if total_seconds < 0:
-                            _svalue += '-'
+                            _svalue += "-"
                             total_seconds *= -1
                         else:
-                            _svalue += '+'
+                            _svalue += "+"
                         hours = total_seconds // 3600
                         minutes = (total_seconds - (hours * 3600)) // 60
-                        _svalue += '{0:02d}:{1:02d}'.format(hours, minutes)
+                        _svalue += "{0:02d}:{1:02d}".format(hours, minutes)
             return _svalue
+
         def gds_validate_simple_patterns(self, patterns, target):
             # pat is a list of lists of strings/patterns.
             # The target value must match at least one of the patterns
@@ -436,101 +476,116 @@ except ImportError as exp:
                     found1 = False
                     break
             return found1
+
         @classmethod
         def gds_parse_time(cls, input_data):
             tz = None
-            if input_data[-1] == 'Z':
-                tz = GeneratedsSuper._FixedOffsetTZ(0, 'UTC')
+            if input_data[-1] == "Z":
+                tz = GeneratedsSuper._FixedOffsetTZ(0, "UTC")
                 input_data = input_data[:-1]
             else:
                 results = GeneratedsSuper.tzoff_pattern.search(input_data)
                 if results is not None:
-                    tzoff_parts = results.group(2).split(':')
+                    tzoff_parts = results.group(2).split(":")
                     tzoff = int(tzoff_parts[0]) * 60 + int(tzoff_parts[1])
-                    if results.group(1) == '-':
+                    if results.group(1) == "-":
                         tzoff *= -1
-                    tz = GeneratedsSuper._FixedOffsetTZ(
-                        tzoff, results.group(0))
+                    tz = GeneratedsSuper._FixedOffsetTZ(tzoff, results.group(0))
                     input_data = input_data[:-6]
-            if len(input_data.split('.')) > 1:
-                dt = datetime_.datetime.strptime(input_data, '%H:%M:%S.%f')
+            if len(input_data.split(".")) > 1:
+                dt = datetime_.datetime.strptime(input_data, "%H:%M:%S.%f")
             else:
-                dt = datetime_.datetime.strptime(input_data, '%H:%M:%S')
+                dt = datetime_.datetime.strptime(input_data, "%H:%M:%S")
             dt = dt.replace(tzinfo=tz)
             return dt.time()
+
         def gds_str_lower(self, instring):
             return instring.lower()
+
         def get_path_(self, node):
             path_list = []
             self.get_path_list_(node, path_list)
             path_list.reverse()
-            path = '/'.join(path_list)
+            path = "/".join(path_list)
             return path
-        Tag_strip_pattern_ = re_.compile(r'\{.*\}')
+
+        Tag_strip_pattern_ = re_.compile(r"\{.*\}")
+
         def get_path_list_(self, node, path_list):
             if node is None:
                 return
-            tag = GeneratedsSuper.Tag_strip_pattern_.sub('', node.tag)
+            tag = GeneratedsSuper.Tag_strip_pattern_.sub("", node.tag)
             if tag:
                 path_list.append(tag)
             self.get_path_list_(node.getparent(), path_list)
+
         def get_class_obj_(self, node, default_class=None):
             class_obj1 = default_class
-            if 'xsi' in node.nsmap:
-                classname = node.get('{%s}type' % node.nsmap['xsi'])
+            if "xsi" in node.nsmap:
+                classname = node.get("{%s}type" % node.nsmap["xsi"])
                 if classname is not None:
-                    names = classname.split(':')
+                    names = classname.split(":")
                     if len(names) == 2:
                         classname = names[1]
                     class_obj2 = globals().get(classname)
                     if class_obj2 is not None:
                         class_obj1 = class_obj2
             return class_obj1
+
         def gds_build_any(self, node, type_name=None):
             content = etree_.tostring(node, encoding="unicode")
             return content
+
         @classmethod
         def gds_reverse_node_mapping(cls, mapping):
             return dict(((v, k) for k, v in mapping.items()))
+
         @staticmethod
         def gds_encode(instring):
             if sys.version_info.major == 2:
                 if ExternalEncoding:
                     encoding = ExternalEncoding
                 else:
-                    encoding = 'utf-8'
+                    encoding = "utf-8"
                 return instring.encode(encoding)
             else:
                 return instring
+
         @staticmethod
         def convert_unicode(instring):
             if isinstance(instring, str):
                 result = quote_xml(instring)
             elif sys.version_info.major == 2 and isinstance(instring, unicode):
-                result = quote_xml(instring).encode('utf8')
+                result = quote_xml(instring).encode("utf8")
             else:
                 result = GeneratedsSuper.gds_encode(str(instring))
             return result
+
         def __eq__(self, other):
             if type(self) != type(other):
                 return False
             return self.__dict__ == other.__dict__
+
         def __ne__(self, other):
             return not self.__eq__(other)
+
         # Django ETL transform hooks.
         def gds_djo_etl_transform(self):
             pass
+
         def gds_djo_etl_transform_db_obj(self, dbobj):
             pass
+
         # SQLAlchemy ETL transform hooks.
         def gds_sqa_etl_transform(self):
             return 0, None
+
         def gds_sqa_etl_transform_db_obj(self, dbobj):
             pass
 
     def getSubclassFromModule_(module, class_):
         """Get the subclass of a class from a specific module."""
-        name = class_.__name__ + 'Sub'
+        name = class_.__name__ + "Sub"
         if hasattr(module, name):
             return getattr(module, name)
         else:
@@ -556,10 +611,10 @@ except ImportError as exp:
 # Globals
 #
 
-ExternalEncoding = ''
-Tag_pattern_ = re_.compile(r'({.*})?(.*)')
+ExternalEncoding = ""
+Tag_pattern_ = re_.compile(r"({.*})?(.*)")
 String_cleanup_pat_ = re_.compile(r"[\n\r\s]+")
-Namespace_extract_pat_ = re_.compile(r'{(.*)}(.*)')
+Namespace_extract_pat_ = re_.compile(r"{(.*)}(.*)")
 CDATA_pattern_ = re_.compile(r"<!\[CDATA\[.*?\]\]>", re_.DOTALL)
 
 # Change this to redirect the generated superclass module to use a
@@ -574,21 +629,21 @@ CurrentSubclassModule_ = None
 def showIndent(outfile, level, pretty_print=True):
     if pretty_print:
         for idx in range(level):
-            outfile.write('    ')
+            outfile.write("    ")
 
 
 def quote_xml(inStr):
     "Escape markup chars, but do not modify CDATA sections."
     if not inStr:
-        return ''
-    s1 = (isinstance(inStr, BaseStrType_) and inStr or '%s' % inStr)
-    s2 = ''
+        return ""
+    s1 = isinstance(inStr, BaseStrType_) and inStr or "%s" % inStr
+    s2 = ""
     pos = 0
     matchobjects = CDATA_pattern_.finditer(s1)
     for mo in matchobjects:
-        s3 = s1[pos:mo.start()]
+        s3 = s1[pos : mo.start()]
         s2 += quote_xml_aux(s3)
-        s2 += s1[mo.start():mo.end()]
+        s2 += s1[mo.start() : mo.end()]
         pos = mo.end()
     s3 = s1[pos:]
     s2 += quote_xml_aux(s3)
@@ -596,17 +651,17 @@ def quote_xml(inStr):
 
 
 def quote_xml_aux(inStr):
-    s1 = inStr.replace('&', '&amp;')
-    s1 = s1.replace('<', '&lt;')
-    s1 = s1.replace('>', '&gt;')
+    s1 = inStr.replace("&", "&amp;")
+    s1 = s1.replace("<", "&lt;")
+    s1 = s1.replace(">", "&gt;")
     return s1
 
 
 def quote_attrib(inStr):
-    s1 = (isinstance(inStr, BaseStrType_) and inStr or '%s' % inStr)
-    s1 = s1.replace('&', '&amp;')
-    s1 = s1.replace('<', '&lt;')
-    s1 = s1.replace('>', '&gt;')
+    s1 = isinstance(inStr, BaseStrType_) and inStr or "%s" % inStr
+    s1 = s1.replace("&", "&amp;")
+    s1 = s1.replace("<", "&lt;")
+    s1 = s1.replace(">", "&gt;")
     if '"' in s1:
         if "'" in s1:
             s1 = '"%s"' % s1.replace('"', "&quot;")
@@ -620,14 +675,14 @@ def quote_attrib(inStr):
 def quote_python(inStr):
     s1 = inStr
     if s1.find("'") == -1:
-        if s1.find('\n') == -1:
+        if s1.find("\n") == -1:
             return "'%s'" % s1
         else:
             return "'''%s'''" % s1
     else:
         if s1.find('"') != -1:
             s1 = s1.replace('"', '\\"')
-        if s1.find('\n') == -1:
+        if s1.find("\n") == -1:
             return '"%s"' % s1
         else:
             return '"""%s"""' % s1
@@ -637,7 +692,7 @@ def get_all_text_(node):
     if node.text is not None:
         text = node.text
     else:
-        text = ''
+        text = ""
     for child in node:
         if child.tail is not None:
             text += child.tail
@@ -646,7 +701,7 @@ def get_all_text_(node):
 
 def find_attr_value_(attr_name, node):
     attrs = node.attrib
-    attr_parts = attr_name.split(':')
+    attr_parts = attr_name.split(":")
     value = None
     if len(attr_parts) == 1:
         value = attrs.get(attr_name)
@@ -654,7 +709,13 @@ def find_attr_value_(attr_name, node):
         prefix, name = attr_parts
         namespace = node.nsmap.get(prefix)
         if namespace is not None:
-            value = attrs.get('{%s}%s' % (namespace, name, ))
+            value = attrs.get(
+                "{%s}%s"
+                % (
+                    namespace,
+                    name,
+                )
+            )
     return value
 
 
@@ -664,7 +725,11 @@ class GDSParseError(Exception):
 
 def raise_parse_error(node, msg):
     if node is not None:
-        msg = '%s (element %s/line %d)' % (msg, node.tag, node.sourceline, )
+        msg = "%s (element %s/line %d)" % (
+            msg,
+            node.tag,
+            node.sourceline,
+        )
     raise GDSParseError(msg)
 
 
@@ -684,51 +749,47 @@ class MixedContainer:
     TypeDouble = 6
     TypeBoolean = 7
     TypeBase64 = 8
+
     def __init__(self, category, content_type, name, value):
         self.category = category
         self.content_type = content_type
         self.name = name
         self.value = value
+
     def getCategory(self):
         return self.category
+
     def getContenttype(self, content_type):
         return self.content_type
+
     def getValue(self):
         return self.value
+
     def getName(self):
         return self.name
-    def export(self, outfile, level, name, namespace,
-               pretty_print=True):
+
+    def export(self, outfile, level, name, namespace, pretty_print=True):
         if self.category == MixedContainer.CategoryText:
             # Prevent exporting empty content as empty lines.
             if self.value.strip():
                 outfile.write(self.value)
         elif self.category == MixedContainer.CategorySimple:
             self.exportSimple(outfile, level, name)
-        else:    # category == MixedContainer.CategoryComplex
-            self.value.export(
-                outfile, level, namespace, name_=name,
-                pretty_print=pretty_print)
+        else:  # category == MixedContainer.CategoryComplex
+            self.value.export(outfile, level, namespace, name_=name, pretty_print=pretty_print)
+
     def exportSimple(self, outfile, level, name):
         if self.content_type == MixedContainer.TypeString:
-            outfile.write('<%s>%s</%s>' % (
-                self.name, self.value, self.name))
-        elif self.content_type == MixedContainer.TypeInteger or \
-                self.content_type == MixedContainer.TypeBoolean:
-            outfile.write('<%s>%d</%s>' % (
-                self.name, self.value, self.name))
-        elif self.content_type == MixedContainer.TypeFloat or \
-                self.content_type == MixedContainer.TypeDecimal:
-            outfile.write('<%s>%f</%s>' % (
-                self.name, self.value, self.name))
+            outfile.write("<%s>%s</%s>" % (self.name, self.value, self.name))
+        elif self.content_type == MixedContainer.TypeInteger or self.content_type == MixedContainer.TypeBoolean:
+            outfile.write("<%s>%d</%s>" % (self.name, self.value, self.name))
+        elif self.content_type == MixedContainer.TypeFloat or self.content_type == MixedContainer.TypeDecimal:
+            outfile.write("<%s>%f</%s>" % (self.name, self.value, self.name))
         elif self.content_type == MixedContainer.TypeDouble:
-            outfile.write('<%s>%g</%s>' % (
-                self.name, self.value, self.name))
+            outfile.write("<%s>%g</%s>" % (self.name, self.value, self.name))
         elif self.content_type == MixedContainer.TypeBase64:
-            outfile.write('<%s>%s</%s>' % (
-                self.name,
-                base64.b64encode(self.value),
-                self.name))
+            outfile.write("<%s>%s</%s>" % (self.name, base64.b64encode(self.value), self.name))
+
     def to_etree(self, element):
         if self.category == MixedContainer.CategoryText:
             # Prevent exporting empty content as empty lines.
@@ -744,83 +805,112 @@ class MixedContainer:
                     else:
                         element.text += self.value
         elif self.category == MixedContainer.CategorySimple:
-            subelement = etree_.SubElement(
-                element, '%s' % self.name)
+            subelement = etree_.SubElement(element, "%s" % self.name)
             subelement.text = self.to_etree_simple()
-        else:    # category == MixedContainer.CategoryComplex
+        else:  # category == MixedContainer.CategoryComplex
             self.value.to_etree(element)
+
     def to_etree_simple(self):
         if self.content_type == MixedContainer.TypeString:
             text = self.value
-        elif (self.content_type == MixedContainer.TypeInteger or
-                self.content_type == MixedContainer.TypeBoolean):
-            text = '%d' % self.value
-        elif (self.content_type == MixedContainer.TypeFloat or
-                self.content_type == MixedContainer.TypeDecimal):
-            text = '%f' % self.value
+        elif self.content_type == MixedContainer.TypeInteger or self.content_type == MixedContainer.TypeBoolean:
+            text = "%d" % self.value
+        elif self.content_type == MixedContainer.TypeFloat or self.content_type == MixedContainer.TypeDecimal:
+            text = "%f" % self.value
         elif self.content_type == MixedContainer.TypeDouble:
-            text = '%g' % self.value
+            text = "%g" % self.value
         elif self.content_type == MixedContainer.TypeBase64:
-            text = '%s' % base64.b64encode(self.value)
+            text = "%s" % base64.b64encode(self.value)
         return text
+
     def exportLiteral(self, outfile, level, name):
         if self.category == MixedContainer.CategoryText:
             showIndent(outfile, level)
             outfile.write(
-                'model_.MixedContainer(%d, %d, "%s", "%s"),\n' % (
-                    self.category, self.content_type,
-                    self.name, self.value))
+                'model_.MixedContainer(%d, %d, "%s", "%s"),\n'
+                % (self.category, self.content_type, self.name, self.value)
+            )
         elif self.category == MixedContainer.CategorySimple:
             showIndent(outfile, level)
             outfile.write(
-                'model_.MixedContainer(%d, %d, "%s", "%s"),\n' % (
-                    self.category, self.content_type,
-                    self.name, self.value))
-        else:    # category == MixedContainer.CategoryComplex
+                'model_.MixedContainer(%d, %d, "%s", "%s"),\n'
+                % (self.category, self.content_type, self.name, self.value)
+            )
+        else:  # category == MixedContainer.CategoryComplex
             showIndent(outfile, level)
             outfile.write(
-                'model_.MixedContainer(%d, %d, "%s",\n' % (
-                    self.category, self.content_type, self.name,))
+                'model_.MixedContainer(%d, %d, "%s",\n'
+                % (
+                    self.category,
+                    self.content_type,
+                    self.name,
+                )
+            )
             self.value.exportLiteral(outfile, level + 1)
             showIndent(outfile, level)
-            outfile.write(')\n')
+            outfile.write(")\n")
 
 
 class MemberSpec_(object):
-    def __init__(self, name='', data_type='', container=0,
-            optional=0, child_attrs=None, choice=None):
+    def __init__(self, name="", data_type="", container=0, optional=0, child_attrs=None, choice=None):
         self.name = name
         self.data_type = data_type
         self.container = container
         self.child_attrs = child_attrs
         self.choice = choice
         self.optional = optional
-    def set_name(self, name): self.name = name
-    def get_name(self): return self.name
-    def set_data_type(self, data_type): self.data_type = data_type
-    def get_data_type_chain(self): return self.data_type
+
+    def set_name(self, name):
+        self.name = name
+
+    def get_name(self):
+        return self.name
+
+    def set_data_type(self, data_type):
+        self.data_type = data_type
+
+    def get_data_type_chain(self):
+        return self.data_type
+
     def get_data_type(self):
         if isinstance(self.data_type, list):
             if len(self.data_type) > 0:
                 return self.data_type[-1]
             else:
-                return 'xs:string'
+                return "xs:string"
         else:
             return self.data_type
-    def set_container(self, container): self.container = container
-    def get_container(self): return self.container
-    def set_child_attrs(self, child_attrs): self.child_attrs = child_attrs
-    def get_child_attrs(self): return self.child_attrs
-    def set_choice(self, choice): self.choice = choice
-    def get_choice(self): return self.choice
-    def set_optional(self, optional): self.optional = optional
-    def get_optional(self): return self.optional
+
+    def set_container(self, container):
+        self.container = container
+
+    def get_container(self):
+        return self.container
+
+    def set_child_attrs(self, child_attrs):
+        self.child_attrs = child_attrs
+
+    def get_child_attrs(self):
+        return self.child_attrs
+
+    def set_choice(self, choice):
+        self.choice = choice
+
+    def get_choice(self):
+        return self.choice
+
+    def set_optional(self, optional):
+        self.optional = optional
+
+    def get_optional(self):
+        return self.optional
 
 
 def _cast(typ, value):
     if typ is None or value is None:
         return value
     return typ(value)
+
 
 #
 # Data representation classes.
@@ -850,11 +940,29 @@ class metsType(GeneratedsSuper):
     PROFILE (string/O): Indicates to which of the registered profile(s) the
     METS document conforms. For additional information about PROFILES see
     Chapter 5 of the METS Primer."""
+
     subclass = None
     superclass = None
-    def __init__(self, ID=None, OBJID=None, LABEL=None, TYPE=None, PROFILE=None, metsHdr=None, dmdSec=None, amdSec=None, fileSec=None, structMap=None, structLink=None, behaviorSec=None, extensiontype_=None, **kwargs_):
+
+    def __init__(
+        self,
+        ID=None,
+        OBJID=None,
+        LABEL=None,
+        TYPE=None,
+        PROFILE=None,
+        metsHdr=None,
+        dmdSec=None,
+        amdSec=None,
+        fileSec=None,
+        structMap=None,
+        structLink=None,
+        behaviorSec=None,
+        extensiontype_=None,
+        **kwargs_,
+    ):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
+        self.parent_object_ = kwargs_.get("parent_object_")
         self.ID = _cast(None, ID)
         self.OBJID = _cast(None, OBJID)
         self.LABEL = _cast(None, LABEL)
@@ -881,201 +989,328 @@ class metsType(GeneratedsSuper):
             self.behaviorSec = behaviorSec
         self.anyAttributes_ = {}
         self.extensiontype_ = extensiontype_
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, metsType)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, metsType)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if metsType.subclass:
             return metsType.subclass(*args_, **kwargs_)
         else:
             return metsType(*args_, **kwargs_)
+
     factory = staticmethod(factory)
+
     def get_metsHdr(self):
         return self.metsHdr
+
     def set_metsHdr(self, metsHdr):
         self.metsHdr = metsHdr
+
     def get_dmdSec(self):
         return self.dmdSec
+
     def set_dmdSec(self, dmdSec):
         self.dmdSec = dmdSec
+
     def add_dmdSec(self, value):
         self.dmdSec.append(value)
+
     def insert_dmdSec_at(self, index, value):
         self.dmdSec.insert(index, value)
+
     def replace_dmdSec_at(self, index, value):
         self.dmdSec[index] = value
+
     def get_amdSec(self):
         return self.amdSec
+
     def set_amdSec(self, amdSec):
         self.amdSec = amdSec
+
     def add_amdSec(self, value):
         self.amdSec.append(value)
+
     def insert_amdSec_at(self, index, value):
         self.amdSec.insert(index, value)
+
     def replace_amdSec_at(self, index, value):
         self.amdSec[index] = value
+
     def get_fileSec(self):
         return self.fileSec
+
     def set_fileSec(self, fileSec):
         self.fileSec = fileSec
+
     def get_structMap(self):
         return self.structMap
+
     def set_structMap(self, structMap):
         self.structMap = structMap
+
     def add_structMap(self, value):
         self.structMap.append(value)
+
     def insert_structMap_at(self, index, value):
         self.structMap.insert(index, value)
+
     def replace_structMap_at(self, index, value):
         self.structMap[index] = value
+
     def get_structLink(self):
         return self.structLink
+
     def set_structLink(self, structLink):
         self.structLink = structLink
+
     def get_behaviorSec(self):
         return self.behaviorSec
+
     def set_behaviorSec(self, behaviorSec):
         self.behaviorSec = behaviorSec
+
     def add_behaviorSec(self, value):
         self.behaviorSec.append(value)
+
     def insert_behaviorSec_at(self, index, value):
         self.behaviorSec.insert(index, value)
+
     def replace_behaviorSec_at(self, index, value):
         self.behaviorSec[index] = value
+
     def get_ID(self):
         return self.ID
+
     def set_ID(self, ID):
         self.ID = ID
+
     def get_OBJID(self):
         return self.OBJID
+
     def set_OBJID(self, OBJID):
         self.OBJID = OBJID
+
     def get_LABEL(self):
         return self.LABEL
+
     def set_LABEL(self, LABEL):
         self.LABEL = LABEL
+
     def get_TYPE(self):
         return self.TYPE
+
     def set_TYPE(self, TYPE):
         self.TYPE = TYPE
+
     def get_PROFILE(self):
         return self.PROFILE
+
     def set_PROFILE(self, PROFILE):
         self.PROFILE = PROFILE
-    def get_anyAttributes_(self): return self.anyAttributes_
-    def set_anyAttributes_(self, anyAttributes_): self.anyAttributes_ = anyAttributes_
-    def get_extensiontype_(self): return self.extensiontype_
-    def set_extensiontype_(self, extensiontype_): self.extensiontype_ = extensiontype_
+
+    def get_anyAttributes_(self):
+        return self.anyAttributes_
+
+    def set_anyAttributes_(self, anyAttributes_):
+        self.anyAttributes_ = anyAttributes_
+
+    def get_extensiontype_(self):
+        return self.extensiontype_
+
+    def set_extensiontype_(self, extensiontype_):
+        self.extensiontype_ = extensiontype_
+
     def hasContent_(self):
         if (
-            self.metsHdr is not None or
-            self.dmdSec or
-            self.amdSec or
-            self.fileSec is not None or
-            self.structMap or
-            self.structLink is not None or
-            self.behaviorSec
+            self.metsHdr is not None
+            or self.dmdSec
+            or self.amdSec
+            or self.fileSec is not None
+            or self.structMap
+            or self.structLink is not None
+            or self.behaviorSec
         ):
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='metsType', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('metsType')
+
+    def export(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="metsType",
+        pretty_print=True,
+    ):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("metsType")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='metsType')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="metsType")
         if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='metsType', pretty_print=pretty_print)
+            outfile.write(">%s" % (eol_,))
+            self.exportChildren(outfile, level + 1, "", namespacedef_, name_="metsType", pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='metsType'):
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="metsType"):
         unique_counter = 0
         for name, value in self.anyAttributes_.items():
-            xsinamespaceprefix = 'xsi'
-            xsinamespace1 = 'http://www.w3.org/2001/XMLSchema-instance'
-            xsinamespace2 = '{%s}' % (xsinamespace1, )
+            xsinamespaceprefix = "xsi"
+            xsinamespace1 = "http://www.w3.org/2001/XMLSchema-instance"
+            xsinamespace2 = "{%s}" % (xsinamespace1,)
             if name.startswith(xsinamespace2):
-                name1 = name[len(xsinamespace2):]
-                name2 = '%s:%s' % (xsinamespaceprefix, name1, )
+                name1 = name[len(xsinamespace2) :]
+                name2 = "%s:%s" % (
+                    xsinamespaceprefix,
+                    name1,
+                )
                 if name2 not in already_processed:
                     already_processed.add(name2)
-                    outfile.write(' %s=%s' % (name2, quote_attrib(value), ))
+                    outfile.write(
+                        " %s=%s"
+                        % (
+                            name2,
+                            quote_attrib(value),
+                        )
+                    )
             else:
                 mo = re_.match(Namespace_extract_pat_, name)
                 if mo is not None:
                     namespace, name = mo.group(1, 2)
                     if name not in already_processed:
                         already_processed.add(name)
-                        if namespace == 'http://www.w3.org/XML/1998/namespace':
-                            outfile.write(' %s=%s' % (
-                                name, quote_attrib(value), ))
+                        if namespace == "http://www.w3.org/XML/1998/namespace":
+                            outfile.write(
+                                " %s=%s"
+                                % (
+                                    name,
+                                    quote_attrib(value),
+                                )
+                            )
                         else:
                             unique_counter += 1
-                            outfile.write(' xmlns:%d="%s"' % (
-                                unique_counter, namespace, ))
-                            outfile.write(' %d:%s=%s' % (
-                                unique_counter, name, quote_attrib(value), ))
+                            outfile.write(
+                                ' xmlns:%d="%s"'
+                                % (
+                                    unique_counter,
+                                    namespace,
+                                )
+                            )
+                            outfile.write(
+                                " %d:%s=%s"
+                                % (
+                                    unique_counter,
+                                    name,
+                                    quote_attrib(value),
+                                )
+                            )
                 else:
                     if name not in already_processed:
                         already_processed.add(name)
-                        outfile.write(' %s=%s' % (
-                            name, quote_attrib(value), ))
-        if self.ID is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
-            outfile.write(' ID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name='ID')), ))
-        if self.OBJID is not None and 'OBJID' not in already_processed:
-            already_processed.add('OBJID')
-            outfile.write(' OBJID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.OBJID), input_name='OBJID')), ))
-        if self.LABEL is not None and 'LABEL' not in already_processed:
-            already_processed.add('LABEL')
-            outfile.write(' LABEL=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.LABEL), input_name='LABEL')), ))
-        if self.TYPE is not None and 'TYPE' not in already_processed:
-            already_processed.add('TYPE')
-            outfile.write(' TYPE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.TYPE), input_name='TYPE')), ))
-        if self.PROFILE is not None and 'PROFILE' not in already_processed:
-            already_processed.add('PROFILE')
-            outfile.write(' PROFILE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.PROFILE), input_name='PROFILE')), ))
-        if self.extensiontype_ is not None and 'xsi:type' not in already_processed:
-            already_processed.add('xsi:type')
+                        outfile.write(
+                            " %s=%s"
+                            % (
+                                name,
+                                quote_attrib(value),
+                            )
+                        )
+        if self.ID is not None and "ID" not in already_processed:
+            already_processed.add("ID")
+            outfile.write(" ID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name="ID")),))
+        if self.OBJID is not None and "OBJID" not in already_processed:
+            already_processed.add("OBJID")
+            outfile.write(
+                " OBJID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.OBJID), input_name="OBJID")),)
+            )
+        if self.LABEL is not None and "LABEL" not in already_processed:
+            already_processed.add("LABEL")
+            outfile.write(
+                " LABEL=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.LABEL), input_name="LABEL")),)
+            )
+        if self.TYPE is not None and "TYPE" not in already_processed:
+            already_processed.add("TYPE")
+            outfile.write(
+                " TYPE=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.TYPE), input_name="TYPE")),)
+            )
+        if self.PROFILE is not None and "PROFILE" not in already_processed:
+            already_processed.add("PROFILE")
+            outfile.write(
+                " PROFILE=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.PROFILE), input_name="PROFILE")),)
+            )
+        if self.extensiontype_ is not None and "xsi:type" not in already_processed:
+            already_processed.add("xsi:type")
             outfile.write(' xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"')
             if ":" not in self.extensiontype_:
-                imported_ns_type_prefix_ = GenerateDSNamespaceTypePrefixes_.get(self.extensiontype_, '')
+                imported_ns_type_prefix_ = GenerateDSNamespaceTypePrefixes_.get(self.extensiontype_, "")
                 outfile.write(' xsi:type="%s%s"' % (imported_ns_type_prefix_, self.extensiontype_))
             else:
                 outfile.write(' xsi:type="%s"' % self.extensiontype_)
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='metsType', fromsubclass_=False, pretty_print=True):
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="metsType",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.metsHdr is not None:
-            self.metsHdr.export(outfile, level, namespaceprefix_, namespacedef_='', name_='metsHdr', pretty_print=pretty_print)
+            self.metsHdr.export(
+                outfile, level, namespaceprefix_, namespacedef_="", name_="metsHdr", pretty_print=pretty_print
+            )
         for dmdSec_ in self.dmdSec:
-            dmdSec_.export(outfile, level, namespaceprefix_, namespacedef_='', name_='dmdSec', pretty_print=pretty_print)
+            dmdSec_.export(
+                outfile, level, namespaceprefix_, namespacedef_="", name_="dmdSec", pretty_print=pretty_print
+            )
         for amdSec_ in self.amdSec:
-            amdSec_.export(outfile, level, namespaceprefix_, namespacedef_='', name_='amdSec', pretty_print=pretty_print)
+            amdSec_.export(
+                outfile, level, namespaceprefix_, namespacedef_="", name_="amdSec", pretty_print=pretty_print
+            )
         if self.fileSec is not None:
-            self.fileSec.export(outfile, level, namespaceprefix_, namespacedef_='', name_='fileSec', pretty_print=pretty_print)
+            self.fileSec.export(
+                outfile, level, namespaceprefix_, namespacedef_="", name_="fileSec", pretty_print=pretty_print
+            )
         for structMap_ in self.structMap:
-            structMap_.export(outfile, level, namespaceprefix_, namespacedef_='', name_='structMap', pretty_print=pretty_print)
+            structMap_.export(
+                outfile, level, namespaceprefix_, namespacedef_="", name_="structMap", pretty_print=pretty_print
+            )
         if self.structLink is not None:
-            self.structLink.export(outfile, level, namespaceprefix_, namespacedef_='', name_='structLink', pretty_print=pretty_print)
+            self.structLink.export(
+                outfile, level, namespaceprefix_, namespacedef_="", name_="structLink", pretty_print=pretty_print
+            )
         for behaviorSec_ in self.behaviorSec:
-            behaviorSec_.export(outfile, level, namespaceprefix_, namespacedef_='', name_='behaviorSec', pretty_print=pretty_print)
+            behaviorSec_.export(
+                outfile, level, namespaceprefix_, namespacedef_="", name_="behaviorSec", pretty_print=pretty_print
+            )
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -1083,71 +1318,75 @@ class metsType(GeneratedsSuper):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('ID', node)
-        if value is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
+        value = find_attr_value_("ID", node)
+        if value is not None and "ID" not in already_processed:
+            already_processed.add("ID")
             self.ID = value
-        value = find_attr_value_('OBJID', node)
-        if value is not None and 'OBJID' not in already_processed:
-            already_processed.add('OBJID')
+        value = find_attr_value_("OBJID", node)
+        if value is not None and "OBJID" not in already_processed:
+            already_processed.add("OBJID")
             self.OBJID = value
-        value = find_attr_value_('LABEL', node)
-        if value is not None and 'LABEL' not in already_processed:
-            already_processed.add('LABEL')
+        value = find_attr_value_("LABEL", node)
+        if value is not None and "LABEL" not in already_processed:
+            already_processed.add("LABEL")
             self.LABEL = value
-        value = find_attr_value_('TYPE', node)
-        if value is not None and 'TYPE' not in already_processed:
-            already_processed.add('TYPE')
+        value = find_attr_value_("TYPE", node)
+        if value is not None and "TYPE" not in already_processed:
+            already_processed.add("TYPE")
             self.TYPE = value
-        value = find_attr_value_('PROFILE', node)
-        if value is not None and 'PROFILE' not in already_processed:
-            already_processed.add('PROFILE')
+        value = find_attr_value_("PROFILE", node)
+        if value is not None and "PROFILE" not in already_processed:
+            already_processed.add("PROFILE")
             self.PROFILE = value
         self.anyAttributes_ = {}
         for name, value in attrs.items():
             if name not in already_processed:
                 self.anyAttributes_[name] = value
-        value = find_attr_value_('xsi:type', node)
-        if value is not None and 'xsi:type' not in already_processed:
-            already_processed.add('xsi:type')
+        value = find_attr_value_("xsi:type", node)
+        if value is not None and "xsi:type" not in already_processed:
+            already_processed.add("xsi:type")
             self.extensiontype_ = value
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
-        if nodeName_ == 'metsHdr':
+        if nodeName_ == "metsHdr":
             obj_ = metsHdrType.factory(parent_object_=self)
             obj_.build(child_)
             self.metsHdr = obj_
-            obj_.original_tagname_ = 'metsHdr'
-        elif nodeName_ == 'dmdSec':
+            obj_.original_tagname_ = "metsHdr"
+        elif nodeName_ == "dmdSec":
             obj_ = mdSecType.factory(parent_object_=self)
             obj_.build(child_)
             self.dmdSec.append(obj_)
-            obj_.original_tagname_ = 'dmdSec'
-        elif nodeName_ == 'amdSec':
+            obj_.original_tagname_ = "dmdSec"
+        elif nodeName_ == "amdSec":
             obj_ = amdSecType.factory(parent_object_=self)
             obj_.build(child_)
             self.amdSec.append(obj_)
-            obj_.original_tagname_ = 'amdSec'
-        elif nodeName_ == 'fileSec':
+            obj_.original_tagname_ = "amdSec"
+        elif nodeName_ == "fileSec":
             obj_ = fileSecType.factory(parent_object_=self)
             obj_.build(child_)
             self.fileSec = obj_
-            obj_.original_tagname_ = 'fileSec'
-        elif nodeName_ == 'structMap':
+            obj_.original_tagname_ = "fileSec"
+        elif nodeName_ == "structMap":
             obj_ = structMapType.factory(parent_object_=self)
             obj_.build(child_)
             self.structMap.append(obj_)
-            obj_.original_tagname_ = 'structMap'
-        elif nodeName_ == 'structLink':
+            obj_.original_tagname_ = "structMap"
+        elif nodeName_ == "structLink":
             obj_ = structLinkType2.factory(parent_object_=self)
             obj_.build(child_)
             self.structLink = obj_
-            obj_.original_tagname_ = 'structLink'
-        elif nodeName_ == 'behaviorSec':
+            obj_.original_tagname_ = "structLink"
+        elif nodeName_ == "behaviorSec":
             obj_ = behaviorSecType.factory(parent_object_=self)
             obj_.build(child_)
             self.behaviorSec.append(obj_)
-            obj_.original_tagname_ = 'behaviorSec'
+            obj_.original_tagname_ = "behaviorSec"
+
+
 # end class metsType
 
 
@@ -1164,11 +1403,13 @@ class amdSecType(GeneratedsSuper):
     from another element or document via an IDREF or an XPTR. For more
     information on using ID attributes for internal and external linking
     see Chapter 4 of the METS Primer."""
+
     subclass = None
     superclass = None
+
     def __init__(self, ID=None, techMD=None, rightsMD=None, sourceMD=None, digiprovMD=None, **kwargs_):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
+        self.parent_object_ = kwargs_.get("parent_object_")
         self.ID = _cast(None, ID)
         if techMD is None:
             self.techMD = []
@@ -1187,142 +1428,231 @@ class amdSecType(GeneratedsSuper):
         else:
             self.digiprovMD = digiprovMD
         self.anyAttributes_ = {}
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, amdSecType)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, amdSecType)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if amdSecType.subclass:
             return amdSecType.subclass(*args_, **kwargs_)
         else:
             return amdSecType(*args_, **kwargs_)
+
     factory = staticmethod(factory)
+
     def get_techMD(self):
         return self.techMD
+
     def set_techMD(self, techMD):
         self.techMD = techMD
+
     def add_techMD(self, value):
         self.techMD.append(value)
+
     def insert_techMD_at(self, index, value):
         self.techMD.insert(index, value)
+
     def replace_techMD_at(self, index, value):
         self.techMD[index] = value
+
     def get_rightsMD(self):
         return self.rightsMD
+
     def set_rightsMD(self, rightsMD):
         self.rightsMD = rightsMD
+
     def add_rightsMD(self, value):
         self.rightsMD.append(value)
+
     def insert_rightsMD_at(self, index, value):
         self.rightsMD.insert(index, value)
+
     def replace_rightsMD_at(self, index, value):
         self.rightsMD[index] = value
+
     def get_sourceMD(self):
         return self.sourceMD
+
     def set_sourceMD(self, sourceMD):
         self.sourceMD = sourceMD
+
     def add_sourceMD(self, value):
         self.sourceMD.append(value)
+
     def insert_sourceMD_at(self, index, value):
         self.sourceMD.insert(index, value)
+
     def replace_sourceMD_at(self, index, value):
         self.sourceMD[index] = value
+
     def get_digiprovMD(self):
         return self.digiprovMD
+
     def set_digiprovMD(self, digiprovMD):
         self.digiprovMD = digiprovMD
+
     def add_digiprovMD(self, value):
         self.digiprovMD.append(value)
+
     def insert_digiprovMD_at(self, index, value):
         self.digiprovMD.insert(index, value)
+
     def replace_digiprovMD_at(self, index, value):
         self.digiprovMD[index] = value
+
     def get_ID(self):
         return self.ID
+
     def set_ID(self, ID):
         self.ID = ID
-    def get_anyAttributes_(self): return self.anyAttributes_
-    def set_anyAttributes_(self, anyAttributes_): self.anyAttributes_ = anyAttributes_
+
+    def get_anyAttributes_(self):
+        return self.anyAttributes_
+
+    def set_anyAttributes_(self, anyAttributes_):
+        self.anyAttributes_ = anyAttributes_
+
     def hasContent_(self):
-        if (
-            self.techMD or
-            self.rightsMD or
-            self.sourceMD or
-            self.digiprovMD
-        ):
+        if self.techMD or self.rightsMD or self.sourceMD or self.digiprovMD:
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='amdSecType', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('amdSecType')
+
+    def export(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="amdSecType",
+        pretty_print=True,
+    ):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("amdSecType")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='amdSecType')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="amdSecType")
         if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='amdSecType', pretty_print=pretty_print)
+            outfile.write(">%s" % (eol_,))
+            self.exportChildren(outfile, level + 1, "", namespacedef_, name_="amdSecType", pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='amdSecType'):
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="amdSecType"):
         unique_counter = 0
         for name, value in self.anyAttributes_.items():
-            xsinamespaceprefix = 'xsi'
-            xsinamespace1 = 'http://www.w3.org/2001/XMLSchema-instance'
-            xsinamespace2 = '{%s}' % (xsinamespace1, )
+            xsinamespaceprefix = "xsi"
+            xsinamespace1 = "http://www.w3.org/2001/XMLSchema-instance"
+            xsinamespace2 = "{%s}" % (xsinamespace1,)
             if name.startswith(xsinamespace2):
-                name1 = name[len(xsinamespace2):]
-                name2 = '%s:%s' % (xsinamespaceprefix, name1, )
+                name1 = name[len(xsinamespace2) :]
+                name2 = "%s:%s" % (
+                    xsinamespaceprefix,
+                    name1,
+                )
                 if name2 not in already_processed:
                     already_processed.add(name2)
-                    outfile.write(' %s=%s' % (name2, quote_attrib(value), ))
+                    outfile.write(
+                        " %s=%s"
+                        % (
+                            name2,
+                            quote_attrib(value),
+                        )
+                    )
             else:
                 mo = re_.match(Namespace_extract_pat_, name)
                 if mo is not None:
                     namespace, name = mo.group(1, 2)
                     if name not in already_processed:
                         already_processed.add(name)
-                        if namespace == 'http://www.w3.org/XML/1998/namespace':
-                            outfile.write(' %s=%s' % (
-                                name, quote_attrib(value), ))
+                        if namespace == "http://www.w3.org/XML/1998/namespace":
+                            outfile.write(
+                                " %s=%s"
+                                % (
+                                    name,
+                                    quote_attrib(value),
+                                )
+                            )
                         else:
                             unique_counter += 1
-                            outfile.write(' xmlns:%d="%s"' % (
-                                unique_counter, namespace, ))
-                            outfile.write(' %d:%s=%s' % (
-                                unique_counter, name, quote_attrib(value), ))
+                            outfile.write(
+                                ' xmlns:%d="%s"'
+                                % (
+                                    unique_counter,
+                                    namespace,
+                                )
+                            )
+                            outfile.write(
+                                " %d:%s=%s"
+                                % (
+                                    unique_counter,
+                                    name,
+                                    quote_attrib(value),
+                                )
+                            )
                 else:
                     if name not in already_processed:
                         already_processed.add(name)
-                        outfile.write(' %s=%s' % (
-                            name, quote_attrib(value), ))
-        if self.ID is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
-            outfile.write(' ID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name='ID')), ))
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='amdSecType', fromsubclass_=False, pretty_print=True):
+                        outfile.write(
+                            " %s=%s"
+                            % (
+                                name,
+                                quote_attrib(value),
+                            )
+                        )
+        if self.ID is not None and "ID" not in already_processed:
+            already_processed.add("ID")
+            outfile.write(" ID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name="ID")),))
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="amdSecType",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         for techMD_ in self.techMD:
-            techMD_.export(outfile, level, namespaceprefix_, namespacedef_='', name_='techMD', pretty_print=pretty_print)
+            techMD_.export(
+                outfile, level, namespaceprefix_, namespacedef_="", name_="techMD", pretty_print=pretty_print
+            )
         for rightsMD_ in self.rightsMD:
-            rightsMD_.export(outfile, level, namespaceprefix_, namespacedef_='', name_='rightsMD', pretty_print=pretty_print)
+            rightsMD_.export(
+                outfile, level, namespaceprefix_, namespacedef_="", name_="rightsMD", pretty_print=pretty_print
+            )
         for sourceMD_ in self.sourceMD:
-            sourceMD_.export(outfile, level, namespaceprefix_, namespacedef_='', name_='sourceMD', pretty_print=pretty_print)
+            sourceMD_.export(
+                outfile, level, namespaceprefix_, namespacedef_="", name_="sourceMD", pretty_print=pretty_print
+            )
         for digiprovMD_ in self.digiprovMD:
-            digiprovMD_.export(outfile, level, namespaceprefix_, namespacedef_='', name_='digiprovMD', pretty_print=pretty_print)
+            digiprovMD_.export(
+                outfile, level, namespaceprefix_, namespacedef_="", name_="digiprovMD", pretty_print=pretty_print
+            )
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -1330,36 +1660,40 @@ class amdSecType(GeneratedsSuper):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('ID', node)
-        if value is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
+        value = find_attr_value_("ID", node)
+        if value is not None and "ID" not in already_processed:
+            already_processed.add("ID")
             self.ID = value
         self.anyAttributes_ = {}
         for name, value in attrs.items():
             if name not in already_processed:
                 self.anyAttributes_[name] = value
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
-        if nodeName_ == 'techMD':
+        if nodeName_ == "techMD":
             obj_ = mdSecType.factory(parent_object_=self)
             obj_.build(child_)
             self.techMD.append(obj_)
-            obj_.original_tagname_ = 'techMD'
-        elif nodeName_ == 'rightsMD':
+            obj_.original_tagname_ = "techMD"
+        elif nodeName_ == "rightsMD":
             obj_ = mdSecType.factory(parent_object_=self)
             obj_.build(child_)
             self.rightsMD.append(obj_)
-            obj_.original_tagname_ = 'rightsMD'
-        elif nodeName_ == 'sourceMD':
+            obj_.original_tagname_ = "rightsMD"
+        elif nodeName_ == "sourceMD":
             obj_ = mdSecType.factory(parent_object_=self)
             obj_.build(child_)
             self.sourceMD.append(obj_)
-            obj_.original_tagname_ = 'sourceMD'
-        elif nodeName_ == 'digiprovMD':
+            obj_.original_tagname_ = "sourceMD"
+        elif nodeName_ == "digiprovMD":
             obj_ = mdSecType.factory(parent_object_=self)
             obj_.build(child_)
             self.digiprovMD.append(obj_)
-            obj_.original_tagname_ = 'digiprovMD'
+            obj_.original_tagname_ = "digiprovMD"
+
+
 # end class amdSecType
 
 
@@ -1394,14 +1728,18 @@ class fileGrpType(GeneratedsSuper):
     and/or <FContent> elements. A USE attribute at the <FLocat> or
     <FContent> level pertains to the particular copy of the file that is
     either referenced (<FLocat>) or wrapped (<FContent>)."""
+
     subclass = None
     superclass = None
-    def __init__(self, ID=None, VERSDATE=None, ADMID=None, USE=None, fileGrp=None, file=None, extensiontype_=None, **kwargs_):
+
+    def __init__(
+        self, ID=None, VERSDATE=None, ADMID=None, USE=None, fileGrp=None, file=None, extensiontype_=None, **kwargs_
+    ):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
+        self.parent_object_ = kwargs_.get("parent_object_")
         self.ID = _cast(None, ID)
         if isinstance(VERSDATE, BaseStrType_):
-            initvalue_ = datetime_.datetime.strptime(VERSDATE, '%Y-%m-%dT%H:%M:%S')
+            initvalue_ = datetime_.datetime.strptime(VERSDATE, "%Y-%m-%dT%H:%M:%S")
         else:
             initvalue_ = VERSDATE
         self.VERSDATE = initvalue_
@@ -1417,147 +1755,236 @@ class fileGrpType(GeneratedsSuper):
             self.file = file
         self.anyAttributes_ = {}
         self.extensiontype_ = extensiontype_
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, fileGrpType)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, fileGrpType)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if fileGrpType.subclass:
             return fileGrpType.subclass(*args_, **kwargs_)
         else:
             return fileGrpType(*args_, **kwargs_)
+
     factory = staticmethod(factory)
+
     def get_fileGrp(self):
         return self.fileGrp
+
     def set_fileGrp(self, fileGrp):
         self.fileGrp = fileGrp
+
     def add_fileGrp(self, value):
         self.fileGrp.append(value)
+
     def insert_fileGrp_at(self, index, value):
         self.fileGrp.insert(index, value)
+
     def replace_fileGrp_at(self, index, value):
         self.fileGrp[index] = value
+
     def get_file(self):
         return self.file
+
     def set_file(self, file):
         self.file = file
+
     def add_file(self, value):
         self.file.append(value)
+
     def insert_file_at(self, index, value):
         self.file.insert(index, value)
+
     def replace_file_at(self, index, value):
         self.file[index] = value
+
     def get_ID(self):
         return self.ID
+
     def set_ID(self, ID):
         self.ID = ID
+
     def get_VERSDATE(self):
         return self.VERSDATE
+
     def set_VERSDATE(self, VERSDATE):
         self.VERSDATE = VERSDATE
+
     def get_ADMID(self):
         return self.ADMID
+
     def set_ADMID(self, ADMID):
         self.ADMID = ADMID
+
     def get_USE(self):
         return self.USE
+
     def set_USE(self, USE):
         self.USE = USE
-    def get_anyAttributes_(self): return self.anyAttributes_
-    def set_anyAttributes_(self, anyAttributes_): self.anyAttributes_ = anyAttributes_
-    def get_extensiontype_(self): return self.extensiontype_
-    def set_extensiontype_(self, extensiontype_): self.extensiontype_ = extensiontype_
+
+    def get_anyAttributes_(self):
+        return self.anyAttributes_
+
+    def set_anyAttributes_(self, anyAttributes_):
+        self.anyAttributes_ = anyAttributes_
+
+    def get_extensiontype_(self):
+        return self.extensiontype_
+
+    def set_extensiontype_(self, extensiontype_):
+        self.extensiontype_ = extensiontype_
+
     def hasContent_(self):
-        if (
-            self.fileGrp or
-            self.file
-        ):
+        if self.fileGrp or self.file:
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='fileGrpType', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('fileGrpType')
+
+    def export(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="fileGrpType",
+        pretty_print=True,
+    ):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("fileGrpType")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='fileGrpType')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="fileGrpType")
         if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='fileGrpType', pretty_print=pretty_print)
+            outfile.write(">%s" % (eol_,))
+            self.exportChildren(outfile, level + 1, "", namespacedef_, name_="fileGrpType", pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='fileGrpType'):
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="fileGrpType"):
         unique_counter = 0
         for name, value in self.anyAttributes_.items():
-            xsinamespaceprefix = 'xsi'
-            xsinamespace1 = 'http://www.w3.org/2001/XMLSchema-instance'
-            xsinamespace2 = '{%s}' % (xsinamespace1, )
+            xsinamespaceprefix = "xsi"
+            xsinamespace1 = "http://www.w3.org/2001/XMLSchema-instance"
+            xsinamespace2 = "{%s}" % (xsinamespace1,)
             if name.startswith(xsinamespace2):
-                name1 = name[len(xsinamespace2):]
-                name2 = '%s:%s' % (xsinamespaceprefix, name1, )
+                name1 = name[len(xsinamespace2) :]
+                name2 = "%s:%s" % (
+                    xsinamespaceprefix,
+                    name1,
+                )
                 if name2 not in already_processed:
                     already_processed.add(name2)
-                    outfile.write(' %s=%s' % (name2, quote_attrib(value), ))
+                    outfile.write(
+                        " %s=%s"
+                        % (
+                            name2,
+                            quote_attrib(value),
+                        )
+                    )
             else:
                 mo = re_.match(Namespace_extract_pat_, name)
                 if mo is not None:
                     namespace, name = mo.group(1, 2)
                     if name not in already_processed:
                         already_processed.add(name)
-                        if namespace == 'http://www.w3.org/XML/1998/namespace':
-                            outfile.write(' %s=%s' % (
-                                name, quote_attrib(value), ))
+                        if namespace == "http://www.w3.org/XML/1998/namespace":
+                            outfile.write(
+                                " %s=%s"
+                                % (
+                                    name,
+                                    quote_attrib(value),
+                                )
+                            )
                         else:
                             unique_counter += 1
-                            outfile.write(' xmlns:%d="%s"' % (
-                                unique_counter, namespace, ))
-                            outfile.write(' %d:%s=%s' % (
-                                unique_counter, name, quote_attrib(value), ))
+                            outfile.write(
+                                ' xmlns:%d="%s"'
+                                % (
+                                    unique_counter,
+                                    namespace,
+                                )
+                            )
+                            outfile.write(
+                                " %d:%s=%s"
+                                % (
+                                    unique_counter,
+                                    name,
+                                    quote_attrib(value),
+                                )
+                            )
                 else:
                     if name not in already_processed:
                         already_processed.add(name)
-                        outfile.write(' %s=%s' % (
-                            name, quote_attrib(value), ))
-        if self.ID is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
-            outfile.write(' ID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name='ID')), ))
-        if self.VERSDATE is not None and 'VERSDATE' not in already_processed:
-            already_processed.add('VERSDATE')
-            outfile.write(' VERSDATE="%s"' % self.gds_format_datetime(self.VERSDATE, input_name='VERSDATE'))
-        if self.ADMID is not None and 'ADMID' not in already_processed:
-            already_processed.add('ADMID')
-            outfile.write(' ADMID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ADMID), input_name='ADMID')), ))
-        if self.USE is not None and 'USE' not in already_processed:
-            already_processed.add('USE')
-            outfile.write(' USE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.USE), input_name='USE')), ))
-        if self.extensiontype_ is not None and 'xsi:type' not in already_processed:
-            already_processed.add('xsi:type')
+                        outfile.write(
+                            " %s=%s"
+                            % (
+                                name,
+                                quote_attrib(value),
+                            )
+                        )
+        if self.ID is not None and "ID" not in already_processed:
+            already_processed.add("ID")
+            outfile.write(" ID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name="ID")),))
+        if self.VERSDATE is not None and "VERSDATE" not in already_processed:
+            already_processed.add("VERSDATE")
+            outfile.write(' VERSDATE="%s"' % self.gds_format_datetime(self.VERSDATE, input_name="VERSDATE"))
+        if self.ADMID is not None and "ADMID" not in already_processed:
+            already_processed.add("ADMID")
+            outfile.write(
+                " ADMID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ADMID), input_name="ADMID")),)
+            )
+        if self.USE is not None and "USE" not in already_processed:
+            already_processed.add("USE")
+            outfile.write(
+                " USE=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.USE), input_name="USE")),)
+            )
+        if self.extensiontype_ is not None and "xsi:type" not in already_processed:
+            already_processed.add("xsi:type")
             outfile.write(' xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"')
             if ":" not in self.extensiontype_:
-                imported_ns_type_prefix_ = GenerateDSNamespaceTypePrefixes_.get(self.extensiontype_, '')
+                imported_ns_type_prefix_ = GenerateDSNamespaceTypePrefixes_.get(self.extensiontype_, "")
                 outfile.write(' xsi:type="%s%s"' % (imported_ns_type_prefix_, self.extensiontype_))
             else:
                 outfile.write(' xsi:type="%s"' % self.extensiontype_)
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='fileGrpType', fromsubclass_=False, pretty_print=True):
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="fileGrpType",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         for fileGrp_ in self.fileGrp:
-            fileGrp_.export(outfile, level, namespaceprefix_, namespacedef_='', name_='fileGrp', pretty_print=pretty_print)
+            fileGrp_.export(
+                outfile, level, namespaceprefix_, namespacedef_="", name_="fileGrp", pretty_print=pretty_print
+            )
         for file_ in self.file:
-            file_.export(outfile, level, namespaceprefix_, namespacedef_='', name_='file', pretty_print=pretty_print)
+            file_.export(outfile, level, namespaceprefix_, namespacedef_="", name_="file", pretty_print=pretty_print)
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -1565,46 +1992,50 @@ class fileGrpType(GeneratedsSuper):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('ID', node)
-        if value is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
+        value = find_attr_value_("ID", node)
+        if value is not None and "ID" not in already_processed:
+            already_processed.add("ID")
             self.ID = value
-        value = find_attr_value_('VERSDATE', node)
-        if value is not None and 'VERSDATE' not in already_processed:
-            already_processed.add('VERSDATE')
+        value = find_attr_value_("VERSDATE", node)
+        if value is not None and "VERSDATE" not in already_processed:
+            already_processed.add("VERSDATE")
             try:
                 self.VERSDATE = self.gds_parse_datetime(value)
             except ValueError as exp:
-                raise ValueError('Bad date-time attribute (VERSDATE): %s' % exp)
-        value = find_attr_value_('ADMID', node)
-        if value is not None and 'ADMID' not in already_processed:
-            already_processed.add('ADMID')
+                raise ValueError("Bad date-time attribute (VERSDATE): %s" % exp)
+        value = find_attr_value_("ADMID", node)
+        if value is not None and "ADMID" not in already_processed:
+            already_processed.add("ADMID")
             self.ADMID = value
-        value = find_attr_value_('USE', node)
-        if value is not None and 'USE' not in already_processed:
-            already_processed.add('USE')
+        value = find_attr_value_("USE", node)
+        if value is not None and "USE" not in already_processed:
+            already_processed.add("USE")
             self.USE = value
         self.anyAttributes_ = {}
         for name, value in attrs.items():
             if name not in already_processed:
                 self.anyAttributes_[name] = value
-        value = find_attr_value_('xsi:type', node)
-        if value is not None and 'xsi:type' not in already_processed:
-            already_processed.add('xsi:type')
+        value = find_attr_value_("xsi:type", node)
+        if value is not None and "xsi:type" not in already_processed:
+            already_processed.add("xsi:type")
             self.extensiontype_ = value
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
-        if nodeName_ == 'fileGrp':
+        if nodeName_ == "fileGrp":
             class_obj_ = self.get_class_obj_(child_, fileGrpType)
             obj_ = class_obj_.factory(parent_object_=self)
             obj_.build(child_)
             self.fileGrp.append(obj_)
-            obj_.original_tagname_ = 'fileGrp'
-        elif nodeName_ == 'file':
+            obj_.original_tagname_ = "fileGrp"
+        elif nodeName_ == "file":
             obj_ = fileType.factory(parent_object_=self)
             obj_.build(child_)
             self.file.append(obj_)
-            obj_.original_tagname_ = 'file'
+            obj_.original_tagname_ = "file"
+
+
 # end class fileGrpType
 
 
@@ -1630,121 +2061,197 @@ class structMapType(GeneratedsSuper):
     <structMap> is provided for a single object. A descriptive LABEL value,
     in that case, could clarify to users the purpose of each of the
     available structMaps."""
+
     subclass = None
     superclass = None
+
     def __init__(self, ID=None, TYPE=None, LABEL=None, div=None, **kwargs_):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
+        self.parent_object_ = kwargs_.get("parent_object_")
         self.ID = _cast(None, ID)
         self.TYPE = _cast(None, TYPE)
         self.LABEL = _cast(None, LABEL)
         self.div = div
         self.anyAttributes_ = {}
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, structMapType)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, structMapType)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if structMapType.subclass:
             return structMapType.subclass(*args_, **kwargs_)
         else:
             return structMapType(*args_, **kwargs_)
+
     factory = staticmethod(factory)
+
     def get_div(self):
         return self.div
+
     def set_div(self, div):
         self.div = div
+
     def get_ID(self):
         return self.ID
+
     def set_ID(self, ID):
         self.ID = ID
+
     def get_TYPE(self):
         return self.TYPE
+
     def set_TYPE(self, TYPE):
         self.TYPE = TYPE
+
     def get_LABEL(self):
         return self.LABEL
+
     def set_LABEL(self, LABEL):
         self.LABEL = LABEL
-    def get_anyAttributes_(self): return self.anyAttributes_
-    def set_anyAttributes_(self, anyAttributes_): self.anyAttributes_ = anyAttributes_
+
+    def get_anyAttributes_(self):
+        return self.anyAttributes_
+
+    def set_anyAttributes_(self, anyAttributes_):
+        self.anyAttributes_ = anyAttributes_
+
     def hasContent_(self):
-        if (
-            self.div is not None
-        ):
+        if self.div is not None:
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='structMapType', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('structMapType')
+
+    def export(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="structMapType",
+        pretty_print=True,
+    ):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("structMapType")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='structMapType')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="structMapType")
         if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='structMapType', pretty_print=pretty_print)
+            outfile.write(">%s" % (eol_,))
+            self.exportChildren(outfile, level + 1, "", namespacedef_, name_="structMapType", pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='structMapType'):
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="structMapType"):
         unique_counter = 0
         for name, value in self.anyAttributes_.items():
-            xsinamespaceprefix = 'xsi'
-            xsinamespace1 = 'http://www.w3.org/2001/XMLSchema-instance'
-            xsinamespace2 = '{%s}' % (xsinamespace1, )
+            xsinamespaceprefix = "xsi"
+            xsinamespace1 = "http://www.w3.org/2001/XMLSchema-instance"
+            xsinamespace2 = "{%s}" % (xsinamespace1,)
             if name.startswith(xsinamespace2):
-                name1 = name[len(xsinamespace2):]
-                name2 = '%s:%s' % (xsinamespaceprefix, name1, )
+                name1 = name[len(xsinamespace2) :]
+                name2 = "%s:%s" % (
+                    xsinamespaceprefix,
+                    name1,
+                )
                 if name2 not in already_processed:
                     already_processed.add(name2)
-                    outfile.write(' %s=%s' % (name2, quote_attrib(value), ))
+                    outfile.write(
+                        " %s=%s"
+                        % (
+                            name2,
+                            quote_attrib(value),
+                        )
+                    )
             else:
                 mo = re_.match(Namespace_extract_pat_, name)
                 if mo is not None:
                     namespace, name = mo.group(1, 2)
                     if name not in already_processed:
                         already_processed.add(name)
-                        if namespace == 'http://www.w3.org/XML/1998/namespace':
-                            outfile.write(' %s=%s' % (
-                                name, quote_attrib(value), ))
+                        if namespace == "http://www.w3.org/XML/1998/namespace":
+                            outfile.write(
+                                " %s=%s"
+                                % (
+                                    name,
+                                    quote_attrib(value),
+                                )
+                            )
                         else:
                             unique_counter += 1
-                            outfile.write(' xmlns:%d="%s"' % (
-                                unique_counter, namespace, ))
-                            outfile.write(' %d:%s=%s' % (
-                                unique_counter, name, quote_attrib(value), ))
+                            outfile.write(
+                                ' xmlns:%d="%s"'
+                                % (
+                                    unique_counter,
+                                    namespace,
+                                )
+                            )
+                            outfile.write(
+                                " %d:%s=%s"
+                                % (
+                                    unique_counter,
+                                    name,
+                                    quote_attrib(value),
+                                )
+                            )
                 else:
                     if name not in already_processed:
                         already_processed.add(name)
-                        outfile.write(' %s=%s' % (
-                            name, quote_attrib(value), ))
-        if self.ID is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
-            outfile.write(' ID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name='ID')), ))
-        if self.TYPE is not None and 'TYPE' not in already_processed:
-            already_processed.add('TYPE')
-            outfile.write(' TYPE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.TYPE), input_name='TYPE')), ))
-        if self.LABEL is not None and 'LABEL' not in already_processed:
-            already_processed.add('LABEL')
-            outfile.write(' LABEL=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.LABEL), input_name='LABEL')), ))
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='structMapType', fromsubclass_=False, pretty_print=True):
+                        outfile.write(
+                            " %s=%s"
+                            % (
+                                name,
+                                quote_attrib(value),
+                            )
+                        )
+        if self.ID is not None and "ID" not in already_processed:
+            already_processed.add("ID")
+            outfile.write(" ID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name="ID")),))
+        if self.TYPE is not None and "TYPE" not in already_processed:
+            already_processed.add("TYPE")
+            outfile.write(
+                " TYPE=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.TYPE), input_name="TYPE")),)
+            )
+        if self.LABEL is not None and "LABEL" not in already_processed:
+            already_processed.add("LABEL")
+            outfile.write(
+                " LABEL=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.LABEL), input_name="LABEL")),)
+            )
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="structMapType",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.div is not None:
-            self.div.export(outfile, level, namespaceprefix_, namespacedef_='', name_='div', pretty_print=pretty_print)
+            self.div.export(outfile, level, namespaceprefix_, namespacedef_="", name_="div", pretty_print=pretty_print)
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -1752,29 +2259,33 @@ class structMapType(GeneratedsSuper):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('ID', node)
-        if value is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
+        value = find_attr_value_("ID", node)
+        if value is not None and "ID" not in already_processed:
+            already_processed.add("ID")
             self.ID = value
-        value = find_attr_value_('TYPE', node)
-        if value is not None and 'TYPE' not in already_processed:
-            already_processed.add('TYPE')
+        value = find_attr_value_("TYPE", node)
+        if value is not None and "TYPE" not in already_processed:
+            already_processed.add("TYPE")
             self.TYPE = value
-        value = find_attr_value_('LABEL', node)
-        if value is not None and 'LABEL' not in already_processed:
-            already_processed.add('LABEL')
+        value = find_attr_value_("LABEL", node)
+        if value is not None and "LABEL" not in already_processed:
+            already_processed.add("LABEL")
             self.LABEL = value
         self.anyAttributes_ = {}
         for name, value in attrs.items():
             if name not in already_processed:
                 self.anyAttributes_[name] = value
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
-        if nodeName_ == 'div':
+        if nodeName_ == "div":
             obj_ = divType.factory(parent_object_=self)
             obj_.build(child_)
             self.div = obj_
-            obj_.original_tagname_ = 'div'
+            obj_.original_tagname_ = "div"
+
+
 # end class structMapType
 
 
@@ -1824,11 +2335,28 @@ class divType(GeneratedsSuper):
     (equivalent to DIDL DII or Digital Item Identifier, a unique external
     ID).
     xlink:label - an xlink label to be referred to by an smLink element"""
+
     subclass = None
     superclass = None
-    def __init__(self, ID=None, DMDID=None, ADMID=None, TYPE=None, CONTENTIDS=None, label=None, ORDER=None, ORDERLABEL=None, LABEL=None, mptr=None, fptr=None, div=None, **kwargs_):
+
+    def __init__(
+        self,
+        ID=None,
+        DMDID=None,
+        ADMID=None,
+        TYPE=None,
+        CONTENTIDS=None,
+        label=None,
+        ORDER=None,
+        ORDERLABEL=None,
+        LABEL=None,
+        mptr=None,
+        fptr=None,
+        div=None,
+        **kwargs_,
+    ):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
+        self.parent_object_ = kwargs_.get("parent_object_")
         self.ID = _cast(None, ID)
         self.DMDID = _cast(None, DMDID)
         self.ADMID = _cast(None, ADMID)
@@ -1850,155 +2378,229 @@ class divType(GeneratedsSuper):
             self.div = []
         else:
             self.div = div
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, divType)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, divType)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if divType.subclass:
             return divType.subclass(*args_, **kwargs_)
         else:
             return divType(*args_, **kwargs_)
+
     factory = staticmethod(factory)
+
     def get_mptr(self):
         return self.mptr
+
     def set_mptr(self, mptr):
         self.mptr = mptr
+
     def add_mptr(self, value):
         self.mptr.append(value)
+
     def insert_mptr_at(self, index, value):
         self.mptr.insert(index, value)
+
     def replace_mptr_at(self, index, value):
         self.mptr[index] = value
+
     def get_fptr(self):
         return self.fptr
+
     def set_fptr(self, fptr):
         self.fptr = fptr
+
     def add_fptr(self, value):
         self.fptr.append(value)
+
     def insert_fptr_at(self, index, value):
         self.fptr.insert(index, value)
+
     def replace_fptr_at(self, index, value):
         self.fptr[index] = value
+
     def get_div(self):
         return self.div
+
     def set_div(self, div):
         self.div = div
+
     def add_div(self, value):
         self.div.append(value)
+
     def insert_div_at(self, index, value):
         self.div.insert(index, value)
+
     def replace_div_at(self, index, value):
         self.div[index] = value
+
     def get_ID(self):
         return self.ID
+
     def set_ID(self, ID):
         self.ID = ID
+
     def get_DMDID(self):
         return self.DMDID
+
     def set_DMDID(self, DMDID):
         self.DMDID = DMDID
+
     def get_ADMID(self):
         return self.ADMID
+
     def set_ADMID(self, ADMID):
         self.ADMID = ADMID
+
     def get_TYPE(self):
         return self.TYPE
+
     def set_TYPE(self, TYPE):
         self.TYPE = TYPE
+
     def get_CONTENTIDS(self):
         return self.CONTENTIDS
+
     def set_CONTENTIDS(self, CONTENTIDS):
         self.CONTENTIDS = CONTENTIDS
+
     def get_label(self):
         return self.label
+
     def set_label(self, label):
         self.label = label
+
     def get_ORDER(self):
         return self.ORDER
+
     def set_ORDER(self, ORDER):
         self.ORDER = ORDER
+
     def get_ORDERLABEL(self):
         return self.ORDERLABEL
+
     def set_ORDERLABEL(self, ORDERLABEL):
         self.ORDERLABEL = ORDERLABEL
+
     def get_LABEL(self):
         return self.LABEL
+
     def set_LABEL(self, LABEL):
         self.LABEL = LABEL
+
     def validate_URIs(self, value):
         # Validate type URIs, a restriction on xsd:anyURI.
         pass
+
     def hasContent_(self):
-        if (
-            self.mptr or
-            self.fptr or
-            self.div
-        ):
+        if self.mptr or self.fptr or self.div:
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='divType', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('divType')
+
+    def export(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="divType",
+        pretty_print=True,
+    ):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("divType")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='divType')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="divType")
         if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='divType', pretty_print=pretty_print)
+            outfile.write(">%s" % (eol_,))
+            self.exportChildren(outfile, level + 1, "", namespacedef_, name_="divType", pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='divType'):
-        if self.ID is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
-            outfile.write(' ID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name='ID')), ))
-        if self.DMDID is not None and 'DMDID' not in already_processed:
-            already_processed.add('DMDID')
-            outfile.write(' DMDID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.DMDID), input_name='DMDID')), ))
-        if self.ADMID is not None and 'ADMID' not in already_processed:
-            already_processed.add('ADMID')
-            outfile.write(' ADMID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ADMID), input_name='ADMID')), ))
-        if self.TYPE is not None and 'TYPE' not in already_processed:
-            already_processed.add('TYPE')
-            outfile.write(' TYPE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.TYPE), input_name='TYPE')), ))
-        if self.CONTENTIDS is not None and 'CONTENTIDS' not in already_processed:
-            already_processed.add('CONTENTIDS')
-            outfile.write(' CONTENTIDS=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.CONTENTIDS), input_name='CONTENTIDS')), ))
-        if self.label is not None and 'label' not in already_processed:
-            already_processed.add('label')
-            outfile.write(' label=%s' % (quote_attrib(self.label), ))
-        if self.ORDER is not None and 'ORDER' not in already_processed:
-            already_processed.add('ORDER')
-            outfile.write(' ORDER="%s"' % self.gds_format_integer(self.ORDER, input_name='ORDER'))
-        if self.ORDERLABEL is not None and 'ORDERLABEL' not in already_processed:
-            already_processed.add('ORDERLABEL')
-            outfile.write(' ORDERLABEL=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ORDERLABEL), input_name='ORDERLABEL')), ))
-        if self.LABEL is not None and 'LABEL' not in already_processed:
-            already_processed.add('LABEL')
-            outfile.write(' LABEL=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.LABEL), input_name='LABEL')), ))
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='divType', fromsubclass_=False, pretty_print=True):
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="divType"):
+        if self.ID is not None and "ID" not in already_processed:
+            already_processed.add("ID")
+            outfile.write(" ID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name="ID")),))
+        if self.DMDID is not None and "DMDID" not in already_processed:
+            already_processed.add("DMDID")
+            outfile.write(
+                " DMDID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.DMDID), input_name="DMDID")),)
+            )
+        if self.ADMID is not None and "ADMID" not in already_processed:
+            already_processed.add("ADMID")
+            outfile.write(
+                " ADMID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ADMID), input_name="ADMID")),)
+            )
+        if self.TYPE is not None and "TYPE" not in already_processed:
+            already_processed.add("TYPE")
+            outfile.write(
+                " TYPE=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.TYPE), input_name="TYPE")),)
+            )
+        if self.CONTENTIDS is not None and "CONTENTIDS" not in already_processed:
+            already_processed.add("CONTENTIDS")
+            outfile.write(
+                " CONTENTIDS=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.CONTENTIDS), input_name="CONTENTIDS")),)
+            )
+        if self.label is not None and "label" not in already_processed:
+            already_processed.add("label")
+            outfile.write(" label=%s" % (quote_attrib(self.label),))
+        if self.ORDER is not None and "ORDER" not in already_processed:
+            already_processed.add("ORDER")
+            outfile.write(' ORDER="%s"' % self.gds_format_integer(self.ORDER, input_name="ORDER"))
+        if self.ORDERLABEL is not None and "ORDERLABEL" not in already_processed:
+            already_processed.add("ORDERLABEL")
+            outfile.write(
+                " ORDERLABEL=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.ORDERLABEL), input_name="ORDERLABEL")),)
+            )
+        if self.LABEL is not None and "LABEL" not in already_processed:
+            already_processed.add("LABEL")
+            outfile.write(
+                " LABEL=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.LABEL), input_name="LABEL")),)
+            )
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="divType",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         for mptr_ in self.mptr:
-            mptr_.export(outfile, level, namespaceprefix_, namespacedef_='', name_='mptr', pretty_print=pretty_print)
+            mptr_.export(outfile, level, namespaceprefix_, namespacedef_="", name_="mptr", pretty_print=pretty_print)
         for fptr_ in self.fptr:
-            fptr_.export(outfile, level, namespaceprefix_, namespacedef_='', name_='fptr', pretty_print=pretty_print)
+            fptr_.export(outfile, level, namespaceprefix_, namespacedef_="", name_="fptr", pretty_print=pretty_print)
         for div_ in self.div:
-            div_.export(outfile, level, namespaceprefix_, namespacedef_='', name_='div', pretty_print=pretty_print)
+            div_.export(outfile, level, namespaceprefix_, namespacedef_="", name_="div", pretty_print=pretty_print)
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -2006,63 +2608,67 @@ class divType(GeneratedsSuper):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('ID', node)
-        if value is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
+        value = find_attr_value_("ID", node)
+        if value is not None and "ID" not in already_processed:
+            already_processed.add("ID")
             self.ID = value
-        value = find_attr_value_('DMDID', node)
-        if value is not None and 'DMDID' not in already_processed:
-            already_processed.add('DMDID')
+        value = find_attr_value_("DMDID", node)
+        if value is not None and "DMDID" not in already_processed:
+            already_processed.add("DMDID")
             self.DMDID = value
-        value = find_attr_value_('ADMID', node)
-        if value is not None and 'ADMID' not in already_processed:
-            already_processed.add('ADMID')
+        value = find_attr_value_("ADMID", node)
+        if value is not None and "ADMID" not in already_processed:
+            already_processed.add("ADMID")
             self.ADMID = value
-        value = find_attr_value_('TYPE', node)
-        if value is not None and 'TYPE' not in already_processed:
-            already_processed.add('TYPE')
+        value = find_attr_value_("TYPE", node)
+        if value is not None and "TYPE" not in already_processed:
+            already_processed.add("TYPE")
             self.TYPE = value
-        value = find_attr_value_('CONTENTIDS', node)
-        if value is not None and 'CONTENTIDS' not in already_processed:
-            already_processed.add('CONTENTIDS')
+        value = find_attr_value_("CONTENTIDS", node)
+        if value is not None and "CONTENTIDS" not in already_processed:
+            already_processed.add("CONTENTIDS")
             self.CONTENTIDS = value
-            self.validate_URIs(self.CONTENTIDS)    # validate type URIs
-        value = find_attr_value_('label', node)
-        if value is not None and 'label' not in already_processed:
-            already_processed.add('label')
+            self.validate_URIs(self.CONTENTIDS)  # validate type URIs
+        value = find_attr_value_("label", node)
+        if value is not None and "label" not in already_processed:
+            already_processed.add("label")
             self.label = value
-        value = find_attr_value_('ORDER', node)
-        if value is not None and 'ORDER' not in already_processed:
-            already_processed.add('ORDER')
+        value = find_attr_value_("ORDER", node)
+        if value is not None and "ORDER" not in already_processed:
+            already_processed.add("ORDER")
             try:
                 self.ORDER = int(value)
             except ValueError as exp:
-                raise_parse_error(node, 'Bad integer attribute: %s' % exp)
-        value = find_attr_value_('ORDERLABEL', node)
-        if value is not None and 'ORDERLABEL' not in already_processed:
-            already_processed.add('ORDERLABEL')
+                raise_parse_error(node, "Bad integer attribute: %s" % exp)
+        value = find_attr_value_("ORDERLABEL", node)
+        if value is not None and "ORDERLABEL" not in already_processed:
+            already_processed.add("ORDERLABEL")
             self.ORDERLABEL = value
-        value = find_attr_value_('LABEL', node)
-        if value is not None and 'LABEL' not in already_processed:
-            already_processed.add('LABEL')
+        value = find_attr_value_("LABEL", node)
+        if value is not None and "LABEL" not in already_processed:
+            already_processed.add("LABEL")
             self.LABEL = value
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
-        if nodeName_ == 'mptr':
+        if nodeName_ == "mptr":
             obj_ = mptrType.factory(parent_object_=self)
             obj_.build(child_)
             self.mptr.append(obj_)
-            obj_.original_tagname_ = 'mptr'
-        elif nodeName_ == 'fptr':
+            obj_.original_tagname_ = "mptr"
+        elif nodeName_ == "fptr":
             obj_ = fptrType.factory(parent_object_=self)
             obj_.build(child_)
             self.fptr.append(obj_)
-            obj_.original_tagname_ = 'fptr'
-        elif nodeName_ == 'div':
+            obj_.original_tagname_ = "fptr"
+        elif nodeName_ == "div":
             obj_ = divType.factory(parent_object_=self)
             obj_.build(child_)
             self.div.append(obj_)
-            obj_.original_tagname_ = 'div'
+            obj_.original_tagname_ = "div"
+
+
 # end class divType
 
 
@@ -2077,11 +2683,13 @@ class parType(GeneratedsSuper):
     from another element or document via an IDREF or an XPTR. For more
     information on using ID attributes for internal and external linking
     see Chapter 4 of the METS Primer."""
+
     subclass = None
     superclass = None
+
     def __init__(self, ID=None, ORDER=None, ORDERLABEL=None, LABEL=None, area=None, seq=None, **kwargs_):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
+        self.parent_object_ = kwargs_.get("parent_object_")
         self.ID = _cast(None, ID)
         self.ORDER = _cast(int, ORDER)
         self.ORDERLABEL = _cast(None, ORDERLABEL)
@@ -2095,137 +2703,221 @@ class parType(GeneratedsSuper):
         else:
             self.seq = seq
         self.anyAttributes_ = {}
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, parType)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, parType)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if parType.subclass:
             return parType.subclass(*args_, **kwargs_)
         else:
             return parType(*args_, **kwargs_)
+
     factory = staticmethod(factory)
+
     def get_area(self):
         return self.area
+
     def set_area(self, area):
         self.area = area
+
     def add_area(self, value):
         self.area.append(value)
+
     def insert_area_at(self, index, value):
         self.area.insert(index, value)
+
     def replace_area_at(self, index, value):
         self.area[index] = value
+
     def get_seq(self):
         return self.seq
+
     def set_seq(self, seq):
         self.seq = seq
+
     def add_seq(self, value):
         self.seq.append(value)
+
     def insert_seq_at(self, index, value):
         self.seq.insert(index, value)
+
     def replace_seq_at(self, index, value):
         self.seq[index] = value
+
     def get_ID(self):
         return self.ID
+
     def set_ID(self, ID):
         self.ID = ID
+
     def get_ORDER(self):
         return self.ORDER
+
     def set_ORDER(self, ORDER):
         self.ORDER = ORDER
+
     def get_ORDERLABEL(self):
         return self.ORDERLABEL
+
     def set_ORDERLABEL(self, ORDERLABEL):
         self.ORDERLABEL = ORDERLABEL
+
     def get_LABEL(self):
         return self.LABEL
+
     def set_LABEL(self, LABEL):
         self.LABEL = LABEL
-    def get_anyAttributes_(self): return self.anyAttributes_
-    def set_anyAttributes_(self, anyAttributes_): self.anyAttributes_ = anyAttributes_
+
+    def get_anyAttributes_(self):
+        return self.anyAttributes_
+
+    def set_anyAttributes_(self, anyAttributes_):
+        self.anyAttributes_ = anyAttributes_
+
     def hasContent_(self):
-        if (
-            self.area or
-            self.seq
-        ):
+        if self.area or self.seq:
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='parType', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('parType')
+
+    def export(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="parType",
+        pretty_print=True,
+    ):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("parType")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='parType')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="parType")
         if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='parType', pretty_print=pretty_print)
+            outfile.write(">%s" % (eol_,))
+            self.exportChildren(outfile, level + 1, "", namespacedef_, name_="parType", pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='parType'):
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="parType"):
         unique_counter = 0
         for name, value in self.anyAttributes_.items():
-            xsinamespaceprefix = 'xsi'
-            xsinamespace1 = 'http://www.w3.org/2001/XMLSchema-instance'
-            xsinamespace2 = '{%s}' % (xsinamespace1, )
+            xsinamespaceprefix = "xsi"
+            xsinamespace1 = "http://www.w3.org/2001/XMLSchema-instance"
+            xsinamespace2 = "{%s}" % (xsinamespace1,)
             if name.startswith(xsinamespace2):
-                name1 = name[len(xsinamespace2):]
-                name2 = '%s:%s' % (xsinamespaceprefix, name1, )
+                name1 = name[len(xsinamespace2) :]
+                name2 = "%s:%s" % (
+                    xsinamespaceprefix,
+                    name1,
+                )
                 if name2 not in already_processed:
                     already_processed.add(name2)
-                    outfile.write(' %s=%s' % (name2, quote_attrib(value), ))
+                    outfile.write(
+                        " %s=%s"
+                        % (
+                            name2,
+                            quote_attrib(value),
+                        )
+                    )
             else:
                 mo = re_.match(Namespace_extract_pat_, name)
                 if mo is not None:
                     namespace, name = mo.group(1, 2)
                     if name not in already_processed:
                         already_processed.add(name)
-                        if namespace == 'http://www.w3.org/XML/1998/namespace':
-                            outfile.write(' %s=%s' % (
-                                name, quote_attrib(value), ))
+                        if namespace == "http://www.w3.org/XML/1998/namespace":
+                            outfile.write(
+                                " %s=%s"
+                                % (
+                                    name,
+                                    quote_attrib(value),
+                                )
+                            )
                         else:
                             unique_counter += 1
-                            outfile.write(' xmlns:%d="%s"' % (
-                                unique_counter, namespace, ))
-                            outfile.write(' %d:%s=%s' % (
-                                unique_counter, name, quote_attrib(value), ))
+                            outfile.write(
+                                ' xmlns:%d="%s"'
+                                % (
+                                    unique_counter,
+                                    namespace,
+                                )
+                            )
+                            outfile.write(
+                                " %d:%s=%s"
+                                % (
+                                    unique_counter,
+                                    name,
+                                    quote_attrib(value),
+                                )
+                            )
                 else:
                     if name not in already_processed:
                         already_processed.add(name)
-                        outfile.write(' %s=%s' % (
-                            name, quote_attrib(value), ))
-        if self.ID is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
-            outfile.write(' ID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name='ID')), ))
-        if self.ORDER is not None and 'ORDER' not in already_processed:
-            already_processed.add('ORDER')
-            outfile.write(' ORDER="%s"' % self.gds_format_integer(self.ORDER, input_name='ORDER'))
-        if self.ORDERLABEL is not None and 'ORDERLABEL' not in already_processed:
-            already_processed.add('ORDERLABEL')
-            outfile.write(' ORDERLABEL=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ORDERLABEL), input_name='ORDERLABEL')), ))
-        if self.LABEL is not None and 'LABEL' not in already_processed:
-            already_processed.add('LABEL')
-            outfile.write(' LABEL=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.LABEL), input_name='LABEL')), ))
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='parType', fromsubclass_=False, pretty_print=True):
+                        outfile.write(
+                            " %s=%s"
+                            % (
+                                name,
+                                quote_attrib(value),
+                            )
+                        )
+        if self.ID is not None and "ID" not in already_processed:
+            already_processed.add("ID")
+            outfile.write(" ID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name="ID")),))
+        if self.ORDER is not None and "ORDER" not in already_processed:
+            already_processed.add("ORDER")
+            outfile.write(' ORDER="%s"' % self.gds_format_integer(self.ORDER, input_name="ORDER"))
+        if self.ORDERLABEL is not None and "ORDERLABEL" not in already_processed:
+            already_processed.add("ORDERLABEL")
+            outfile.write(
+                " ORDERLABEL=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.ORDERLABEL), input_name="ORDERLABEL")),)
+            )
+        if self.LABEL is not None and "LABEL" not in already_processed:
+            already_processed.add("LABEL")
+            outfile.write(
+                " LABEL=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.LABEL), input_name="LABEL")),)
+            )
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="parType",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         for area_ in self.area:
-            area_.export(outfile, level, namespaceprefix_, namespacedef_='', name_='area', pretty_print=pretty_print)
+            area_.export(outfile, level, namespaceprefix_, namespacedef_="", name_="area", pretty_print=pretty_print)
         for seq_ in self.seq:
-            seq_.export(outfile, level, namespaceprefix_, namespacedef_='', name_='seq', pretty_print=pretty_print)
+            seq_.export(outfile, level, namespaceprefix_, namespacedef_="", name_="seq", pretty_print=pretty_print)
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -2233,41 +2925,45 @@ class parType(GeneratedsSuper):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('ID', node)
-        if value is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
+        value = find_attr_value_("ID", node)
+        if value is not None and "ID" not in already_processed:
+            already_processed.add("ID")
             self.ID = value
-        value = find_attr_value_('ORDER', node)
-        if value is not None and 'ORDER' not in already_processed:
-            already_processed.add('ORDER')
+        value = find_attr_value_("ORDER", node)
+        if value is not None and "ORDER" not in already_processed:
+            already_processed.add("ORDER")
             try:
                 self.ORDER = int(value)
             except ValueError as exp:
-                raise_parse_error(node, 'Bad integer attribute: %s' % exp)
-        value = find_attr_value_('ORDERLABEL', node)
-        if value is not None and 'ORDERLABEL' not in already_processed:
-            already_processed.add('ORDERLABEL')
+                raise_parse_error(node, "Bad integer attribute: %s" % exp)
+        value = find_attr_value_("ORDERLABEL", node)
+        if value is not None and "ORDERLABEL" not in already_processed:
+            already_processed.add("ORDERLABEL")
             self.ORDERLABEL = value
-        value = find_attr_value_('LABEL', node)
-        if value is not None and 'LABEL' not in already_processed:
-            already_processed.add('LABEL')
+        value = find_attr_value_("LABEL", node)
+        if value is not None and "LABEL" not in already_processed:
+            already_processed.add("LABEL")
             self.LABEL = value
         self.anyAttributes_ = {}
         for name, value in attrs.items():
             if name not in already_processed:
                 self.anyAttributes_[name] = value
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
-        if nodeName_ == 'area':
+        if nodeName_ == "area":
             obj_ = areaType.factory(parent_object_=self)
             obj_.build(child_)
             self.area.append(obj_)
-            obj_.original_tagname_ = 'area'
-        elif nodeName_ == 'seq':
+            obj_.original_tagname_ = "area"
+        elif nodeName_ == "seq":
             obj_ = seqType.factory(parent_object_=self)
             obj_.build(child_)
             self.seq.append(obj_)
-            obj_.original_tagname_ = 'seq'
+            obj_.original_tagname_ = "seq"
+
+
 # end class parType
 
 
@@ -2282,11 +2978,13 @@ class seqType(GeneratedsSuper):
     from another element or document via an IDREF or an XPTR. For more
     information on using ID attributes for internal and external linking
     see Chapter 4 of the METS Primer."""
+
     subclass = None
     superclass = None
+
     def __init__(self, ID=None, ORDER=None, ORDERLABEL=None, LABEL=None, area=None, par=None, **kwargs_):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
+        self.parent_object_ = kwargs_.get("parent_object_")
         self.ID = _cast(None, ID)
         self.ORDER = _cast(int, ORDER)
         self.ORDERLABEL = _cast(None, ORDERLABEL)
@@ -2300,137 +2998,221 @@ class seqType(GeneratedsSuper):
         else:
             self.par = par
         self.anyAttributes_ = {}
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, seqType)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, seqType)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if seqType.subclass:
             return seqType.subclass(*args_, **kwargs_)
         else:
             return seqType(*args_, **kwargs_)
+
     factory = staticmethod(factory)
+
     def get_area(self):
         return self.area
+
     def set_area(self, area):
         self.area = area
+
     def add_area(self, value):
         self.area.append(value)
+
     def insert_area_at(self, index, value):
         self.area.insert(index, value)
+
     def replace_area_at(self, index, value):
         self.area[index] = value
+
     def get_par(self):
         return self.par
+
     def set_par(self, par):
         self.par = par
+
     def add_par(self, value):
         self.par.append(value)
+
     def insert_par_at(self, index, value):
         self.par.insert(index, value)
+
     def replace_par_at(self, index, value):
         self.par[index] = value
+
     def get_ID(self):
         return self.ID
+
     def set_ID(self, ID):
         self.ID = ID
+
     def get_ORDER(self):
         return self.ORDER
+
     def set_ORDER(self, ORDER):
         self.ORDER = ORDER
+
     def get_ORDERLABEL(self):
         return self.ORDERLABEL
+
     def set_ORDERLABEL(self, ORDERLABEL):
         self.ORDERLABEL = ORDERLABEL
+
     def get_LABEL(self):
         return self.LABEL
+
     def set_LABEL(self, LABEL):
         self.LABEL = LABEL
-    def get_anyAttributes_(self): return self.anyAttributes_
-    def set_anyAttributes_(self, anyAttributes_): self.anyAttributes_ = anyAttributes_
+
+    def get_anyAttributes_(self):
+        return self.anyAttributes_
+
+    def set_anyAttributes_(self, anyAttributes_):
+        self.anyAttributes_ = anyAttributes_
+
     def hasContent_(self):
-        if (
-            self.area or
-            self.par
-        ):
+        if self.area or self.par:
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='seqType', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('seqType')
+
+    def export(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="seqType",
+        pretty_print=True,
+    ):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("seqType")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='seqType')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="seqType")
         if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='seqType', pretty_print=pretty_print)
+            outfile.write(">%s" % (eol_,))
+            self.exportChildren(outfile, level + 1, "", namespacedef_, name_="seqType", pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='seqType'):
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="seqType"):
         unique_counter = 0
         for name, value in self.anyAttributes_.items():
-            xsinamespaceprefix = 'xsi'
-            xsinamespace1 = 'http://www.w3.org/2001/XMLSchema-instance'
-            xsinamespace2 = '{%s}' % (xsinamespace1, )
+            xsinamespaceprefix = "xsi"
+            xsinamespace1 = "http://www.w3.org/2001/XMLSchema-instance"
+            xsinamespace2 = "{%s}" % (xsinamespace1,)
             if name.startswith(xsinamespace2):
-                name1 = name[len(xsinamespace2):]
-                name2 = '%s:%s' % (xsinamespaceprefix, name1, )
+                name1 = name[len(xsinamespace2) :]
+                name2 = "%s:%s" % (
+                    xsinamespaceprefix,
+                    name1,
+                )
                 if name2 not in already_processed:
                     already_processed.add(name2)
-                    outfile.write(' %s=%s' % (name2, quote_attrib(value), ))
+                    outfile.write(
+                        " %s=%s"
+                        % (
+                            name2,
+                            quote_attrib(value),
+                        )
+                    )
             else:
                 mo = re_.match(Namespace_extract_pat_, name)
                 if mo is not None:
                     namespace, name = mo.group(1, 2)
                     if name not in already_processed:
                         already_processed.add(name)
-                        if namespace == 'http://www.w3.org/XML/1998/namespace':
-                            outfile.write(' %s=%s' % (
-                                name, quote_attrib(value), ))
+                        if namespace == "http://www.w3.org/XML/1998/namespace":
+                            outfile.write(
+                                " %s=%s"
+                                % (
+                                    name,
+                                    quote_attrib(value),
+                                )
+                            )
                         else:
                             unique_counter += 1
-                            outfile.write(' xmlns:%d="%s"' % (
-                                unique_counter, namespace, ))
-                            outfile.write(' %d:%s=%s' % (
-                                unique_counter, name, quote_attrib(value), ))
+                            outfile.write(
+                                ' xmlns:%d="%s"'
+                                % (
+                                    unique_counter,
+                                    namespace,
+                                )
+                            )
+                            outfile.write(
+                                " %d:%s=%s"
+                                % (
+                                    unique_counter,
+                                    name,
+                                    quote_attrib(value),
+                                )
+                            )
                 else:
                     if name not in already_processed:
                         already_processed.add(name)
-                        outfile.write(' %s=%s' % (
-                            name, quote_attrib(value), ))
-        if self.ID is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
-            outfile.write(' ID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name='ID')), ))
-        if self.ORDER is not None and 'ORDER' not in already_processed:
-            already_processed.add('ORDER')
-            outfile.write(' ORDER="%s"' % self.gds_format_integer(self.ORDER, input_name='ORDER'))
-        if self.ORDERLABEL is not None and 'ORDERLABEL' not in already_processed:
-            already_processed.add('ORDERLABEL')
-            outfile.write(' ORDERLABEL=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ORDERLABEL), input_name='ORDERLABEL')), ))
-        if self.LABEL is not None and 'LABEL' not in already_processed:
-            already_processed.add('LABEL')
-            outfile.write(' LABEL=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.LABEL), input_name='LABEL')), ))
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='seqType', fromsubclass_=False, pretty_print=True):
+                        outfile.write(
+                            " %s=%s"
+                            % (
+                                name,
+                                quote_attrib(value),
+                            )
+                        )
+        if self.ID is not None and "ID" not in already_processed:
+            already_processed.add("ID")
+            outfile.write(" ID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name="ID")),))
+        if self.ORDER is not None and "ORDER" not in already_processed:
+            already_processed.add("ORDER")
+            outfile.write(' ORDER="%s"' % self.gds_format_integer(self.ORDER, input_name="ORDER"))
+        if self.ORDERLABEL is not None and "ORDERLABEL" not in already_processed:
+            already_processed.add("ORDERLABEL")
+            outfile.write(
+                " ORDERLABEL=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.ORDERLABEL), input_name="ORDERLABEL")),)
+            )
+        if self.LABEL is not None and "LABEL" not in already_processed:
+            already_processed.add("LABEL")
+            outfile.write(
+                " LABEL=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.LABEL), input_name="LABEL")),)
+            )
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="seqType",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         for area_ in self.area:
-            area_.export(outfile, level, namespaceprefix_, namespacedef_='', name_='area', pretty_print=pretty_print)
+            area_.export(outfile, level, namespaceprefix_, namespacedef_="", name_="area", pretty_print=pretty_print)
         for par_ in self.par:
-            par_.export(outfile, level, namespaceprefix_, namespacedef_='', name_='par', pretty_print=pretty_print)
+            par_.export(outfile, level, namespaceprefix_, namespacedef_="", name_="par", pretty_print=pretty_print)
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -2438,41 +3220,45 @@ class seqType(GeneratedsSuper):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('ID', node)
-        if value is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
+        value = find_attr_value_("ID", node)
+        if value is not None and "ID" not in already_processed:
+            already_processed.add("ID")
             self.ID = value
-        value = find_attr_value_('ORDER', node)
-        if value is not None and 'ORDER' not in already_processed:
-            already_processed.add('ORDER')
+        value = find_attr_value_("ORDER", node)
+        if value is not None and "ORDER" not in already_processed:
+            already_processed.add("ORDER")
             try:
                 self.ORDER = int(value)
             except ValueError as exp:
-                raise_parse_error(node, 'Bad integer attribute: %s' % exp)
-        value = find_attr_value_('ORDERLABEL', node)
-        if value is not None and 'ORDERLABEL' not in already_processed:
-            already_processed.add('ORDERLABEL')
+                raise_parse_error(node, "Bad integer attribute: %s" % exp)
+        value = find_attr_value_("ORDERLABEL", node)
+        if value is not None and "ORDERLABEL" not in already_processed:
+            already_processed.add("ORDERLABEL")
             self.ORDERLABEL = value
-        value = find_attr_value_('LABEL', node)
-        if value is not None and 'LABEL' not in already_processed:
-            already_processed.add('LABEL')
+        value = find_attr_value_("LABEL", node)
+        if value is not None and "LABEL" not in already_processed:
+            already_processed.add("LABEL")
             self.LABEL = value
         self.anyAttributes_ = {}
         for name, value in attrs.items():
             if name not in already_processed:
                 self.anyAttributes_[name] = value
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
-        if nodeName_ == 'area':
+        if nodeName_ == "area":
             obj_ = areaType.factory(parent_object_=self)
             obj_.build(child_)
             self.area.append(obj_)
-            obj_.original_tagname_ = 'area'
-        elif nodeName_ == 'par':
+            obj_.original_tagname_ = "area"
+        elif nodeName_ == "par":
             obj_ = parType.factory(parent_object_=self)
             obj_.build(child_)
             self.par.append(obj_)
-            obj_.original_tagname_ = 'par'
+            obj_.original_tagname_ = "par"
+
+
 # end class seqType
 
 
@@ -2589,11 +3375,30 @@ class areaType(GeneratedsSuper):
     CONTENTIDS (URI/O): Content IDs for the content represented by the <area>
     (equivalent to DIDL DII or Digital Item Identifier, a unique external
     ID)."""
+
     subclass = None
     superclass = None
-    def __init__(self, ID=None, FILEID=None, SHAPE=None, COORDS=None, BEGIN=None, END=None, BETYPE=None, EXTENT=None, EXTTYPE=None, ADMID=None, CONTENTIDS=None, ORDER=None, ORDERLABEL=None, LABEL=None, **kwargs_):
+
+    def __init__(
+        self,
+        ID=None,
+        FILEID=None,
+        SHAPE=None,
+        COORDS=None,
+        BEGIN=None,
+        END=None,
+        BETYPE=None,
+        EXTENT=None,
+        EXTTYPE=None,
+        ADMID=None,
+        CONTENTIDS=None,
+        ORDER=None,
+        ORDERLABEL=None,
+        LABEL=None,
+        **kwargs_,
+    ):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
+        self.parent_object_ = kwargs_.get("parent_object_")
         self.ID = _cast(None, ID)
         self.FILEID = _cast(None, FILEID)
         self.SHAPE = _cast(None, SHAPE)
@@ -2609,181 +3414,295 @@ class areaType(GeneratedsSuper):
         self.ORDERLABEL = _cast(None, ORDERLABEL)
         self.LABEL = _cast(None, LABEL)
         self.anyAttributes_ = {}
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, areaType)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, areaType)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if areaType.subclass:
             return areaType.subclass(*args_, **kwargs_)
         else:
             return areaType(*args_, **kwargs_)
+
     factory = staticmethod(factory)
+
     def get_ID(self):
         return self.ID
+
     def set_ID(self, ID):
         self.ID = ID
+
     def get_FILEID(self):
         return self.FILEID
+
     def set_FILEID(self, FILEID):
         self.FILEID = FILEID
+
     def get_SHAPE(self):
         return self.SHAPE
+
     def set_SHAPE(self, SHAPE):
         self.SHAPE = SHAPE
+
     def get_COORDS(self):
         return self.COORDS
+
     def set_COORDS(self, COORDS):
         self.COORDS = COORDS
+
     def get_BEGIN(self):
         return self.BEGIN
+
     def set_BEGIN(self, BEGIN):
         self.BEGIN = BEGIN
+
     def get_END(self):
         return self.END
+
     def set_END(self, END):
         self.END = END
+
     def get_BETYPE(self):
         return self.BETYPE
+
     def set_BETYPE(self, BETYPE):
         self.BETYPE = BETYPE
+
     def get_EXTENT(self):
         return self.EXTENT
+
     def set_EXTENT(self, EXTENT):
         self.EXTENT = EXTENT
+
     def get_EXTTYPE(self):
         return self.EXTTYPE
+
     def set_EXTTYPE(self, EXTTYPE):
         self.EXTTYPE = EXTTYPE
+
     def get_ADMID(self):
         return self.ADMID
+
     def set_ADMID(self, ADMID):
         self.ADMID = ADMID
+
     def get_CONTENTIDS(self):
         return self.CONTENTIDS
+
     def set_CONTENTIDS(self, CONTENTIDS):
         self.CONTENTIDS = CONTENTIDS
+
     def get_ORDER(self):
         return self.ORDER
+
     def set_ORDER(self, ORDER):
         self.ORDER = ORDER
+
     def get_ORDERLABEL(self):
         return self.ORDERLABEL
+
     def set_ORDERLABEL(self, ORDERLABEL):
         self.ORDERLABEL = ORDERLABEL
+
     def get_LABEL(self):
         return self.LABEL
+
     def set_LABEL(self, LABEL):
         self.LABEL = LABEL
-    def get_anyAttributes_(self): return self.anyAttributes_
-    def set_anyAttributes_(self, anyAttributes_): self.anyAttributes_ = anyAttributes_
+
+    def get_anyAttributes_(self):
+        return self.anyAttributes_
+
+    def set_anyAttributes_(self, anyAttributes_):
+        self.anyAttributes_ = anyAttributes_
+
     def validate_URIs(self, value):
         # Validate type URIs, a restriction on xsd:anyURI.
         pass
-    def hasContent_(self):
-        if (
 
-        ):
+    def hasContent_(self):
+        if ():
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='areaType', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('areaType')
+
+    def export(self, outfile, level, namespaceprefix_="", namespacedef_="", name_="areaType", pretty_print=True):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("areaType")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='areaType')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="areaType")
         if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='areaType', pretty_print=pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            outfile.write(">%s" % (eol_,))
+            self.exportChildren(outfile, level + 1, "", namespacedef_, name_="areaType", pretty_print=pretty_print)
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='areaType'):
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="areaType"):
         unique_counter = 0
         for name, value in self.anyAttributes_.items():
-            xsinamespaceprefix = 'xsi'
-            xsinamespace1 = 'http://www.w3.org/2001/XMLSchema-instance'
-            xsinamespace2 = '{%s}' % (xsinamespace1, )
+            xsinamespaceprefix = "xsi"
+            xsinamespace1 = "http://www.w3.org/2001/XMLSchema-instance"
+            xsinamespace2 = "{%s}" % (xsinamespace1,)
             if name.startswith(xsinamespace2):
-                name1 = name[len(xsinamespace2):]
-                name2 = '%s:%s' % (xsinamespaceprefix, name1, )
+                name1 = name[len(xsinamespace2) :]
+                name2 = "%s:%s" % (
+                    xsinamespaceprefix,
+                    name1,
+                )
                 if name2 not in already_processed:
                     already_processed.add(name2)
-                    outfile.write(' %s=%s' % (name2, quote_attrib(value), ))
+                    outfile.write(
+                        " %s=%s"
+                        % (
+                            name2,
+                            quote_attrib(value),
+                        )
+                    )
             else:
                 mo = re_.match(Namespace_extract_pat_, name)
                 if mo is not None:
                     namespace, name = mo.group(1, 2)
                     if name not in already_processed:
                         already_processed.add(name)
-                        if namespace == 'http://www.w3.org/XML/1998/namespace':
-                            outfile.write(' %s=%s' % (
-                                name, quote_attrib(value), ))
+                        if namespace == "http://www.w3.org/XML/1998/namespace":
+                            outfile.write(
+                                " %s=%s"
+                                % (
+                                    name,
+                                    quote_attrib(value),
+                                )
+                            )
                         else:
                             unique_counter += 1
-                            outfile.write(' xmlns:%d="%s"' % (
-                                unique_counter, namespace, ))
-                            outfile.write(' %d:%s=%s' % (
-                                unique_counter, name, quote_attrib(value), ))
+                            outfile.write(
+                                ' xmlns:%d="%s"'
+                                % (
+                                    unique_counter,
+                                    namespace,
+                                )
+                            )
+                            outfile.write(
+                                " %d:%s=%s"
+                                % (
+                                    unique_counter,
+                                    name,
+                                    quote_attrib(value),
+                                )
+                            )
                 else:
                     if name not in already_processed:
                         already_processed.add(name)
-                        outfile.write(' %s=%s' % (
-                            name, quote_attrib(value), ))
-        if self.ID is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
-            outfile.write(' ID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name='ID')), ))
-        if 'FILEID' not in already_processed:
-            already_processed.add('FILEID')
-            outfile.write(' FILEID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.FILEID), input_name='FILEID')), ))
-        if self.SHAPE is not None and 'SHAPE' not in already_processed:
-            already_processed.add('SHAPE')
-            outfile.write(' SHAPE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.SHAPE), input_name='SHAPE')), ))
-        if self.COORDS is not None and 'COORDS' not in already_processed:
-            already_processed.add('COORDS')
-            outfile.write(' COORDS=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.COORDS), input_name='COORDS')), ))
-        if self.BEGIN is not None and 'BEGIN' not in already_processed:
-            already_processed.add('BEGIN')
-            outfile.write(' BEGIN=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.BEGIN), input_name='BEGIN')), ))
-        if self.END is not None and 'END' not in already_processed:
-            already_processed.add('END')
-            outfile.write(' END=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.END), input_name='END')), ))
-        if self.BETYPE is not None and 'BETYPE' not in already_processed:
-            already_processed.add('BETYPE')
-            outfile.write(' BETYPE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.BETYPE), input_name='BETYPE')), ))
-        if self.EXTENT is not None and 'EXTENT' not in already_processed:
-            already_processed.add('EXTENT')
-            outfile.write(' EXTENT=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.EXTENT), input_name='EXTENT')), ))
-        if self.EXTTYPE is not None and 'EXTTYPE' not in already_processed:
-            already_processed.add('EXTTYPE')
-            outfile.write(' EXTTYPE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.EXTTYPE), input_name='EXTTYPE')), ))
-        if self.ADMID is not None and 'ADMID' not in already_processed:
-            already_processed.add('ADMID')
-            outfile.write(' ADMID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ADMID), input_name='ADMID')), ))
-        if self.CONTENTIDS is not None and 'CONTENTIDS' not in already_processed:
-            already_processed.add('CONTENTIDS')
-            outfile.write(' CONTENTIDS=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.CONTENTIDS), input_name='CONTENTIDS')), ))
-        if self.ORDER is not None and 'ORDER' not in already_processed:
-            already_processed.add('ORDER')
-            outfile.write(' ORDER="%s"' % self.gds_format_integer(self.ORDER, input_name='ORDER'))
-        if self.ORDERLABEL is not None and 'ORDERLABEL' not in already_processed:
-            already_processed.add('ORDERLABEL')
-            outfile.write(' ORDERLABEL=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ORDERLABEL), input_name='ORDERLABEL')), ))
-        if self.LABEL is not None and 'LABEL' not in already_processed:
-            already_processed.add('LABEL')
-            outfile.write(' LABEL=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.LABEL), input_name='LABEL')), ))
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='areaType', fromsubclass_=False, pretty_print=True):
+                        outfile.write(
+                            " %s=%s"
+                            % (
+                                name,
+                                quote_attrib(value),
+                            )
+                        )
+        if self.ID is not None and "ID" not in already_processed:
+            already_processed.add("ID")
+            outfile.write(" ID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name="ID")),))
+        if "FILEID" not in already_processed:
+            already_processed.add("FILEID")
+            outfile.write(
+                " FILEID=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.FILEID), input_name="FILEID")),)
+            )
+        if self.SHAPE is not None and "SHAPE" not in already_processed:
+            already_processed.add("SHAPE")
+            outfile.write(
+                " SHAPE=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.SHAPE), input_name="SHAPE")),)
+            )
+        if self.COORDS is not None and "COORDS" not in already_processed:
+            already_processed.add("COORDS")
+            outfile.write(
+                " COORDS=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.COORDS), input_name="COORDS")),)
+            )
+        if self.BEGIN is not None and "BEGIN" not in already_processed:
+            already_processed.add("BEGIN")
+            outfile.write(
+                " BEGIN=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.BEGIN), input_name="BEGIN")),)
+            )
+        if self.END is not None and "END" not in already_processed:
+            already_processed.add("END")
+            outfile.write(
+                " END=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.END), input_name="END")),)
+            )
+        if self.BETYPE is not None and "BETYPE" not in already_processed:
+            already_processed.add("BETYPE")
+            outfile.write(
+                " BETYPE=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.BETYPE), input_name="BETYPE")),)
+            )
+        if self.EXTENT is not None and "EXTENT" not in already_processed:
+            already_processed.add("EXTENT")
+            outfile.write(
+                " EXTENT=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.EXTENT), input_name="EXTENT")),)
+            )
+        if self.EXTTYPE is not None and "EXTTYPE" not in already_processed:
+            already_processed.add("EXTTYPE")
+            outfile.write(
+                " EXTTYPE=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.EXTTYPE), input_name="EXTTYPE")),)
+            )
+        if self.ADMID is not None and "ADMID" not in already_processed:
+            already_processed.add("ADMID")
+            outfile.write(
+                " ADMID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ADMID), input_name="ADMID")),)
+            )
+        if self.CONTENTIDS is not None and "CONTENTIDS" not in already_processed:
+            already_processed.add("CONTENTIDS")
+            outfile.write(
+                " CONTENTIDS=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.CONTENTIDS), input_name="CONTENTIDS")),)
+            )
+        if self.ORDER is not None and "ORDER" not in already_processed:
+            already_processed.add("ORDER")
+            outfile.write(' ORDER="%s"' % self.gds_format_integer(self.ORDER, input_name="ORDER"))
+        if self.ORDERLABEL is not None and "ORDERLABEL" not in already_processed:
+            already_processed.add("ORDERLABEL")
+            outfile.write(
+                " ORDERLABEL=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.ORDERLABEL), input_name="ORDERLABEL")),)
+            )
+        if self.LABEL is not None and "LABEL" not in already_processed:
+            already_processed.add("LABEL")
+            outfile.write(
+                " LABEL=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.LABEL), input_name="LABEL")),)
+            )
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_="",
+        name_="areaType",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
         pass
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -2791,73 +3710,77 @@ class areaType(GeneratedsSuper):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('ID', node)
-        if value is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
+        value = find_attr_value_("ID", node)
+        if value is not None and "ID" not in already_processed:
+            already_processed.add("ID")
             self.ID = value
-        value = find_attr_value_('FILEID', node)
-        if value is not None and 'FILEID' not in already_processed:
-            already_processed.add('FILEID')
+        value = find_attr_value_("FILEID", node)
+        if value is not None and "FILEID" not in already_processed:
+            already_processed.add("FILEID")
             self.FILEID = value
-        value = find_attr_value_('SHAPE', node)
-        if value is not None and 'SHAPE' not in already_processed:
-            already_processed.add('SHAPE')
+        value = find_attr_value_("SHAPE", node)
+        if value is not None and "SHAPE" not in already_processed:
+            already_processed.add("SHAPE")
             self.SHAPE = value
-        value = find_attr_value_('COORDS', node)
-        if value is not None and 'COORDS' not in already_processed:
-            already_processed.add('COORDS')
+        value = find_attr_value_("COORDS", node)
+        if value is not None and "COORDS" not in already_processed:
+            already_processed.add("COORDS")
             self.COORDS = value
-        value = find_attr_value_('BEGIN', node)
-        if value is not None and 'BEGIN' not in already_processed:
-            already_processed.add('BEGIN')
+        value = find_attr_value_("BEGIN", node)
+        if value is not None and "BEGIN" not in already_processed:
+            already_processed.add("BEGIN")
             self.BEGIN = value
-        value = find_attr_value_('END', node)
-        if value is not None and 'END' not in already_processed:
-            already_processed.add('END')
+        value = find_attr_value_("END", node)
+        if value is not None and "END" not in already_processed:
+            already_processed.add("END")
             self.END = value
-        value = find_attr_value_('BETYPE', node)
-        if value is not None and 'BETYPE' not in already_processed:
-            already_processed.add('BETYPE')
+        value = find_attr_value_("BETYPE", node)
+        if value is not None and "BETYPE" not in already_processed:
+            already_processed.add("BETYPE")
             self.BETYPE = value
-        value = find_attr_value_('EXTENT', node)
-        if value is not None and 'EXTENT' not in already_processed:
-            already_processed.add('EXTENT')
+        value = find_attr_value_("EXTENT", node)
+        if value is not None and "EXTENT" not in already_processed:
+            already_processed.add("EXTENT")
             self.EXTENT = value
-        value = find_attr_value_('EXTTYPE', node)
-        if value is not None and 'EXTTYPE' not in already_processed:
-            already_processed.add('EXTTYPE')
+        value = find_attr_value_("EXTTYPE", node)
+        if value is not None and "EXTTYPE" not in already_processed:
+            already_processed.add("EXTTYPE")
             self.EXTTYPE = value
-        value = find_attr_value_('ADMID', node)
-        if value is not None and 'ADMID' not in already_processed:
-            already_processed.add('ADMID')
+        value = find_attr_value_("ADMID", node)
+        if value is not None and "ADMID" not in already_processed:
+            already_processed.add("ADMID")
             self.ADMID = value
-        value = find_attr_value_('CONTENTIDS', node)
-        if value is not None and 'CONTENTIDS' not in already_processed:
-            already_processed.add('CONTENTIDS')
+        value = find_attr_value_("CONTENTIDS", node)
+        if value is not None and "CONTENTIDS" not in already_processed:
+            already_processed.add("CONTENTIDS")
             self.CONTENTIDS = value
-            self.validate_URIs(self.CONTENTIDS)    # validate type URIs
-        value = find_attr_value_('ORDER', node)
-        if value is not None and 'ORDER' not in already_processed:
-            already_processed.add('ORDER')
+            self.validate_URIs(self.CONTENTIDS)  # validate type URIs
+        value = find_attr_value_("ORDER", node)
+        if value is not None and "ORDER" not in already_processed:
+            already_processed.add("ORDER")
             try:
                 self.ORDER = int(value)
             except ValueError as exp:
-                raise_parse_error(node, 'Bad integer attribute: %s' % exp)
-        value = find_attr_value_('ORDERLABEL', node)
-        if value is not None and 'ORDERLABEL' not in already_processed:
-            already_processed.add('ORDERLABEL')
+                raise_parse_error(node, "Bad integer attribute: %s" % exp)
+        value = find_attr_value_("ORDERLABEL", node)
+        if value is not None and "ORDERLABEL" not in already_processed:
+            already_processed.add("ORDERLABEL")
             self.ORDERLABEL = value
-        value = find_attr_value_('LABEL', node)
-        if value is not None and 'LABEL' not in already_processed:
-            already_processed.add('LABEL')
+        value = find_attr_value_("LABEL", node)
+        if value is not None and "LABEL" not in already_processed:
+            already_processed.add("LABEL")
             self.LABEL = value
         self.anyAttributes_ = {}
         for name, value in attrs.items():
             if name not in already_processed:
                 self.anyAttributes_[name] = value
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
+
+
 # end class areaType
 
 
@@ -2874,11 +3797,13 @@ class structLinkType(GeneratedsSuper):
     from another element or document via an IDREF or an XPTR. For more
     information on using ID attributes for internal and external linking
     see Chapter 4 of the METS Primer."""
+
     subclass = None
     superclass = None
+
     def __init__(self, ID=None, smLink=None, smLinkGrp=None, extensiontype_=None, **kwargs_):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
+        self.parent_object_ = kwargs_.get("parent_object_")
         self.ID = _cast(None, ID)
         if smLink is None:
             self.smLink = []
@@ -2890,126 +3815,209 @@ class structLinkType(GeneratedsSuper):
             self.smLinkGrp = smLinkGrp
         self.anyAttributes_ = {}
         self.extensiontype_ = extensiontype_
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, structLinkType)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, structLinkType)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if structLinkType.subclass:
             return structLinkType.subclass(*args_, **kwargs_)
         else:
             return structLinkType(*args_, **kwargs_)
+
     factory = staticmethod(factory)
+
     def get_smLink(self):
         return self.smLink
+
     def set_smLink(self, smLink):
         self.smLink = smLink
+
     def add_smLink(self, value):
         self.smLink.append(value)
+
     def insert_smLink_at(self, index, value):
         self.smLink.insert(index, value)
+
     def replace_smLink_at(self, index, value):
         self.smLink[index] = value
+
     def get_smLinkGrp(self):
         return self.smLinkGrp
+
     def set_smLinkGrp(self, smLinkGrp):
         self.smLinkGrp = smLinkGrp
+
     def add_smLinkGrp(self, value):
         self.smLinkGrp.append(value)
+
     def insert_smLinkGrp_at(self, index, value):
         self.smLinkGrp.insert(index, value)
+
     def replace_smLinkGrp_at(self, index, value):
         self.smLinkGrp[index] = value
+
     def get_ID(self):
         return self.ID
+
     def set_ID(self, ID):
         self.ID = ID
-    def get_anyAttributes_(self): return self.anyAttributes_
-    def set_anyAttributes_(self, anyAttributes_): self.anyAttributes_ = anyAttributes_
-    def get_extensiontype_(self): return self.extensiontype_
-    def set_extensiontype_(self, extensiontype_): self.extensiontype_ = extensiontype_
+
+    def get_anyAttributes_(self):
+        return self.anyAttributes_
+
+    def set_anyAttributes_(self, anyAttributes_):
+        self.anyAttributes_ = anyAttributes_
+
+    def get_extensiontype_(self):
+        return self.extensiontype_
+
+    def set_extensiontype_(self, extensiontype_):
+        self.extensiontype_ = extensiontype_
+
     def hasContent_(self):
-        if (
-            self.smLink or
-            self.smLinkGrp
-        ):
+        if self.smLink or self.smLinkGrp:
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='structLinkType', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('structLinkType')
+
+    def export(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="structLinkType",
+        pretty_print=True,
+    ):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("structLinkType")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='structLinkType')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="structLinkType")
         if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='structLinkType', pretty_print=pretty_print)
+            outfile.write(">%s" % (eol_,))
+            self.exportChildren(
+                outfile, level + 1, "", namespacedef_, name_="structLinkType", pretty_print=pretty_print
+            )
             showIndent(outfile, level, pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='structLinkType'):
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="structLinkType"):
         unique_counter = 0
         for name, value in self.anyAttributes_.items():
-            xsinamespaceprefix = 'xsi'
-            xsinamespace1 = 'http://www.w3.org/2001/XMLSchema-instance'
-            xsinamespace2 = '{%s}' % (xsinamespace1, )
+            xsinamespaceprefix = "xsi"
+            xsinamespace1 = "http://www.w3.org/2001/XMLSchema-instance"
+            xsinamespace2 = "{%s}" % (xsinamespace1,)
             if name.startswith(xsinamespace2):
-                name1 = name[len(xsinamespace2):]
-                name2 = '%s:%s' % (xsinamespaceprefix, name1, )
+                name1 = name[len(xsinamespace2) :]
+                name2 = "%s:%s" % (
+                    xsinamespaceprefix,
+                    name1,
+                )
                 if name2 not in already_processed:
                     already_processed.add(name2)
-                    outfile.write(' %s=%s' % (name2, quote_attrib(value), ))
+                    outfile.write(
+                        " %s=%s"
+                        % (
+                            name2,
+                            quote_attrib(value),
+                        )
+                    )
             else:
                 mo = re_.match(Namespace_extract_pat_, name)
                 if mo is not None:
                     namespace, name = mo.group(1, 2)
                     if name not in already_processed:
                         already_processed.add(name)
-                        if namespace == 'http://www.w3.org/XML/1998/namespace':
-                            outfile.write(' %s=%s' % (
-                                name, quote_attrib(value), ))
+                        if namespace == "http://www.w3.org/XML/1998/namespace":
+                            outfile.write(
+                                " %s=%s"
+                                % (
+                                    name,
+                                    quote_attrib(value),
+                                )
+                            )
                         else:
                             unique_counter += 1
-                            outfile.write(' xmlns:%d="%s"' % (
-                                unique_counter, namespace, ))
-                            outfile.write(' %d:%s=%s' % (
-                                unique_counter, name, quote_attrib(value), ))
+                            outfile.write(
+                                ' xmlns:%d="%s"'
+                                % (
+                                    unique_counter,
+                                    namespace,
+                                )
+                            )
+                            outfile.write(
+                                " %d:%s=%s"
+                                % (
+                                    unique_counter,
+                                    name,
+                                    quote_attrib(value),
+                                )
+                            )
                 else:
                     if name not in already_processed:
                         already_processed.add(name)
-                        outfile.write(' %s=%s' % (
-                            name, quote_attrib(value), ))
-        if self.ID is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
-            outfile.write(' ID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name='ID')), ))
-        if self.extensiontype_ is not None and 'xsi:type' not in already_processed:
-            already_processed.add('xsi:type')
+                        outfile.write(
+                            " %s=%s"
+                            % (
+                                name,
+                                quote_attrib(value),
+                            )
+                        )
+        if self.ID is not None and "ID" not in already_processed:
+            already_processed.add("ID")
+            outfile.write(" ID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name="ID")),))
+        if self.extensiontype_ is not None and "xsi:type" not in already_processed:
+            already_processed.add("xsi:type")
             outfile.write(' xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"')
             if ":" not in self.extensiontype_:
-                imported_ns_type_prefix_ = GenerateDSNamespaceTypePrefixes_.get(self.extensiontype_, '')
+                imported_ns_type_prefix_ = GenerateDSNamespaceTypePrefixes_.get(self.extensiontype_, "")
                 outfile.write(' xsi:type="%s%s"' % (imported_ns_type_prefix_, self.extensiontype_))
             else:
                 outfile.write(' xsi:type="%s"' % self.extensiontype_)
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='structLinkType', fromsubclass_=False, pretty_print=True):
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="structLinkType",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         for smLink_ in self.smLink:
-            smLink_.export(outfile, level, namespaceprefix_, namespacedef_='', name_='smLink', pretty_print=pretty_print)
+            smLink_.export(
+                outfile, level, namespaceprefix_, namespacedef_="", name_="smLink", pretty_print=pretty_print
+            )
         for smLinkGrp_ in self.smLinkGrp:
-            smLinkGrp_.export(outfile, level, namespaceprefix_, namespacedef_='', name_='smLinkGrp', pretty_print=pretty_print)
+            smLinkGrp_.export(
+                outfile, level, namespaceprefix_, namespacedef_="", name_="smLinkGrp", pretty_print=pretty_print
+            )
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -3017,30 +4025,34 @@ class structLinkType(GeneratedsSuper):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('ID', node)
-        if value is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
+        value = find_attr_value_("ID", node)
+        if value is not None and "ID" not in already_processed:
+            already_processed.add("ID")
             self.ID = value
         self.anyAttributes_ = {}
         for name, value in attrs.items():
             if name not in already_processed:
                 self.anyAttributes_[name] = value
-        value = find_attr_value_('xsi:type', node)
-        if value is not None and 'xsi:type' not in already_processed:
-            already_processed.add('xsi:type')
+        value = find_attr_value_("xsi:type", node)
+        if value is not None and "xsi:type" not in already_processed:
+            already_processed.add("xsi:type")
             self.extensiontype_ = value
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
-        if nodeName_ == 'smLink':
+        if nodeName_ == "smLink":
             obj_ = smLinkType.factory(parent_object_=self)
             obj_.build(child_)
             self.smLink.append(obj_)
-            obj_.original_tagname_ = 'smLink'
-        elif nodeName_ == 'smLinkGrp':
+            obj_.original_tagname_ = "smLink"
+        elif nodeName_ == "smLinkGrp":
             obj_ = smLinkGrpType.factory(parent_object_=self)
             obj_.build(child_)
             self.smLinkGrp.append(obj_)
-            obj_.original_tagname_ = 'smLinkGrp'
+            obj_.original_tagname_ = "smLinkGrp"
+
+
 # end class structLinkType
 
 
@@ -3059,14 +4071,16 @@ class behaviorSecType(GeneratedsSuper):
     CREATED (dateTime/O): Specifies the date and time of creation for the
     <behaviorSec>
     LABEL (string/O): A text description of the behavior section."""
+
     subclass = None
     superclass = None
+
     def __init__(self, ID=None, CREATED=None, LABEL=None, behaviorSec=None, behavior=None, **kwargs_):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
+        self.parent_object_ = kwargs_.get("parent_object_")
         self.ID = _cast(None, ID)
         if isinstance(CREATED, BaseStrType_):
-            initvalue_ = datetime_.datetime.strptime(CREATED, '%Y-%m-%dT%H:%M:%S')
+            initvalue_ = datetime_.datetime.strptime(CREATED, "%Y-%m-%dT%H:%M:%S")
         else:
             initvalue_ = CREATED
         self.CREATED = initvalue_
@@ -3080,130 +4094,215 @@ class behaviorSecType(GeneratedsSuper):
         else:
             self.behavior = behavior
         self.anyAttributes_ = {}
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, behaviorSecType)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, behaviorSecType)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if behaviorSecType.subclass:
             return behaviorSecType.subclass(*args_, **kwargs_)
         else:
             return behaviorSecType(*args_, **kwargs_)
+
     factory = staticmethod(factory)
+
     def get_behaviorSec(self):
         return self.behaviorSec
+
     def set_behaviorSec(self, behaviorSec):
         self.behaviorSec = behaviorSec
+
     def add_behaviorSec(self, value):
         self.behaviorSec.append(value)
+
     def insert_behaviorSec_at(self, index, value):
         self.behaviorSec.insert(index, value)
+
     def replace_behaviorSec_at(self, index, value):
         self.behaviorSec[index] = value
+
     def get_behavior(self):
         return self.behavior
+
     def set_behavior(self, behavior):
         self.behavior = behavior
+
     def add_behavior(self, value):
         self.behavior.append(value)
+
     def insert_behavior_at(self, index, value):
         self.behavior.insert(index, value)
+
     def replace_behavior_at(self, index, value):
         self.behavior[index] = value
+
     def get_ID(self):
         return self.ID
+
     def set_ID(self, ID):
         self.ID = ID
+
     def get_CREATED(self):
         return self.CREATED
+
     def set_CREATED(self, CREATED):
         self.CREATED = CREATED
+
     def get_LABEL(self):
         return self.LABEL
+
     def set_LABEL(self, LABEL):
         self.LABEL = LABEL
-    def get_anyAttributes_(self): return self.anyAttributes_
-    def set_anyAttributes_(self, anyAttributes_): self.anyAttributes_ = anyAttributes_
+
+    def get_anyAttributes_(self):
+        return self.anyAttributes_
+
+    def set_anyAttributes_(self, anyAttributes_):
+        self.anyAttributes_ = anyAttributes_
+
     def hasContent_(self):
-        if (
-            self.behaviorSec or
-            self.behavior
-        ):
+        if self.behaviorSec or self.behavior:
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='behaviorSecType', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('behaviorSecType')
+
+    def export(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="behaviorSecType",
+        pretty_print=True,
+    ):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("behaviorSecType")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='behaviorSecType')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="behaviorSecType")
         if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='behaviorSecType', pretty_print=pretty_print)
+            outfile.write(">%s" % (eol_,))
+            self.exportChildren(
+                outfile, level + 1, "", namespacedef_, name_="behaviorSecType", pretty_print=pretty_print
+            )
             showIndent(outfile, level, pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='behaviorSecType'):
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="behaviorSecType"):
         unique_counter = 0
         for name, value in self.anyAttributes_.items():
-            xsinamespaceprefix = 'xsi'
-            xsinamespace1 = 'http://www.w3.org/2001/XMLSchema-instance'
-            xsinamespace2 = '{%s}' % (xsinamespace1, )
+            xsinamespaceprefix = "xsi"
+            xsinamespace1 = "http://www.w3.org/2001/XMLSchema-instance"
+            xsinamespace2 = "{%s}" % (xsinamespace1,)
             if name.startswith(xsinamespace2):
-                name1 = name[len(xsinamespace2):]
-                name2 = '%s:%s' % (xsinamespaceprefix, name1, )
+                name1 = name[len(xsinamespace2) :]
+                name2 = "%s:%s" % (
+                    xsinamespaceprefix,
+                    name1,
+                )
                 if name2 not in already_processed:
                     already_processed.add(name2)
-                    outfile.write(' %s=%s' % (name2, quote_attrib(value), ))
+                    outfile.write(
+                        " %s=%s"
+                        % (
+                            name2,
+                            quote_attrib(value),
+                        )
+                    )
             else:
                 mo = re_.match(Namespace_extract_pat_, name)
                 if mo is not None:
                     namespace, name = mo.group(1, 2)
                     if name not in already_processed:
                         already_processed.add(name)
-                        if namespace == 'http://www.w3.org/XML/1998/namespace':
-                            outfile.write(' %s=%s' % (
-                                name, quote_attrib(value), ))
+                        if namespace == "http://www.w3.org/XML/1998/namespace":
+                            outfile.write(
+                                " %s=%s"
+                                % (
+                                    name,
+                                    quote_attrib(value),
+                                )
+                            )
                         else:
                             unique_counter += 1
-                            outfile.write(' xmlns:%d="%s"' % (
-                                unique_counter, namespace, ))
-                            outfile.write(' %d:%s=%s' % (
-                                unique_counter, name, quote_attrib(value), ))
+                            outfile.write(
+                                ' xmlns:%d="%s"'
+                                % (
+                                    unique_counter,
+                                    namespace,
+                                )
+                            )
+                            outfile.write(
+                                " %d:%s=%s"
+                                % (
+                                    unique_counter,
+                                    name,
+                                    quote_attrib(value),
+                                )
+                            )
                 else:
                     if name not in already_processed:
                         already_processed.add(name)
-                        outfile.write(' %s=%s' % (
-                            name, quote_attrib(value), ))
-        if self.ID is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
-            outfile.write(' ID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name='ID')), ))
-        if self.CREATED is not None and 'CREATED' not in already_processed:
-            already_processed.add('CREATED')
-            outfile.write(' CREATED="%s"' % self.gds_format_datetime(self.CREATED, input_name='CREATED'))
-        if self.LABEL is not None and 'LABEL' not in already_processed:
-            already_processed.add('LABEL')
-            outfile.write(' LABEL=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.LABEL), input_name='LABEL')), ))
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='behaviorSecType', fromsubclass_=False, pretty_print=True):
+                        outfile.write(
+                            " %s=%s"
+                            % (
+                                name,
+                                quote_attrib(value),
+                            )
+                        )
+        if self.ID is not None and "ID" not in already_processed:
+            already_processed.add("ID")
+            outfile.write(" ID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name="ID")),))
+        if self.CREATED is not None and "CREATED" not in already_processed:
+            already_processed.add("CREATED")
+            outfile.write(' CREATED="%s"' % self.gds_format_datetime(self.CREATED, input_name="CREATED"))
+        if self.LABEL is not None and "LABEL" not in already_processed:
+            already_processed.add("LABEL")
+            outfile.write(
+                " LABEL=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.LABEL), input_name="LABEL")),)
+            )
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="behaviorSecType",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         for behaviorSec_ in self.behaviorSec:
-            behaviorSec_.export(outfile, level, namespaceprefix_, namespacedef_='', name_='behaviorSec', pretty_print=pretty_print)
+            behaviorSec_.export(
+                outfile, level, namespaceprefix_, namespacedef_="", name_="behaviorSec", pretty_print=pretty_print
+            )
         for behavior_ in self.behavior:
-            behavior_.export(outfile, level, namespaceprefix_, namespacedef_='', name_='behavior', pretty_print=pretty_print)
+            behavior_.export(
+                outfile, level, namespaceprefix_, namespacedef_="", name_="behavior", pretty_print=pretty_print
+            )
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -3211,37 +4310,41 @@ class behaviorSecType(GeneratedsSuper):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('ID', node)
-        if value is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
+        value = find_attr_value_("ID", node)
+        if value is not None and "ID" not in already_processed:
+            already_processed.add("ID")
             self.ID = value
-        value = find_attr_value_('CREATED', node)
-        if value is not None and 'CREATED' not in already_processed:
-            already_processed.add('CREATED')
+        value = find_attr_value_("CREATED", node)
+        if value is not None and "CREATED" not in already_processed:
+            already_processed.add("CREATED")
             try:
                 self.CREATED = self.gds_parse_datetime(value)
             except ValueError as exp:
-                raise ValueError('Bad date-time attribute (CREATED): %s' % exp)
-        value = find_attr_value_('LABEL', node)
-        if value is not None and 'LABEL' not in already_processed:
-            already_processed.add('LABEL')
+                raise ValueError("Bad date-time attribute (CREATED): %s" % exp)
+        value = find_attr_value_("LABEL", node)
+        if value is not None and "LABEL" not in already_processed:
+            already_processed.add("LABEL")
             self.LABEL = value
         self.anyAttributes_ = {}
         for name, value in attrs.items():
             if name not in already_processed:
                 self.anyAttributes_[name] = value
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
-        if nodeName_ == 'behaviorSec':
+        if nodeName_ == "behaviorSec":
             obj_ = behaviorSecType.factory(parent_object_=self)
             obj_.build(child_)
             self.behaviorSec.append(obj_)
-            obj_.original_tagname_ = 'behaviorSec'
-        elif nodeName_ == 'behavior':
+            obj_.original_tagname_ = "behaviorSec"
+        elif nodeName_ == "behavior":
             obj_ = behaviorType.factory(parent_object_=self)
             obj_.build(child_)
             self.behavior.append(obj_)
-            obj_.original_tagname_ = 'behavior'
+            obj_.original_tagname_ = "behavior"
+
+
 # end class behaviorSecType
 
 
@@ -3277,16 +4380,30 @@ class behaviorType(GeneratedsSuper):
     ADMID (IDREFS/O): An optional attribute listing the XML ID values of
     administrative metadata sections within the METS document pertaining to
     this behavior."""
+
     subclass = None
     superclass = None
-    def __init__(self, ID=None, STRUCTID=None, BTYPE=None, CREATED=None, LABEL=None, GROUPID=None, ADMID=None, interfaceDef=None, mechanism=None, **kwargs_):
+
+    def __init__(
+        self,
+        ID=None,
+        STRUCTID=None,
+        BTYPE=None,
+        CREATED=None,
+        LABEL=None,
+        GROUPID=None,
+        ADMID=None,
+        interfaceDef=None,
+        mechanism=None,
+        **kwargs_,
+    ):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
+        self.parent_object_ = kwargs_.get("parent_object_")
         self.ID = _cast(None, ID)
         self.STRUCTID = _cast(None, STRUCTID)
         self.BTYPE = _cast(None, BTYPE)
         if isinstance(CREATED, BaseStrType_):
-            initvalue_ = datetime_.datetime.strptime(CREATED, '%Y-%m-%dT%H:%M:%S')
+            initvalue_ = datetime_.datetime.strptime(CREATED, "%Y-%m-%dT%H:%M:%S")
         else:
             initvalue_ = CREATED
         self.CREATED = initvalue_
@@ -3295,113 +4412,174 @@ class behaviorType(GeneratedsSuper):
         self.ADMID = _cast(None, ADMID)
         self.interfaceDef = interfaceDef
         self.mechanism = mechanism
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, behaviorType)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, behaviorType)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if behaviorType.subclass:
             return behaviorType.subclass(*args_, **kwargs_)
         else:
             return behaviorType(*args_, **kwargs_)
+
     factory = staticmethod(factory)
+
     def get_interfaceDef(self):
         return self.interfaceDef
+
     def set_interfaceDef(self, interfaceDef):
         self.interfaceDef = interfaceDef
+
     def get_mechanism(self):
         return self.mechanism
+
     def set_mechanism(self, mechanism):
         self.mechanism = mechanism
+
     def get_ID(self):
         return self.ID
+
     def set_ID(self, ID):
         self.ID = ID
+
     def get_STRUCTID(self):
         return self.STRUCTID
+
     def set_STRUCTID(self, STRUCTID):
         self.STRUCTID = STRUCTID
+
     def get_BTYPE(self):
         return self.BTYPE
+
     def set_BTYPE(self, BTYPE):
         self.BTYPE = BTYPE
+
     def get_CREATED(self):
         return self.CREATED
+
     def set_CREATED(self, CREATED):
         self.CREATED = CREATED
+
     def get_LABEL(self):
         return self.LABEL
+
     def set_LABEL(self, LABEL):
         self.LABEL = LABEL
+
     def get_GROUPID(self):
         return self.GROUPID
+
     def set_GROUPID(self, GROUPID):
         self.GROUPID = GROUPID
+
     def get_ADMID(self):
         return self.ADMID
+
     def set_ADMID(self, ADMID):
         self.ADMID = ADMID
+
     def hasContent_(self):
-        if (
-            self.interfaceDef is not None or
-            self.mechanism is not None
-        ):
+        if self.interfaceDef is not None or self.mechanism is not None:
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='behaviorType', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('behaviorType')
+
+    def export(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="behaviorType",
+        pretty_print=True,
+    ):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("behaviorType")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='behaviorType')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="behaviorType")
         if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='behaviorType', pretty_print=pretty_print)
+            outfile.write(">%s" % (eol_,))
+            self.exportChildren(outfile, level + 1, "", namespacedef_, name_="behaviorType", pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='behaviorType'):
-        if self.ID is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
-            outfile.write(' ID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name='ID')), ))
-        if self.STRUCTID is not None and 'STRUCTID' not in already_processed:
-            already_processed.add('STRUCTID')
-            outfile.write(' STRUCTID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.STRUCTID), input_name='STRUCTID')), ))
-        if self.BTYPE is not None and 'BTYPE' not in already_processed:
-            already_processed.add('BTYPE')
-            outfile.write(' BTYPE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.BTYPE), input_name='BTYPE')), ))
-        if self.CREATED is not None and 'CREATED' not in already_processed:
-            already_processed.add('CREATED')
-            outfile.write(' CREATED="%s"' % self.gds_format_datetime(self.CREATED, input_name='CREATED'))
-        if self.LABEL is not None and 'LABEL' not in already_processed:
-            already_processed.add('LABEL')
-            outfile.write(' LABEL=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.LABEL), input_name='LABEL')), ))
-        if self.GROUPID is not None and 'GROUPID' not in already_processed:
-            already_processed.add('GROUPID')
-            outfile.write(' GROUPID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.GROUPID), input_name='GROUPID')), ))
-        if self.ADMID is not None and 'ADMID' not in already_processed:
-            already_processed.add('ADMID')
-            outfile.write(' ADMID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ADMID), input_name='ADMID')), ))
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='behaviorType', fromsubclass_=False, pretty_print=True):
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="behaviorType"):
+        if self.ID is not None and "ID" not in already_processed:
+            already_processed.add("ID")
+            outfile.write(" ID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name="ID")),))
+        if self.STRUCTID is not None and "STRUCTID" not in already_processed:
+            already_processed.add("STRUCTID")
+            outfile.write(
+                " STRUCTID=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.STRUCTID), input_name="STRUCTID")),)
+            )
+        if self.BTYPE is not None and "BTYPE" not in already_processed:
+            already_processed.add("BTYPE")
+            outfile.write(
+                " BTYPE=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.BTYPE), input_name="BTYPE")),)
+            )
+        if self.CREATED is not None and "CREATED" not in already_processed:
+            already_processed.add("CREATED")
+            outfile.write(' CREATED="%s"' % self.gds_format_datetime(self.CREATED, input_name="CREATED"))
+        if self.LABEL is not None and "LABEL" not in already_processed:
+            already_processed.add("LABEL")
+            outfile.write(
+                " LABEL=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.LABEL), input_name="LABEL")),)
+            )
+        if self.GROUPID is not None and "GROUPID" not in already_processed:
+            already_processed.add("GROUPID")
+            outfile.write(
+                " GROUPID=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.GROUPID), input_name="GROUPID")),)
+            )
+        if self.ADMID is not None and "ADMID" not in already_processed:
+            already_processed.add("ADMID")
+            outfile.write(
+                " ADMID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ADMID), input_name="ADMID")),)
+            )
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="behaviorType",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.interfaceDef is not None:
-            self.interfaceDef.export(outfile, level, namespaceprefix_, namespacedef_='', name_='interfaceDef', pretty_print=pretty_print)
+            self.interfaceDef.export(
+                outfile, level, namespaceprefix_, namespacedef_="", name_="interfaceDef", pretty_print=pretty_print
+            )
         if self.mechanism is not None:
-            self.mechanism.export(outfile, level, namespaceprefix_, namespacedef_='', name_='mechanism', pretty_print=pretty_print)
+            self.mechanism.export(
+                outfile, level, namespaceprefix_, namespacedef_="", name_="mechanism", pretty_print=pretty_print
+            )
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -3409,49 +4587,53 @@ class behaviorType(GeneratedsSuper):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('ID', node)
-        if value is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
+        value = find_attr_value_("ID", node)
+        if value is not None and "ID" not in already_processed:
+            already_processed.add("ID")
             self.ID = value
-        value = find_attr_value_('STRUCTID', node)
-        if value is not None and 'STRUCTID' not in already_processed:
-            already_processed.add('STRUCTID')
+        value = find_attr_value_("STRUCTID", node)
+        if value is not None and "STRUCTID" not in already_processed:
+            already_processed.add("STRUCTID")
             self.STRUCTID = value
-        value = find_attr_value_('BTYPE', node)
-        if value is not None and 'BTYPE' not in already_processed:
-            already_processed.add('BTYPE')
+        value = find_attr_value_("BTYPE", node)
+        if value is not None and "BTYPE" not in already_processed:
+            already_processed.add("BTYPE")
             self.BTYPE = value
-        value = find_attr_value_('CREATED', node)
-        if value is not None and 'CREATED' not in already_processed:
-            already_processed.add('CREATED')
+        value = find_attr_value_("CREATED", node)
+        if value is not None and "CREATED" not in already_processed:
+            already_processed.add("CREATED")
             try:
                 self.CREATED = self.gds_parse_datetime(value)
             except ValueError as exp:
-                raise ValueError('Bad date-time attribute (CREATED): %s' % exp)
-        value = find_attr_value_('LABEL', node)
-        if value is not None and 'LABEL' not in already_processed:
-            already_processed.add('LABEL')
+                raise ValueError("Bad date-time attribute (CREATED): %s" % exp)
+        value = find_attr_value_("LABEL", node)
+        if value is not None and "LABEL" not in already_processed:
+            already_processed.add("LABEL")
             self.LABEL = value
-        value = find_attr_value_('GROUPID', node)
-        if value is not None and 'GROUPID' not in already_processed:
-            already_processed.add('GROUPID')
+        value = find_attr_value_("GROUPID", node)
+        if value is not None and "GROUPID" not in already_processed:
+            already_processed.add("GROUPID")
             self.GROUPID = value
-        value = find_attr_value_('ADMID', node)
-        if value is not None and 'ADMID' not in already_processed:
-            already_processed.add('ADMID')
+        value = find_attr_value_("ADMID", node)
+        if value is not None and "ADMID" not in already_processed:
+            already_processed.add("ADMID")
             self.ADMID = value
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
-        if nodeName_ == 'interfaceDef':
+        if nodeName_ == "interfaceDef":
             obj_ = objectType.factory(parent_object_=self)
             obj_.build(child_)
             self.interfaceDef = obj_
-            obj_.original_tagname_ = 'interfaceDef'
-        elif nodeName_ == 'mechanism':
+            obj_.original_tagname_ = "interfaceDef"
+        elif nodeName_ == "mechanism":
             obj_ = objectType.factory(parent_object_=self)
             obj_.build(child_)
             self.mechanism = obj_
-            obj_.original_tagname_ = 'mechanism'
+            obj_.original_tagname_ = "mechanism"
+
+
 # end class behaviorType
 
 
@@ -3467,11 +4649,27 @@ class objectType(GeneratedsSuper):
     information on using ID attributes for internal and external linking
     see Chapter 4 of the METS Primer.
     LABEL (string/O): A text description of the entity represented."""
+
     subclass = None
     superclass = None
-    def __init__(self, ID=None, LABEL=None, LOCTYPE=None, OTHERLOCTYPE=None, type_='simple', href=None, role=None, arcrole=None, title=None, show=None, actuate=None, **kwargs_):
+
+    def __init__(
+        self,
+        ID=None,
+        LABEL=None,
+        LOCTYPE=None,
+        OTHERLOCTYPE=None,
+        type_="simple",
+        href=None,
+        role=None,
+        arcrole=None,
+        title=None,
+        show=None,
+        actuate=None,
+        **kwargs_,
+    ):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
+        self.parent_object_ = kwargs_.get("parent_object_")
         self.ID = _cast(None, ID)
         self.LABEL = _cast(None, LABEL)
         self.LOCTYPE = _cast(None, LOCTYPE)
@@ -3483,124 +4681,179 @@ class objectType(GeneratedsSuper):
         self.title = _cast(None, title)
         self.show = _cast(None, show)
         self.actuate = _cast(None, actuate)
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, objectType)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, objectType)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if objectType.subclass:
             return objectType.subclass(*args_, **kwargs_)
         else:
             return objectType(*args_, **kwargs_)
+
     factory = staticmethod(factory)
+
     def get_ID(self):
         return self.ID
+
     def set_ID(self, ID):
         self.ID = ID
+
     def get_LABEL(self):
         return self.LABEL
+
     def set_LABEL(self, LABEL):
         self.LABEL = LABEL
+
     def get_LOCTYPE(self):
         return self.LOCTYPE
+
     def set_LOCTYPE(self, LOCTYPE):
         self.LOCTYPE = LOCTYPE
+
     def get_OTHERLOCTYPE(self):
         return self.OTHERLOCTYPE
+
     def set_OTHERLOCTYPE(self, OTHERLOCTYPE):
         self.OTHERLOCTYPE = OTHERLOCTYPE
+
     def get_type(self):
         return self.type_
+
     def set_type(self, type_):
         self.type_ = type_
+
     def get_href(self):
         return self.href
+
     def set_href(self, href):
         self.href = href
+
     def get_role(self):
         return self.role
+
     def set_role(self, role):
         self.role = role
+
     def get_arcrole(self):
         return self.arcrole
+
     def set_arcrole(self, arcrole):
         self.arcrole = arcrole
+
     def get_title(self):
         return self.title
+
     def set_title(self, title):
         self.title = title
+
     def get_show(self):
         return self.show
+
     def set_show(self, show):
         self.show = show
+
     def get_actuate(self):
         return self.actuate
+
     def set_actuate(self, actuate):
         self.actuate = actuate
-    def hasContent_(self):
-        if (
 
-        ):
+    def hasContent_(self):
+        if ():
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='objectType', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('objectType')
+
+    def export(self, outfile, level, namespaceprefix_="", namespacedef_="", name_="objectType", pretty_print=True):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("objectType")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='objectType')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="objectType")
         if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='objectType', pretty_print=pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            outfile.write(">%s" % (eol_,))
+            self.exportChildren(outfile, level + 1, "", namespacedef_, name_="objectType", pretty_print=pretty_print)
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='objectType'):
-        if self.ID is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
-            outfile.write(' ID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name='ID')), ))
-        if self.LABEL is not None and 'LABEL' not in already_processed:
-            already_processed.add('LABEL')
-            outfile.write(' LABEL=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.LABEL), input_name='LABEL')), ))
-        if 'LOCTYPE' not in already_processed:
-            already_processed.add('LOCTYPE')
-            outfile.write(' LOCTYPE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.LOCTYPE), input_name='LOCTYPE')), ))
-        if self.OTHERLOCTYPE is not None and 'OTHERLOCTYPE' not in already_processed:
-            already_processed.add('OTHERLOCTYPE')
-            outfile.write(' OTHERLOCTYPE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.OTHERLOCTYPE), input_name='OTHERLOCTYPE')), ))
-        if self.type_ != "simple" and 'type_' not in already_processed:
-            already_processed.add('type_')
-            outfile.write(' type=%s' % (quote_attrib(self.type_), ))
-        if self.href is not None and 'href' not in already_processed:
-            already_processed.add('href')
-            outfile.write(' href=%s' % (quote_attrib(self.href), ))
-        if self.role is not None and 'role' not in already_processed:
-            already_processed.add('role')
-            outfile.write(' role=%s' % (quote_attrib(self.role), ))
-        if self.arcrole is not None and 'arcrole' not in already_processed:
-            already_processed.add('arcrole')
-            outfile.write(' arcrole=%s' % (quote_attrib(self.arcrole), ))
-        if self.title is not None and 'title' not in already_processed:
-            already_processed.add('title')
-            outfile.write(' title=%s' % (quote_attrib(self.title), ))
-        if self.show is not None and 'show' not in already_processed:
-            already_processed.add('show')
-            outfile.write(' show=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.show), input_name='show')), ))
-        if self.actuate is not None and 'actuate' not in already_processed:
-            already_processed.add('actuate')
-            outfile.write(' actuate=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.actuate), input_name='actuate')), ))
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='objectType', fromsubclass_=False, pretty_print=True):
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="objectType"):
+        if self.ID is not None and "ID" not in already_processed:
+            already_processed.add("ID")
+            outfile.write(" ID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name="ID")),))
+        if self.LABEL is not None and "LABEL" not in already_processed:
+            already_processed.add("LABEL")
+            outfile.write(
+                " LABEL=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.LABEL), input_name="LABEL")),)
+            )
+        if "LOCTYPE" not in already_processed:
+            already_processed.add("LOCTYPE")
+            outfile.write(
+                " LOCTYPE=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.LOCTYPE), input_name="LOCTYPE")),)
+            )
+        if self.OTHERLOCTYPE is not None and "OTHERLOCTYPE" not in already_processed:
+            already_processed.add("OTHERLOCTYPE")
+            outfile.write(
+                " OTHERLOCTYPE=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.OTHERLOCTYPE), input_name="OTHERLOCTYPE")),)
+            )
+        if self.type_ != "simple" and "type_" not in already_processed:
+            already_processed.add("type_")
+            outfile.write(" type=%s" % (quote_attrib(self.type_),))
+        if self.href is not None and "href" not in already_processed:
+            already_processed.add("href")
+            outfile.write(" href=%s" % (quote_attrib(self.href),))
+        if self.role is not None and "role" not in already_processed:
+            already_processed.add("role")
+            outfile.write(" role=%s" % (quote_attrib(self.role),))
+        if self.arcrole is not None and "arcrole" not in already_processed:
+            already_processed.add("arcrole")
+            outfile.write(" arcrole=%s" % (quote_attrib(self.arcrole),))
+        if self.title is not None and "title" not in already_processed:
+            already_processed.add("title")
+            outfile.write(" title=%s" % (quote_attrib(self.title),))
+        if self.show is not None and "show" not in already_processed:
+            already_processed.add("show")
+            outfile.write(
+                " show=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.show), input_name="show")),)
+            )
+        if self.actuate is not None and "actuate" not in already_processed:
+            already_processed.add("actuate")
+            outfile.write(
+                " actuate=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.actuate), input_name="actuate")),)
+            )
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_="",
+        name_="objectType",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
         pass
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -3608,53 +4861,57 @@ class objectType(GeneratedsSuper):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('ID', node)
-        if value is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
+        value = find_attr_value_("ID", node)
+        if value is not None and "ID" not in already_processed:
+            already_processed.add("ID")
             self.ID = value
-        value = find_attr_value_('LABEL', node)
-        if value is not None and 'LABEL' not in already_processed:
-            already_processed.add('LABEL')
+        value = find_attr_value_("LABEL", node)
+        if value is not None and "LABEL" not in already_processed:
+            already_processed.add("LABEL")
             self.LABEL = value
-        value = find_attr_value_('LOCTYPE', node)
-        if value is not None and 'LOCTYPE' not in already_processed:
-            already_processed.add('LOCTYPE')
+        value = find_attr_value_("LOCTYPE", node)
+        if value is not None and "LOCTYPE" not in already_processed:
+            already_processed.add("LOCTYPE")
             self.LOCTYPE = value
-        value = find_attr_value_('OTHERLOCTYPE', node)
-        if value is not None and 'OTHERLOCTYPE' not in already_processed:
-            already_processed.add('OTHERLOCTYPE')
+        value = find_attr_value_("OTHERLOCTYPE", node)
+        if value is not None and "OTHERLOCTYPE" not in already_processed:
+            already_processed.add("OTHERLOCTYPE")
             self.OTHERLOCTYPE = value
-        value = find_attr_value_('type', node)
-        if value is not None and 'type' not in already_processed:
-            already_processed.add('type')
+        value = find_attr_value_("type", node)
+        if value is not None and "type" not in already_processed:
+            already_processed.add("type")
             self.type_ = value
-        value = find_attr_value_('href', node)
-        if value is not None and 'href' not in already_processed:
-            already_processed.add('href')
+        value = find_attr_value_("href", node)
+        if value is not None and "href" not in already_processed:
+            already_processed.add("href")
             self.href = value
-        value = find_attr_value_('role', node)
-        if value is not None and 'role' not in already_processed:
-            already_processed.add('role')
+        value = find_attr_value_("role", node)
+        if value is not None and "role" not in already_processed:
+            already_processed.add("role")
             self.role = value
-        value = find_attr_value_('arcrole', node)
-        if value is not None and 'arcrole' not in already_processed:
-            already_processed.add('arcrole')
+        value = find_attr_value_("arcrole", node)
+        if value is not None and "arcrole" not in already_processed:
+            already_processed.add("arcrole")
             self.arcrole = value
-        value = find_attr_value_('title', node)
-        if value is not None and 'title' not in already_processed:
-            already_processed.add('title')
+        value = find_attr_value_("title", node)
+        if value is not None and "title" not in already_processed:
+            already_processed.add("title")
             self.title = value
-        value = find_attr_value_('show', node)
-        if value is not None and 'show' not in already_processed:
-            already_processed.add('show')
+        value = find_attr_value_("show", node)
+        if value is not None and "show" not in already_processed:
+            already_processed.add("show")
             self.show = value
-        value = find_attr_value_('actuate', node)
-        if value is not None and 'actuate' not in already_processed:
-            already_processed.add('actuate')
+        value = find_attr_value_("actuate", node)
+        if value is not None and "actuate" not in already_processed:
+            already_processed.add("actuate")
             self.actuate = value
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
+
+
 # end class objectType
 
 
@@ -3695,16 +4952,20 @@ class mdSecType(GeneratedsSuper):
     metadata.
     STATUS (string/O): Indicates the status of this metadata (e.g., superseded,
     current, etc.)."""
+
     subclass = None
     superclass = None
-    def __init__(self, ID=None, GROUPID=None, ADMID=None, CREATED=None, STATUS=None, mdRef=None, mdWrap=None, **kwargs_):
+
+    def __init__(
+        self, ID=None, GROUPID=None, ADMID=None, CREATED=None, STATUS=None, mdRef=None, mdWrap=None, **kwargs_
+    ):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
+        self.parent_object_ = kwargs_.get("parent_object_")
         self.ID = _cast(None, ID)
         self.GROUPID = _cast(None, GROUPID)
         self.ADMID = _cast(None, ADMID)
         if isinstance(CREATED, BaseStrType_):
-            initvalue_ = datetime_.datetime.strptime(CREATED, '%Y-%m-%dT%H:%M:%S')
+            initvalue_ = datetime_.datetime.strptime(CREATED, "%Y-%m-%dT%H:%M:%S")
         else:
             initvalue_ = CREATED
         self.CREATED = initvalue_
@@ -3712,132 +4973,219 @@ class mdSecType(GeneratedsSuper):
         self.mdRef = mdRef
         self.mdWrap = mdWrap
         self.anyAttributes_ = {}
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, mdSecType)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, mdSecType)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if mdSecType.subclass:
             return mdSecType.subclass(*args_, **kwargs_)
         else:
             return mdSecType(*args_, **kwargs_)
+
     factory = staticmethod(factory)
+
     def get_mdRef(self):
         return self.mdRef
+
     def set_mdRef(self, mdRef):
         self.mdRef = mdRef
+
     def get_mdWrap(self):
         return self.mdWrap
+
     def set_mdWrap(self, mdWrap):
         self.mdWrap = mdWrap
+
     def get_ID(self):
         return self.ID
+
     def set_ID(self, ID):
         self.ID = ID
+
     def get_GROUPID(self):
         return self.GROUPID
+
     def set_GROUPID(self, GROUPID):
         self.GROUPID = GROUPID
+
     def get_ADMID(self):
         return self.ADMID
+
     def set_ADMID(self, ADMID):
         self.ADMID = ADMID
+
     def get_CREATED(self):
         return self.CREATED
+
     def set_CREATED(self, CREATED):
         self.CREATED = CREATED
+
     def get_STATUS(self):
         return self.STATUS
+
     def set_STATUS(self, STATUS):
         self.STATUS = STATUS
-    def get_anyAttributes_(self): return self.anyAttributes_
-    def set_anyAttributes_(self, anyAttributes_): self.anyAttributes_ = anyAttributes_
+
+    def get_anyAttributes_(self):
+        return self.anyAttributes_
+
+    def set_anyAttributes_(self, anyAttributes_):
+        self.anyAttributes_ = anyAttributes_
+
     def hasContent_(self):
-        if (
-            self.mdRef is not None or
-            self.mdWrap is not None
-        ):
+        if self.mdRef is not None or self.mdWrap is not None:
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='mdSecType', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('mdSecType')
+
+    def export(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="mdSecType",
+        pretty_print=True,
+    ):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("mdSecType")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='mdSecType')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="mdSecType")
         if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='mdSecType', pretty_print=pretty_print)
+            outfile.write(">%s" % (eol_,))
+            self.exportChildren(outfile, level + 1, "", namespacedef_, name_="mdSecType", pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='mdSecType'):
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="mdSecType"):
         unique_counter = 0
         for name, value in self.anyAttributes_.items():
-            xsinamespaceprefix = 'xsi'
-            xsinamespace1 = 'http://www.w3.org/2001/XMLSchema-instance'
-            xsinamespace2 = '{%s}' % (xsinamespace1, )
+            xsinamespaceprefix = "xsi"
+            xsinamespace1 = "http://www.w3.org/2001/XMLSchema-instance"
+            xsinamespace2 = "{%s}" % (xsinamespace1,)
             if name.startswith(xsinamespace2):
-                name1 = name[len(xsinamespace2):]
-                name2 = '%s:%s' % (xsinamespaceprefix, name1, )
+                name1 = name[len(xsinamespace2) :]
+                name2 = "%s:%s" % (
+                    xsinamespaceprefix,
+                    name1,
+                )
                 if name2 not in already_processed:
                     already_processed.add(name2)
-                    outfile.write(' %s=%s' % (name2, quote_attrib(value), ))
+                    outfile.write(
+                        " %s=%s"
+                        % (
+                            name2,
+                            quote_attrib(value),
+                        )
+                    )
             else:
                 mo = re_.match(Namespace_extract_pat_, name)
                 if mo is not None:
                     namespace, name = mo.group(1, 2)
                     if name not in already_processed:
                         already_processed.add(name)
-                        if namespace == 'http://www.w3.org/XML/1998/namespace':
-                            outfile.write(' %s=%s' % (
-                                name, quote_attrib(value), ))
+                        if namespace == "http://www.w3.org/XML/1998/namespace":
+                            outfile.write(
+                                " %s=%s"
+                                % (
+                                    name,
+                                    quote_attrib(value),
+                                )
+                            )
                         else:
                             unique_counter += 1
-                            outfile.write(' xmlns:%d="%s"' % (
-                                unique_counter, namespace, ))
-                            outfile.write(' %d:%s=%s' % (
-                                unique_counter, name, quote_attrib(value), ))
+                            outfile.write(
+                                ' xmlns:%d="%s"'
+                                % (
+                                    unique_counter,
+                                    namespace,
+                                )
+                            )
+                            outfile.write(
+                                " %d:%s=%s"
+                                % (
+                                    unique_counter,
+                                    name,
+                                    quote_attrib(value),
+                                )
+                            )
                 else:
                     if name not in already_processed:
                         already_processed.add(name)
-                        outfile.write(' %s=%s' % (
-                            name, quote_attrib(value), ))
-        if 'ID' not in already_processed:
-            already_processed.add('ID')
-            outfile.write(' ID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name='ID')), ))
-        if self.GROUPID is not None and 'GROUPID' not in already_processed:
-            already_processed.add('GROUPID')
-            outfile.write(' GROUPID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.GROUPID), input_name='GROUPID')), ))
-        if self.ADMID is not None and 'ADMID' not in already_processed:
-            already_processed.add('ADMID')
-            outfile.write(' ADMID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ADMID), input_name='ADMID')), ))
-        if self.CREATED is not None and 'CREATED' not in already_processed:
-            already_processed.add('CREATED')
-            outfile.write(' CREATED="%s"' % self.gds_format_datetime(self.CREATED, input_name='CREATED'))
-        if self.STATUS is not None and 'STATUS' not in already_processed:
-            already_processed.add('STATUS')
-            outfile.write(' STATUS=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.STATUS), input_name='STATUS')), ))
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='mdSecType', fromsubclass_=False, pretty_print=True):
+                        outfile.write(
+                            " %s=%s"
+                            % (
+                                name,
+                                quote_attrib(value),
+                            )
+                        )
+        if "ID" not in already_processed:
+            already_processed.add("ID")
+            outfile.write(" ID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name="ID")),))
+        if self.GROUPID is not None and "GROUPID" not in already_processed:
+            already_processed.add("GROUPID")
+            outfile.write(
+                " GROUPID=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.GROUPID), input_name="GROUPID")),)
+            )
+        if self.ADMID is not None and "ADMID" not in already_processed:
+            already_processed.add("ADMID")
+            outfile.write(
+                " ADMID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ADMID), input_name="ADMID")),)
+            )
+        if self.CREATED is not None and "CREATED" not in already_processed:
+            already_processed.add("CREATED")
+            outfile.write(' CREATED="%s"' % self.gds_format_datetime(self.CREATED, input_name="CREATED"))
+        if self.STATUS is not None and "STATUS" not in already_processed:
+            already_processed.add("STATUS")
+            outfile.write(
+                " STATUS=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.STATUS), input_name="STATUS")),)
+            )
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="mdSecType",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.mdRef is not None:
-            self.mdRef.export(outfile, level, namespaceprefix_, namespacedef_='', name_='mdRef', pretty_print=pretty_print)
+            self.mdRef.export(
+                outfile, level, namespaceprefix_, namespacedef_="", name_="mdRef", pretty_print=pretty_print
+            )
         if self.mdWrap is not None:
-            self.mdWrap.export(outfile, level, namespaceprefix_, namespacedef_='', name_='mdWrap', pretty_print=pretty_print)
+            self.mdWrap.export(
+                outfile, level, namespaceprefix_, namespacedef_="", name_="mdWrap", pretty_print=pretty_print
+            )
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -3845,45 +5193,49 @@ class mdSecType(GeneratedsSuper):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('ID', node)
-        if value is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
+        value = find_attr_value_("ID", node)
+        if value is not None and "ID" not in already_processed:
+            already_processed.add("ID")
             self.ID = value
-        value = find_attr_value_('GROUPID', node)
-        if value is not None and 'GROUPID' not in already_processed:
-            already_processed.add('GROUPID')
+        value = find_attr_value_("GROUPID", node)
+        if value is not None and "GROUPID" not in already_processed:
+            already_processed.add("GROUPID")
             self.GROUPID = value
-        value = find_attr_value_('ADMID', node)
-        if value is not None and 'ADMID' not in already_processed:
-            already_processed.add('ADMID')
+        value = find_attr_value_("ADMID", node)
+        if value is not None and "ADMID" not in already_processed:
+            already_processed.add("ADMID")
             self.ADMID = value
-        value = find_attr_value_('CREATED', node)
-        if value is not None and 'CREATED' not in already_processed:
-            already_processed.add('CREATED')
+        value = find_attr_value_("CREATED", node)
+        if value is not None and "CREATED" not in already_processed:
+            already_processed.add("CREATED")
             try:
                 self.CREATED = self.gds_parse_datetime(value)
             except ValueError as exp:
-                raise ValueError('Bad date-time attribute (CREATED): %s' % exp)
-        value = find_attr_value_('STATUS', node)
-        if value is not None and 'STATUS' not in already_processed:
-            already_processed.add('STATUS')
+                raise ValueError("Bad date-time attribute (CREATED): %s" % exp)
+        value = find_attr_value_("STATUS", node)
+        if value is not None and "STATUS" not in already_processed:
+            already_processed.add("STATUS")
             self.STATUS = value
         self.anyAttributes_ = {}
         for name, value in attrs.items():
             if name not in already_processed:
                 self.anyAttributes_[name] = value
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
-        if nodeName_ == 'mdRef':
+        if nodeName_ == "mdRef":
             obj_ = mdRefType.factory(parent_object_=self)
             obj_.build(child_)
             self.mdRef = obj_
-            obj_.original_tagname_ = 'mdRef'
-        elif nodeName_ == 'mdWrap':
+            obj_.original_tagname_ = "mdRef"
+        elif nodeName_ == "mdWrap":
             obj_ = mdWrapType.factory(parent_object_=self)
             obj_.build(child_)
             self.mdWrap = obj_
-            obj_.original_tagname_ = 'mdWrap'
+            obj_.original_tagname_ = "mdWrap"
+
+
 # end class mdSecType
 
 
@@ -3956,11 +5308,36 @@ class fileType(GeneratedsSuper):
     BETYPE (string/O): An attribute that specifies the kind of BEGIN and/or END
     values that are being used. Currently BYTE is the only valid value that
     can be used in conjunction with nested <file> or <stream> elements."""
+
     subclass = None
     superclass = None
-    def __init__(self, ID=None, SEQ=None, OWNERID=None, ADMID=None, DMDID=None, GROUPID=None, USE=None, BEGIN=None, END=None, BETYPE=None, MIMETYPE=None, SIZE=None, CREATED=None, CHECKSUM=None, CHECKSUMTYPE=None, FLocat=None, FContent=None, stream=None, transformFile=None, file=None, **kwargs_):
+
+    def __init__(
+        self,
+        ID=None,
+        SEQ=None,
+        OWNERID=None,
+        ADMID=None,
+        DMDID=None,
+        GROUPID=None,
+        USE=None,
+        BEGIN=None,
+        END=None,
+        BETYPE=None,
+        MIMETYPE=None,
+        SIZE=None,
+        CREATED=None,
+        CHECKSUM=None,
+        CHECKSUMTYPE=None,
+        FLocat=None,
+        FContent=None,
+        stream=None,
+        transformFile=None,
+        file=None,
+        **kwargs_,
+    ):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
+        self.parent_object_ = kwargs_.get("parent_object_")
         self.ID = _cast(None, ID)
         self.SEQ = _cast(int, SEQ)
         self.OWNERID = _cast(None, OWNERID)
@@ -3974,7 +5351,7 @@ class fileType(GeneratedsSuper):
         self.MIMETYPE = _cast(None, MIMETYPE)
         self.SIZE = _cast(int, SIZE)
         if isinstance(CREATED, BaseStrType_):
-            initvalue_ = datetime_.datetime.strptime(CREATED, '%Y-%m-%dT%H:%M:%S')
+            initvalue_ = datetime_.datetime.strptime(CREATED, "%Y-%m-%dT%H:%M:%S")
         else:
             initvalue_ = CREATED
         self.CREATED = initvalue_
@@ -3998,247 +5375,393 @@ class fileType(GeneratedsSuper):
         else:
             self.file = file
         self.anyAttributes_ = {}
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, fileType)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, fileType)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if fileType.subclass:
             return fileType.subclass(*args_, **kwargs_)
         else:
             return fileType(*args_, **kwargs_)
+
     factory = staticmethod(factory)
+
     def get_FLocat(self):
         return self.FLocat
+
     def set_FLocat(self, FLocat):
         self.FLocat = FLocat
+
     def add_FLocat(self, value):
         self.FLocat.append(value)
+
     def insert_FLocat_at(self, index, value):
         self.FLocat.insert(index, value)
+
     def replace_FLocat_at(self, index, value):
         self.FLocat[index] = value
+
     def get_FContent(self):
         return self.FContent
+
     def set_FContent(self, FContent):
         self.FContent = FContent
+
     def get_stream(self):
         return self.stream
+
     def set_stream(self, stream):
         self.stream = stream
+
     def add_stream(self, value):
         self.stream.append(value)
+
     def insert_stream_at(self, index, value):
         self.stream.insert(index, value)
+
     def replace_stream_at(self, index, value):
         self.stream[index] = value
+
     def get_transformFile(self):
         return self.transformFile
+
     def set_transformFile(self, transformFile):
         self.transformFile = transformFile
+
     def add_transformFile(self, value):
         self.transformFile.append(value)
+
     def insert_transformFile_at(self, index, value):
         self.transformFile.insert(index, value)
+
     def replace_transformFile_at(self, index, value):
         self.transformFile[index] = value
+
     def get_file(self):
         return self.file
+
     def set_file(self, file):
         self.file = file
+
     def add_file(self, value):
         self.file.append(value)
+
     def insert_file_at(self, index, value):
         self.file.insert(index, value)
+
     def replace_file_at(self, index, value):
         self.file[index] = value
+
     def get_ID(self):
         return self.ID
+
     def set_ID(self, ID):
         self.ID = ID
+
     def get_SEQ(self):
         return self.SEQ
+
     def set_SEQ(self, SEQ):
         self.SEQ = SEQ
+
     def get_OWNERID(self):
         return self.OWNERID
+
     def set_OWNERID(self, OWNERID):
         self.OWNERID = OWNERID
+
     def get_ADMID(self):
         return self.ADMID
+
     def set_ADMID(self, ADMID):
         self.ADMID = ADMID
+
     def get_DMDID(self):
         return self.DMDID
+
     def set_DMDID(self, DMDID):
         self.DMDID = DMDID
+
     def get_GROUPID(self):
         return self.GROUPID
+
     def set_GROUPID(self, GROUPID):
         self.GROUPID = GROUPID
+
     def get_USE(self):
         return self.USE
+
     def set_USE(self, USE):
         self.USE = USE
+
     def get_BEGIN(self):
         return self.BEGIN
+
     def set_BEGIN(self, BEGIN):
         self.BEGIN = BEGIN
+
     def get_END(self):
         return self.END
+
     def set_END(self, END):
         self.END = END
+
     def get_BETYPE(self):
         return self.BETYPE
+
     def set_BETYPE(self, BETYPE):
         self.BETYPE = BETYPE
+
     def get_MIMETYPE(self):
         return self.MIMETYPE
+
     def set_MIMETYPE(self, MIMETYPE):
         self.MIMETYPE = MIMETYPE
+
     def get_SIZE(self):
         return self.SIZE
+
     def set_SIZE(self, SIZE):
         self.SIZE = SIZE
+
     def get_CREATED(self):
         return self.CREATED
+
     def set_CREATED(self, CREATED):
         self.CREATED = CREATED
+
     def get_CHECKSUM(self):
         return self.CHECKSUM
+
     def set_CHECKSUM(self, CHECKSUM):
         self.CHECKSUM = CHECKSUM
+
     def get_CHECKSUMTYPE(self):
         return self.CHECKSUMTYPE
+
     def set_CHECKSUMTYPE(self, CHECKSUMTYPE):
         self.CHECKSUMTYPE = CHECKSUMTYPE
-    def get_anyAttributes_(self): return self.anyAttributes_
-    def set_anyAttributes_(self, anyAttributes_): self.anyAttributes_ = anyAttributes_
+
+    def get_anyAttributes_(self):
+        return self.anyAttributes_
+
+    def set_anyAttributes_(self, anyAttributes_):
+        self.anyAttributes_ = anyAttributes_
+
     def hasContent_(self):
-        if (
-            self.FLocat or
-            self.FContent is not None or
-            self.stream or
-            self.transformFile or
-            self.file
-        ):
+        if self.FLocat or self.FContent is not None or self.stream or self.transformFile or self.file:
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='fileType', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('fileType')
+
+    def export(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="fileType",
+        pretty_print=True,
+    ):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("fileType")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='fileType')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="fileType")
         if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='fileType', pretty_print=pretty_print)
+            outfile.write(">%s" % (eol_,))
+            self.exportChildren(outfile, level + 1, "", namespacedef_, name_="fileType", pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='fileType'):
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="fileType"):
         unique_counter = 0
         for name, value in self.anyAttributes_.items():
-            xsinamespaceprefix = 'xsi'
-            xsinamespace1 = 'http://www.w3.org/2001/XMLSchema-instance'
-            xsinamespace2 = '{%s}' % (xsinamespace1, )
+            xsinamespaceprefix = "xsi"
+            xsinamespace1 = "http://www.w3.org/2001/XMLSchema-instance"
+            xsinamespace2 = "{%s}" % (xsinamespace1,)
             if name.startswith(xsinamespace2):
-                name1 = name[len(xsinamespace2):]
-                name2 = '%s:%s' % (xsinamespaceprefix, name1, )
+                name1 = name[len(xsinamespace2) :]
+                name2 = "%s:%s" % (
+                    xsinamespaceprefix,
+                    name1,
+                )
                 if name2 not in already_processed:
                     already_processed.add(name2)
-                    outfile.write(' %s=%s' % (name2, quote_attrib(value), ))
+                    outfile.write(
+                        " %s=%s"
+                        % (
+                            name2,
+                            quote_attrib(value),
+                        )
+                    )
             else:
                 mo = re_.match(Namespace_extract_pat_, name)
                 if mo is not None:
                     namespace, name = mo.group(1, 2)
                     if name not in already_processed:
                         already_processed.add(name)
-                        if namespace == 'http://www.w3.org/XML/1998/namespace':
-                            outfile.write(' %s=%s' % (
-                                name, quote_attrib(value), ))
+                        if namespace == "http://www.w3.org/XML/1998/namespace":
+                            outfile.write(
+                                " %s=%s"
+                                % (
+                                    name,
+                                    quote_attrib(value),
+                                )
+                            )
                         else:
                             unique_counter += 1
-                            outfile.write(' xmlns:%d="%s"' % (
-                                unique_counter, namespace, ))
-                            outfile.write(' %d:%s=%s' % (
-                                unique_counter, name, quote_attrib(value), ))
+                            outfile.write(
+                                ' xmlns:%d="%s"'
+                                % (
+                                    unique_counter,
+                                    namespace,
+                                )
+                            )
+                            outfile.write(
+                                " %d:%s=%s"
+                                % (
+                                    unique_counter,
+                                    name,
+                                    quote_attrib(value),
+                                )
+                            )
                 else:
                     if name not in already_processed:
                         already_processed.add(name)
-                        outfile.write(' %s=%s' % (
-                            name, quote_attrib(value), ))
-        if 'ID' not in already_processed:
-            already_processed.add('ID')
-            outfile.write(' ID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name='ID')), ))
-        if self.SEQ is not None and 'SEQ' not in already_processed:
-            already_processed.add('SEQ')
-            outfile.write(' SEQ="%s"' % self.gds_format_integer(self.SEQ, input_name='SEQ'))
-        if self.OWNERID is not None and 'OWNERID' not in already_processed:
-            already_processed.add('OWNERID')
-            outfile.write(' OWNERID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.OWNERID), input_name='OWNERID')), ))
-        if self.ADMID is not None and 'ADMID' not in already_processed:
-            already_processed.add('ADMID')
-            outfile.write(' ADMID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ADMID), input_name='ADMID')), ))
-        if self.DMDID is not None and 'DMDID' not in already_processed:
-            already_processed.add('DMDID')
-            outfile.write(' DMDID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.DMDID), input_name='DMDID')), ))
-        if self.GROUPID is not None and 'GROUPID' not in already_processed:
-            already_processed.add('GROUPID')
-            outfile.write(' GROUPID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.GROUPID), input_name='GROUPID')), ))
-        if self.USE is not None and 'USE' not in already_processed:
-            already_processed.add('USE')
-            outfile.write(' USE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.USE), input_name='USE')), ))
-        if self.BEGIN is not None and 'BEGIN' not in already_processed:
-            already_processed.add('BEGIN')
-            outfile.write(' BEGIN=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.BEGIN), input_name='BEGIN')), ))
-        if self.END is not None and 'END' not in already_processed:
-            already_processed.add('END')
-            outfile.write(' END=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.END), input_name='END')), ))
-        if self.BETYPE is not None and 'BETYPE' not in already_processed:
-            already_processed.add('BETYPE')
-            outfile.write(' BETYPE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.BETYPE), input_name='BETYPE')), ))
-        if self.MIMETYPE is not None and 'MIMETYPE' not in already_processed:
-            already_processed.add('MIMETYPE')
-            outfile.write(' MIMETYPE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.MIMETYPE), input_name='MIMETYPE')), ))
-        if self.SIZE is not None and 'SIZE' not in already_processed:
-            already_processed.add('SIZE')
-            outfile.write(' SIZE="%s"' % self.gds_format_integer(self.SIZE, input_name='SIZE'))
-        if self.CREATED is not None and 'CREATED' not in already_processed:
-            already_processed.add('CREATED')
-            outfile.write(' CREATED="%s"' % self.gds_format_datetime(self.CREATED, input_name='CREATED'))
-        if self.CHECKSUM is not None and 'CHECKSUM' not in already_processed:
-            already_processed.add('CHECKSUM')
-            outfile.write(' CHECKSUM=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.CHECKSUM), input_name='CHECKSUM')), ))
-        if self.CHECKSUMTYPE is not None and 'CHECKSUMTYPE' not in already_processed:
-            already_processed.add('CHECKSUMTYPE')
-            outfile.write(' CHECKSUMTYPE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.CHECKSUMTYPE), input_name='CHECKSUMTYPE')), ))
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='fileType', fromsubclass_=False, pretty_print=True):
+                        outfile.write(
+                            " %s=%s"
+                            % (
+                                name,
+                                quote_attrib(value),
+                            )
+                        )
+        if "ID" not in already_processed:
+            already_processed.add("ID")
+            outfile.write(" ID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name="ID")),))
+        if self.SEQ is not None and "SEQ" not in already_processed:
+            already_processed.add("SEQ")
+            outfile.write(' SEQ="%s"' % self.gds_format_integer(self.SEQ, input_name="SEQ"))
+        if self.OWNERID is not None and "OWNERID" not in already_processed:
+            already_processed.add("OWNERID")
+            outfile.write(
+                " OWNERID=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.OWNERID), input_name="OWNERID")),)
+            )
+        if self.ADMID is not None and "ADMID" not in already_processed:
+            already_processed.add("ADMID")
+            outfile.write(
+                " ADMID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ADMID), input_name="ADMID")),)
+            )
+        if self.DMDID is not None and "DMDID" not in already_processed:
+            already_processed.add("DMDID")
+            outfile.write(
+                " DMDID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.DMDID), input_name="DMDID")),)
+            )
+        if self.GROUPID is not None and "GROUPID" not in already_processed:
+            already_processed.add("GROUPID")
+            outfile.write(
+                " GROUPID=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.GROUPID), input_name="GROUPID")),)
+            )
+        if self.USE is not None and "USE" not in already_processed:
+            already_processed.add("USE")
+            outfile.write(
+                " USE=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.USE), input_name="USE")),)
+            )
+        if self.BEGIN is not None and "BEGIN" not in already_processed:
+            already_processed.add("BEGIN")
+            outfile.write(
+                " BEGIN=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.BEGIN), input_name="BEGIN")),)
+            )
+        if self.END is not None and "END" not in already_processed:
+            already_processed.add("END")
+            outfile.write(
+                " END=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.END), input_name="END")),)
+            )
+        if self.BETYPE is not None and "BETYPE" not in already_processed:
+            already_processed.add("BETYPE")
+            outfile.write(
+                " BETYPE=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.BETYPE), input_name="BETYPE")),)
+            )
+        if self.MIMETYPE is not None and "MIMETYPE" not in already_processed:
+            already_processed.add("MIMETYPE")
+            outfile.write(
+                " MIMETYPE=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.MIMETYPE), input_name="MIMETYPE")),)
+            )
+        if self.SIZE is not None and "SIZE" not in already_processed:
+            already_processed.add("SIZE")
+            outfile.write(' SIZE="%s"' % self.gds_format_integer(self.SIZE, input_name="SIZE"))
+        if self.CREATED is not None and "CREATED" not in already_processed:
+            already_processed.add("CREATED")
+            outfile.write(' CREATED="%s"' % self.gds_format_datetime(self.CREATED, input_name="CREATED"))
+        if self.CHECKSUM is not None and "CHECKSUM" not in already_processed:
+            already_processed.add("CHECKSUM")
+            outfile.write(
+                " CHECKSUM=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.CHECKSUM), input_name="CHECKSUM")),)
+            )
+        if self.CHECKSUMTYPE is not None and "CHECKSUMTYPE" not in already_processed:
+            already_processed.add("CHECKSUMTYPE")
+            outfile.write(
+                " CHECKSUMTYPE=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.CHECKSUMTYPE), input_name="CHECKSUMTYPE")),)
+            )
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="fileType",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         for FLocat_ in self.FLocat:
-            FLocat_.export(outfile, level, namespaceprefix_, namespacedef_='', name_='FLocat', pretty_print=pretty_print)
+            FLocat_.export(
+                outfile, level, namespaceprefix_, namespacedef_="", name_="FLocat", pretty_print=pretty_print
+            )
         if self.FContent is not None:
-            self.FContent.export(outfile, level, namespaceprefix_, namespacedef_='', name_='FContent', pretty_print=pretty_print)
+            self.FContent.export(
+                outfile, level, namespaceprefix_, namespacedef_="", name_="FContent", pretty_print=pretty_print
+            )
         for stream_ in self.stream:
-            stream_.export(outfile, level, namespaceprefix_, namespacedef_='', name_='stream', pretty_print=pretty_print)
+            stream_.export(
+                outfile, level, namespaceprefix_, namespacedef_="", name_="stream", pretty_print=pretty_print
+            )
         for transformFile_ in self.transformFile:
-            transformFile_.export(outfile, level, namespaceprefix_, namespacedef_='', name_='transformFile', pretty_print=pretty_print)
+            transformFile_.export(
+                outfile, level, namespaceprefix_, namespacedef_="", name_="transformFile", pretty_print=pretty_print
+            )
         for file_ in self.file:
-            file_.export(outfile, level, namespaceprefix_, namespacedef_='', name_='file', pretty_print=pretty_print)
+            file_.export(outfile, level, namespaceprefix_, namespacedef_="", name_="file", pretty_print=pretty_print)
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -4246,106 +5769,110 @@ class fileType(GeneratedsSuper):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('ID', node)
-        if value is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
+        value = find_attr_value_("ID", node)
+        if value is not None and "ID" not in already_processed:
+            already_processed.add("ID")
             self.ID = value
-        value = find_attr_value_('SEQ', node)
-        if value is not None and 'SEQ' not in already_processed:
-            already_processed.add('SEQ')
+        value = find_attr_value_("SEQ", node)
+        if value is not None and "SEQ" not in already_processed:
+            already_processed.add("SEQ")
             try:
                 self.SEQ = int(value)
             except ValueError as exp:
-                raise_parse_error(node, 'Bad integer attribute: %s' % exp)
-        value = find_attr_value_('OWNERID', node)
-        if value is not None and 'OWNERID' not in already_processed:
-            already_processed.add('OWNERID')
+                raise_parse_error(node, "Bad integer attribute: %s" % exp)
+        value = find_attr_value_("OWNERID", node)
+        if value is not None and "OWNERID" not in already_processed:
+            already_processed.add("OWNERID")
             self.OWNERID = value
-        value = find_attr_value_('ADMID', node)
-        if value is not None and 'ADMID' not in already_processed:
-            already_processed.add('ADMID')
+        value = find_attr_value_("ADMID", node)
+        if value is not None and "ADMID" not in already_processed:
+            already_processed.add("ADMID")
             self.ADMID = value
-        value = find_attr_value_('DMDID', node)
-        if value is not None and 'DMDID' not in already_processed:
-            already_processed.add('DMDID')
+        value = find_attr_value_("DMDID", node)
+        if value is not None and "DMDID" not in already_processed:
+            already_processed.add("DMDID")
             self.DMDID = value
-        value = find_attr_value_('GROUPID', node)
-        if value is not None and 'GROUPID' not in already_processed:
-            already_processed.add('GROUPID')
+        value = find_attr_value_("GROUPID", node)
+        if value is not None and "GROUPID" not in already_processed:
+            already_processed.add("GROUPID")
             self.GROUPID = value
-        value = find_attr_value_('USE', node)
-        if value is not None and 'USE' not in already_processed:
-            already_processed.add('USE')
+        value = find_attr_value_("USE", node)
+        if value is not None and "USE" not in already_processed:
+            already_processed.add("USE")
             self.USE = value
-        value = find_attr_value_('BEGIN', node)
-        if value is not None and 'BEGIN' not in already_processed:
-            already_processed.add('BEGIN')
+        value = find_attr_value_("BEGIN", node)
+        if value is not None and "BEGIN" not in already_processed:
+            already_processed.add("BEGIN")
             self.BEGIN = value
-        value = find_attr_value_('END', node)
-        if value is not None and 'END' not in already_processed:
-            already_processed.add('END')
+        value = find_attr_value_("END", node)
+        if value is not None and "END" not in already_processed:
+            already_processed.add("END")
             self.END = value
-        value = find_attr_value_('BETYPE', node)
-        if value is not None and 'BETYPE' not in already_processed:
-            already_processed.add('BETYPE')
+        value = find_attr_value_("BETYPE", node)
+        if value is not None and "BETYPE" not in already_processed:
+            already_processed.add("BETYPE")
             self.BETYPE = value
-        value = find_attr_value_('MIMETYPE', node)
-        if value is not None and 'MIMETYPE' not in already_processed:
-            already_processed.add('MIMETYPE')
+        value = find_attr_value_("MIMETYPE", node)
+        if value is not None and "MIMETYPE" not in already_processed:
+            already_processed.add("MIMETYPE")
             self.MIMETYPE = value
-        value = find_attr_value_('SIZE', node)
-        if value is not None and 'SIZE' not in already_processed:
-            already_processed.add('SIZE')
+        value = find_attr_value_("SIZE", node)
+        if value is not None and "SIZE" not in already_processed:
+            already_processed.add("SIZE")
             try:
                 self.SIZE = int(value)
             except ValueError as exp:
-                raise_parse_error(node, 'Bad integer attribute: %s' % exp)
-        value = find_attr_value_('CREATED', node)
-        if value is not None and 'CREATED' not in already_processed:
-            already_processed.add('CREATED')
+                raise_parse_error(node, "Bad integer attribute: %s" % exp)
+        value = find_attr_value_("CREATED", node)
+        if value is not None and "CREATED" not in already_processed:
+            already_processed.add("CREATED")
             try:
                 self.CREATED = self.gds_parse_datetime(value)
             except ValueError as exp:
-                raise ValueError('Bad date-time attribute (CREATED): %s' % exp)
-        value = find_attr_value_('CHECKSUM', node)
-        if value is not None and 'CHECKSUM' not in already_processed:
-            already_processed.add('CHECKSUM')
+                raise ValueError("Bad date-time attribute (CREATED): %s" % exp)
+        value = find_attr_value_("CHECKSUM", node)
+        if value is not None and "CHECKSUM" not in already_processed:
+            already_processed.add("CHECKSUM")
             self.CHECKSUM = value
-        value = find_attr_value_('CHECKSUMTYPE', node)
-        if value is not None and 'CHECKSUMTYPE' not in already_processed:
-            already_processed.add('CHECKSUMTYPE')
+        value = find_attr_value_("CHECKSUMTYPE", node)
+        if value is not None and "CHECKSUMTYPE" not in already_processed:
+            already_processed.add("CHECKSUMTYPE")
             self.CHECKSUMTYPE = value
         self.anyAttributes_ = {}
         for name, value in attrs.items():
             if name not in already_processed:
                 self.anyAttributes_[name] = value
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
-        if nodeName_ == 'FLocat':
+        if nodeName_ == "FLocat":
             obj_ = FLocatType.factory(parent_object_=self)
             obj_.build(child_)
             self.FLocat.append(obj_)
-            obj_.original_tagname_ = 'FLocat'
-        elif nodeName_ == 'FContent':
+            obj_.original_tagname_ = "FLocat"
+        elif nodeName_ == "FContent":
             obj_ = FContentType.factory(parent_object_=self)
             obj_.build(child_)
             self.FContent = obj_
-            obj_.original_tagname_ = 'FContent'
-        elif nodeName_ == 'stream':
+            obj_.original_tagname_ = "FContent"
+        elif nodeName_ == "stream":
             obj_ = streamType.factory(parent_object_=self)
             obj_.build(child_)
             self.stream.append(obj_)
-            obj_.original_tagname_ = 'stream'
-        elif nodeName_ == 'transformFile':
+            obj_.original_tagname_ = "stream"
+        elif nodeName_ == "transformFile":
             obj_ = transformFileType.factory(parent_object_=self)
             obj_.build(child_)
             self.transformFile.append(obj_)
-            obj_.original_tagname_ = 'transformFile'
-        elif nodeName_ == 'file':
+            obj_.original_tagname_ = "transformFile"
+        elif nodeName_ == "file":
             obj_ = fileType.factory(parent_object_=self)
             obj_.build(child_)
             self.file.append(obj_)
-            obj_.original_tagname_ = 'file'
+            obj_.original_tagname_ = "file"
+
+
 # end class fileType
 
 
@@ -4373,20 +5900,33 @@ class metsHdrType(GeneratedsSuper):
     document was last modified.
     RECORDSTATUS (string/O): Specifies the status of the METS document. It is
     used for internal processing purposes."""
+
     subclass = None
     superclass = None
-    def __init__(self, ID=None, ADMID=None, CREATEDATE=None, LASTMODDATE=None, RECORDSTATUS=None, agent=None, altRecordID=None, metsDocumentID=None, **kwargs_):
+
+    def __init__(
+        self,
+        ID=None,
+        ADMID=None,
+        CREATEDATE=None,
+        LASTMODDATE=None,
+        RECORDSTATUS=None,
+        agent=None,
+        altRecordID=None,
+        metsDocumentID=None,
+        **kwargs_,
+    ):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
+        self.parent_object_ = kwargs_.get("parent_object_")
         self.ID = _cast(None, ID)
         self.ADMID = _cast(None, ADMID)
         if isinstance(CREATEDATE, BaseStrType_):
-            initvalue_ = datetime_.datetime.strptime(CREATEDATE, '%Y-%m-%dT%H:%M:%S')
+            initvalue_ = datetime_.datetime.strptime(CREATEDATE, "%Y-%m-%dT%H:%M:%S")
         else:
             initvalue_ = CREATEDATE
         self.CREATEDATE = initvalue_
         if isinstance(LASTMODDATE, BaseStrType_):
-            initvalue_ = datetime_.datetime.strptime(LASTMODDATE, '%Y-%m-%dT%H:%M:%S')
+            initvalue_ = datetime_.datetime.strptime(LASTMODDATE, "%Y-%m-%dT%H:%M:%S")
         else:
             initvalue_ = LASTMODDATE
         self.LASTMODDATE = initvalue_
@@ -4401,151 +5941,242 @@ class metsHdrType(GeneratedsSuper):
             self.altRecordID = altRecordID
         self.metsDocumentID = metsDocumentID
         self.anyAttributes_ = {}
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, metsHdrType)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, metsHdrType)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if metsHdrType.subclass:
             return metsHdrType.subclass(*args_, **kwargs_)
         else:
             return metsHdrType(*args_, **kwargs_)
+
     factory = staticmethod(factory)
+
     def get_agent(self):
         return self.agent
+
     def set_agent(self, agent):
         self.agent = agent
+
     def add_agent(self, value):
         self.agent.append(value)
+
     def insert_agent_at(self, index, value):
         self.agent.insert(index, value)
+
     def replace_agent_at(self, index, value):
         self.agent[index] = value
+
     def get_altRecordID(self):
         return self.altRecordID
+
     def set_altRecordID(self, altRecordID):
         self.altRecordID = altRecordID
+
     def add_altRecordID(self, value):
         self.altRecordID.append(value)
+
     def insert_altRecordID_at(self, index, value):
         self.altRecordID.insert(index, value)
+
     def replace_altRecordID_at(self, index, value):
         self.altRecordID[index] = value
+
     def get_metsDocumentID(self):
         return self.metsDocumentID
+
     def set_metsDocumentID(self, metsDocumentID):
         self.metsDocumentID = metsDocumentID
+
     def get_ID(self):
         return self.ID
+
     def set_ID(self, ID):
         self.ID = ID
+
     def get_ADMID(self):
         return self.ADMID
+
     def set_ADMID(self, ADMID):
         self.ADMID = ADMID
+
     def get_CREATEDATE(self):
         return self.CREATEDATE
+
     def set_CREATEDATE(self, CREATEDATE):
         self.CREATEDATE = CREATEDATE
+
     def get_LASTMODDATE(self):
         return self.LASTMODDATE
+
     def set_LASTMODDATE(self, LASTMODDATE):
         self.LASTMODDATE = LASTMODDATE
+
     def get_RECORDSTATUS(self):
         return self.RECORDSTATUS
+
     def set_RECORDSTATUS(self, RECORDSTATUS):
         self.RECORDSTATUS = RECORDSTATUS
-    def get_anyAttributes_(self): return self.anyAttributes_
-    def set_anyAttributes_(self, anyAttributes_): self.anyAttributes_ = anyAttributes_
+
+    def get_anyAttributes_(self):
+        return self.anyAttributes_
+
+    def set_anyAttributes_(self, anyAttributes_):
+        self.anyAttributes_ = anyAttributes_
+
     def hasContent_(self):
-        if (
-            self.agent or
-            self.altRecordID or
-            self.metsDocumentID is not None
-        ):
+        if self.agent or self.altRecordID or self.metsDocumentID is not None:
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='metsHdrType', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('metsHdrType')
+
+    def export(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="metsHdrType",
+        pretty_print=True,
+    ):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("metsHdrType")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='metsHdrType')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="metsHdrType")
         if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='metsHdrType', pretty_print=pretty_print)
+            outfile.write(">%s" % (eol_,))
+            self.exportChildren(outfile, level + 1, "", namespacedef_, name_="metsHdrType", pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='metsHdrType'):
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="metsHdrType"):
         unique_counter = 0
         for name, value in self.anyAttributes_.items():
-            xsinamespaceprefix = 'xsi'
-            xsinamespace1 = 'http://www.w3.org/2001/XMLSchema-instance'
-            xsinamespace2 = '{%s}' % (xsinamespace1, )
+            xsinamespaceprefix = "xsi"
+            xsinamespace1 = "http://www.w3.org/2001/XMLSchema-instance"
+            xsinamespace2 = "{%s}" % (xsinamespace1,)
             if name.startswith(xsinamespace2):
-                name1 = name[len(xsinamespace2):]
-                name2 = '%s:%s' % (xsinamespaceprefix, name1, )
+                name1 = name[len(xsinamespace2) :]
+                name2 = "%s:%s" % (
+                    xsinamespaceprefix,
+                    name1,
+                )
                 if name2 not in already_processed:
                     already_processed.add(name2)
-                    outfile.write(' %s=%s' % (name2, quote_attrib(value), ))
+                    outfile.write(
+                        " %s=%s"
+                        % (
+                            name2,
+                            quote_attrib(value),
+                        )
+                    )
             else:
                 mo = re_.match(Namespace_extract_pat_, name)
                 if mo is not None:
                     namespace, name = mo.group(1, 2)
                     if name not in already_processed:
                         already_processed.add(name)
-                        if namespace == 'http://www.w3.org/XML/1998/namespace':
-                            outfile.write(' %s=%s' % (
-                                name, quote_attrib(value), ))
+                        if namespace == "http://www.w3.org/XML/1998/namespace":
+                            outfile.write(
+                                " %s=%s"
+                                % (
+                                    name,
+                                    quote_attrib(value),
+                                )
+                            )
                         else:
                             unique_counter += 1
-                            outfile.write(' xmlns:%d="%s"' % (
-                                unique_counter, namespace, ))
-                            outfile.write(' %d:%s=%s' % (
-                                unique_counter, name, quote_attrib(value), ))
+                            outfile.write(
+                                ' xmlns:%d="%s"'
+                                % (
+                                    unique_counter,
+                                    namespace,
+                                )
+                            )
+                            outfile.write(
+                                " %d:%s=%s"
+                                % (
+                                    unique_counter,
+                                    name,
+                                    quote_attrib(value),
+                                )
+                            )
                 else:
                     if name not in already_processed:
                         already_processed.add(name)
-                        outfile.write(' %s=%s' % (
-                            name, quote_attrib(value), ))
-        if self.ID is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
-            outfile.write(' ID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name='ID')), ))
-        if self.ADMID is not None and 'ADMID' not in already_processed:
-            already_processed.add('ADMID')
-            outfile.write(' ADMID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ADMID), input_name='ADMID')), ))
-        if self.CREATEDATE is not None and 'CREATEDATE' not in already_processed:
-            already_processed.add('CREATEDATE')
-            outfile.write(' CREATEDATE="%s"' % self.gds_format_datetime(self.CREATEDATE, input_name='CREATEDATE'))
-        if self.LASTMODDATE is not None and 'LASTMODDATE' not in already_processed:
-            already_processed.add('LASTMODDATE')
-            outfile.write(' LASTMODDATE="%s"' % self.gds_format_datetime(self.LASTMODDATE, input_name='LASTMODDATE'))
-        if self.RECORDSTATUS is not None and 'RECORDSTATUS' not in already_processed:
-            already_processed.add('RECORDSTATUS')
-            outfile.write(' RECORDSTATUS=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.RECORDSTATUS), input_name='RECORDSTATUS')), ))
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='metsHdrType', fromsubclass_=False, pretty_print=True):
+                        outfile.write(
+                            " %s=%s"
+                            % (
+                                name,
+                                quote_attrib(value),
+                            )
+                        )
+        if self.ID is not None and "ID" not in already_processed:
+            already_processed.add("ID")
+            outfile.write(" ID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name="ID")),))
+        if self.ADMID is not None and "ADMID" not in already_processed:
+            already_processed.add("ADMID")
+            outfile.write(
+                " ADMID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ADMID), input_name="ADMID")),)
+            )
+        if self.CREATEDATE is not None and "CREATEDATE" not in already_processed:
+            already_processed.add("CREATEDATE")
+            outfile.write(' CREATEDATE="%s"' % self.gds_format_datetime(self.CREATEDATE, input_name="CREATEDATE"))
+        if self.LASTMODDATE is not None and "LASTMODDATE" not in already_processed:
+            already_processed.add("LASTMODDATE")
+            outfile.write(' LASTMODDATE="%s"' % self.gds_format_datetime(self.LASTMODDATE, input_name="LASTMODDATE"))
+        if self.RECORDSTATUS is not None and "RECORDSTATUS" not in already_processed:
+            already_processed.add("RECORDSTATUS")
+            outfile.write(
+                " RECORDSTATUS=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.RECORDSTATUS), input_name="RECORDSTATUS")),)
+            )
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="metsHdrType",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         for agent_ in self.agent:
-            agent_.export(outfile, level, namespaceprefix_, namespacedef_='', name_='agent', pretty_print=pretty_print)
+            agent_.export(outfile, level, namespaceprefix_, namespacedef_="", name_="agent", pretty_print=pretty_print)
         for altRecordID_ in self.altRecordID:
-            altRecordID_.export(outfile, level, namespaceprefix_, namespacedef_='', name_='altRecordID', pretty_print=pretty_print)
+            altRecordID_.export(
+                outfile, level, namespaceprefix_, namespacedef_="", name_="altRecordID", pretty_print=pretty_print
+            )
         if self.metsDocumentID is not None:
-            self.metsDocumentID.export(outfile, level, namespaceprefix_, namespacedef_='', name_='metsDocumentID', pretty_print=pretty_print)
+            self.metsDocumentID.export(
+                outfile, level, namespaceprefix_, namespacedef_="", name_="metsDocumentID", pretty_print=pretty_print
+            )
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -4553,53 +6184,57 @@ class metsHdrType(GeneratedsSuper):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('ID', node)
-        if value is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
+        value = find_attr_value_("ID", node)
+        if value is not None and "ID" not in already_processed:
+            already_processed.add("ID")
             self.ID = value
-        value = find_attr_value_('ADMID', node)
-        if value is not None and 'ADMID' not in already_processed:
-            already_processed.add('ADMID')
+        value = find_attr_value_("ADMID", node)
+        if value is not None and "ADMID" not in already_processed:
+            already_processed.add("ADMID")
             self.ADMID = value
-        value = find_attr_value_('CREATEDATE', node)
-        if value is not None and 'CREATEDATE' not in already_processed:
-            already_processed.add('CREATEDATE')
+        value = find_attr_value_("CREATEDATE", node)
+        if value is not None and "CREATEDATE" not in already_processed:
+            already_processed.add("CREATEDATE")
             try:
                 self.CREATEDATE = self.gds_parse_datetime(value)
             except ValueError as exp:
-                raise ValueError('Bad date-time attribute (CREATEDATE): %s' % exp)
-        value = find_attr_value_('LASTMODDATE', node)
-        if value is not None and 'LASTMODDATE' not in already_processed:
-            already_processed.add('LASTMODDATE')
+                raise ValueError("Bad date-time attribute (CREATEDATE): %s" % exp)
+        value = find_attr_value_("LASTMODDATE", node)
+        if value is not None and "LASTMODDATE" not in already_processed:
+            already_processed.add("LASTMODDATE")
             try:
                 self.LASTMODDATE = self.gds_parse_datetime(value)
             except ValueError as exp:
-                raise ValueError('Bad date-time attribute (LASTMODDATE): %s' % exp)
-        value = find_attr_value_('RECORDSTATUS', node)
-        if value is not None and 'RECORDSTATUS' not in already_processed:
-            already_processed.add('RECORDSTATUS')
+                raise ValueError("Bad date-time attribute (LASTMODDATE): %s" % exp)
+        value = find_attr_value_("RECORDSTATUS", node)
+        if value is not None and "RECORDSTATUS" not in already_processed:
+            already_processed.add("RECORDSTATUS")
             self.RECORDSTATUS = value
         self.anyAttributes_ = {}
         for name, value in attrs.items():
             if name not in already_processed:
                 self.anyAttributes_[name] = value
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
-        if nodeName_ == 'agent':
+        if nodeName_ == "agent":
             obj_ = agentType.factory(parent_object_=self)
             obj_.build(child_)
             self.agent.append(obj_)
-            obj_.original_tagname_ = 'agent'
-        elif nodeName_ == 'altRecordID':
+            obj_.original_tagname_ = "agent"
+        elif nodeName_ == "altRecordID":
             obj_ = altRecordIDType.factory(parent_object_=self)
             obj_.build(child_)
             self.altRecordID.append(obj_)
-            obj_.original_tagname_ = 'altRecordID'
-        elif nodeName_ == 'metsDocumentID':
+            obj_.original_tagname_ = "altRecordID"
+        elif nodeName_ == "metsDocumentID":
             obj_ = metsDocumentIDType.factory(parent_object_=self)
             obj_.build(child_)
             self.metsDocumentID = obj_
-            obj_.original_tagname_ = 'metsDocumentID'
+            obj_.original_tagname_ = "metsDocumentID"
+
+
 # end class metsHdrType
 
 
@@ -4643,11 +6278,13 @@ class agentType(GeneratedsSuper):
     type of agent specifier being used in the OTHERTYPE attribute
     OTHERTYPE (string/O): Specifies the type of agent when the value OTHER is
     indicated in the TYPE attribute."""
+
     subclass = None
     superclass = None
+
     def __init__(self, ID=None, ROLE=None, OTHERROLE=None, TYPE=None, OTHERTYPE=None, name=None, note=None, **kwargs_):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
+        self.parent_object_ = kwargs_.get("parent_object_")
         self.ID = _cast(None, ID)
         self.ROLE = _cast(None, ROLE)
         self.OTHERROLE = _cast(None, OTHERROLE)
@@ -4658,106 +6295,168 @@ class agentType(GeneratedsSuper):
             self.note = []
         else:
             self.note = note
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, agentType)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, agentType)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if agentType.subclass:
             return agentType.subclass(*args_, **kwargs_)
         else:
             return agentType(*args_, **kwargs_)
+
     factory = staticmethod(factory)
+
     def get_name(self):
         return self.name
+
     def set_name(self, name):
         self.name = name
+
     def get_note(self):
         return self.note
+
     def set_note(self, note):
         self.note = note
+
     def add_note(self, value):
         self.note.append(value)
+
     def insert_note_at(self, index, value):
         self.note.insert(index, value)
+
     def replace_note_at(self, index, value):
         self.note[index] = value
+
     def get_ID(self):
         return self.ID
+
     def set_ID(self, ID):
         self.ID = ID
+
     def get_ROLE(self):
         return self.ROLE
+
     def set_ROLE(self, ROLE):
         self.ROLE = ROLE
+
     def get_OTHERROLE(self):
         return self.OTHERROLE
+
     def set_OTHERROLE(self, OTHERROLE):
         self.OTHERROLE = OTHERROLE
+
     def get_TYPE(self):
         return self.TYPE
+
     def set_TYPE(self, TYPE):
         self.TYPE = TYPE
+
     def get_OTHERTYPE(self):
         return self.OTHERTYPE
+
     def set_OTHERTYPE(self, OTHERTYPE):
         self.OTHERTYPE = OTHERTYPE
+
     def hasContent_(self):
-        if (
-            self.name is not None or
-            self.note
-        ):
+        if self.name is not None or self.note:
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='agentType', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('agentType')
+
+    def export(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="agentType",
+        pretty_print=True,
+    ):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("agentType")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='agentType')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="agentType")
         if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='agentType', pretty_print=pretty_print)
+            outfile.write(">%s" % (eol_,))
+            self.exportChildren(outfile, level + 1, "", namespacedef_, name_="agentType", pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='agentType'):
-        if self.ID is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
-            outfile.write(' ID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name='ID')), ))
-        if 'ROLE' not in already_processed:
-            already_processed.add('ROLE')
-            outfile.write(' ROLE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ROLE), input_name='ROLE')), ))
-        if self.OTHERROLE is not None and 'OTHERROLE' not in already_processed:
-            already_processed.add('OTHERROLE')
-            outfile.write(' OTHERROLE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.OTHERROLE), input_name='OTHERROLE')), ))
-        if self.TYPE is not None and 'TYPE' not in already_processed:
-            already_processed.add('TYPE')
-            outfile.write(' TYPE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.TYPE), input_name='TYPE')), ))
-        if self.OTHERTYPE is not None and 'OTHERTYPE' not in already_processed:
-            already_processed.add('OTHERTYPE')
-            outfile.write(' OTHERTYPE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.OTHERTYPE), input_name='OTHERTYPE')), ))
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='agentType', fromsubclass_=False, pretty_print=True):
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="agentType"):
+        if self.ID is not None and "ID" not in already_processed:
+            already_processed.add("ID")
+            outfile.write(" ID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name="ID")),))
+        if "ROLE" not in already_processed:
+            already_processed.add("ROLE")
+            outfile.write(
+                " ROLE=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ROLE), input_name="ROLE")),)
+            )
+        if self.OTHERROLE is not None and "OTHERROLE" not in already_processed:
+            already_processed.add("OTHERROLE")
+            outfile.write(
+                " OTHERROLE=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.OTHERROLE), input_name="OTHERROLE")),)
+            )
+        if self.TYPE is not None and "TYPE" not in already_processed:
+            already_processed.add("TYPE")
+            outfile.write(
+                " TYPE=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.TYPE), input_name="TYPE")),)
+            )
+        if self.OTHERTYPE is not None and "OTHERTYPE" not in already_processed:
+            already_processed.add("OTHERTYPE")
+            outfile.write(
+                " OTHERTYPE=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.OTHERTYPE), input_name="OTHERTYPE")),)
+            )
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="agentType",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.name is not None:
             showIndent(outfile, level, pretty_print)
-            outfile.write('<%sname>%s</%sname>%s' % (namespaceprefix_ , self.gds_encode(self.gds_format_string(quote_xml(self.name), input_name='name')), namespaceprefix_ , eol_))
+            outfile.write(
+                "<%sname>%s</%sname>%s"
+                % (
+                    namespaceprefix_,
+                    self.gds_encode(self.gds_format_string(quote_xml(self.name), input_name="name")),
+                    namespaceprefix_,
+                    eol_,
+                )
+            )
         for note_ in self.note:
-            note_.export(outfile, level, namespaceprefix_, namespacedef_='', name_='note', pretty_print=pretty_print)
+            note_.export(outfile, level, namespaceprefix_, namespacedef_="", name_="note", pretty_print=pretty_print)
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -4765,129 +6464,193 @@ class agentType(GeneratedsSuper):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('ID', node)
-        if value is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
+        value = find_attr_value_("ID", node)
+        if value is not None and "ID" not in already_processed:
+            already_processed.add("ID")
             self.ID = value
-        value = find_attr_value_('ROLE', node)
-        if value is not None and 'ROLE' not in already_processed:
-            already_processed.add('ROLE')
+        value = find_attr_value_("ROLE", node)
+        if value is not None and "ROLE" not in already_processed:
+            already_processed.add("ROLE")
             self.ROLE = value
-        value = find_attr_value_('OTHERROLE', node)
-        if value is not None and 'OTHERROLE' not in already_processed:
-            already_processed.add('OTHERROLE')
+        value = find_attr_value_("OTHERROLE", node)
+        if value is not None and "OTHERROLE" not in already_processed:
+            already_processed.add("OTHERROLE")
             self.OTHERROLE = value
-        value = find_attr_value_('TYPE', node)
-        if value is not None and 'TYPE' not in already_processed:
-            already_processed.add('TYPE')
+        value = find_attr_value_("TYPE", node)
+        if value is not None and "TYPE" not in already_processed:
+            already_processed.add("TYPE")
             self.TYPE = value
-        value = find_attr_value_('OTHERTYPE', node)
-        if value is not None and 'OTHERTYPE' not in already_processed:
-            already_processed.add('OTHERTYPE')
+        value = find_attr_value_("OTHERTYPE", node)
+        if value is not None and "OTHERTYPE" not in already_processed:
+            already_processed.add("OTHERTYPE")
             self.OTHERTYPE = value
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
-        if nodeName_ == 'name':
+        if nodeName_ == "name":
             value_ = child_.text
-            value_ = self.gds_parse_string(value_, node, 'name')
-            value_ = self.gds_validate_string(value_, node, 'name')
+            value_ = self.gds_parse_string(value_, node, "name")
+            value_ = self.gds_validate_string(value_, node, "name")
             self.name = value_
-        elif nodeName_ == 'note':
+        elif nodeName_ == "note":
             obj_ = noteType.factory(parent_object_=self)
             obj_.build(child_)
             self.note.append(obj_)
-            obj_.original_tagname_ = 'note'
+            obj_.original_tagname_ = "note"
+
+
 # end class agentType
 
 
 class noteType(GeneratedsSuper):
     """The <note> element can be used to record any additional information
     regarding the agent's activities with respect to the METS document."""
+
     subclass = None
     superclass = None
+
     def __init__(self, valueOf_=None, **kwargs_):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
+        self.parent_object_ = kwargs_.get("parent_object_")
         self.valueOf_ = valueOf_
         self.anyAttributes_ = {}
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, noteType)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, noteType)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if noteType.subclass:
             return noteType.subclass(*args_, **kwargs_)
         else:
             return noteType(*args_, **kwargs_)
+
     factory = staticmethod(factory)
-    def get_valueOf_(self): return self.valueOf_
-    def set_valueOf_(self, valueOf_): self.valueOf_ = valueOf_
-    def get_anyAttributes_(self): return self.anyAttributes_
-    def set_anyAttributes_(self, anyAttributes_): self.anyAttributes_ = anyAttributes_
+
+    def get_valueOf_(self):
+        return self.valueOf_
+
+    def set_valueOf_(self, valueOf_):
+        self.valueOf_ = valueOf_
+
+    def get_anyAttributes_(self):
+        return self.anyAttributes_
+
+    def set_anyAttributes_(self, anyAttributes_):
+        self.anyAttributes_ = anyAttributes_
+
     def hasContent_(self):
-        if (
-            (1 if type(self.valueOf_) in [int,float] else self.valueOf_)
-        ):
+        if 1 if type(self.valueOf_) in [int, float] else self.valueOf_:
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='noteType', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('noteType')
+
+    def export(self, outfile, level, namespaceprefix_="", namespacedef_="", name_="noteType", pretty_print=True):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("noteType")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='noteType')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="noteType")
         if self.hasContent_():
-            outfile.write('>')
+            outfile.write(">")
             outfile.write(self.convert_unicode(self.valueOf_))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='noteType', pretty_print=pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            self.exportChildren(outfile, level + 1, "", namespacedef_, name_="noteType", pretty_print=pretty_print)
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='noteType'):
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="noteType"):
         unique_counter = 0
         for name, value in self.anyAttributes_.items():
-            xsinamespaceprefix = 'xsi'
-            xsinamespace1 = 'http://www.w3.org/2001/XMLSchema-instance'
-            xsinamespace2 = '{%s}' % (xsinamespace1, )
+            xsinamespaceprefix = "xsi"
+            xsinamespace1 = "http://www.w3.org/2001/XMLSchema-instance"
+            xsinamespace2 = "{%s}" % (xsinamespace1,)
             if name.startswith(xsinamespace2):
-                name1 = name[len(xsinamespace2):]
-                name2 = '%s:%s' % (xsinamespaceprefix, name1, )
+                name1 = name[len(xsinamespace2) :]
+                name2 = "%s:%s" % (
+                    xsinamespaceprefix,
+                    name1,
+                )
                 if name2 not in already_processed:
                     already_processed.add(name2)
-                    outfile.write(' %s=%s' % (name2, quote_attrib(value), ))
+                    outfile.write(
+                        " %s=%s"
+                        % (
+                            name2,
+                            quote_attrib(value),
+                        )
+                    )
             else:
                 mo = re_.match(Namespace_extract_pat_, name)
                 if mo is not None:
                     namespace, name = mo.group(1, 2)
                     if name not in already_processed:
                         already_processed.add(name)
-                        if namespace == 'http://www.w3.org/XML/1998/namespace':
-                            outfile.write(' %s=%s' % (
-                                name, quote_attrib(value), ))
+                        if namespace == "http://www.w3.org/XML/1998/namespace":
+                            outfile.write(
+                                " %s=%s"
+                                % (
+                                    name,
+                                    quote_attrib(value),
+                                )
+                            )
                         else:
                             unique_counter += 1
-                            outfile.write(' xmlns:%d="%s"' % (
-                                unique_counter, namespace, ))
-                            outfile.write(' %d:%s=%s' % (
-                                unique_counter, name, quote_attrib(value), ))
+                            outfile.write(
+                                ' xmlns:%d="%s"'
+                                % (
+                                    unique_counter,
+                                    namespace,
+                                )
+                            )
+                            outfile.write(
+                                " %d:%s=%s"
+                                % (
+                                    unique_counter,
+                                    name,
+                                    quote_attrib(value),
+                                )
+                            )
                 else:
                     if name not in already_processed:
                         already_processed.add(name)
-                        outfile.write(' %s=%s' % (
-                            name, quote_attrib(value), ))
+                        outfile.write(
+                            " %s=%s"
+                            % (
+                                name,
+                                quote_attrib(value),
+                            )
+                        )
         pass
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='noteType', fromsubclass_=False, pretty_print=True):
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_="",
+        name_="noteType",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
         pass
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -4896,13 +6659,17 @@ class noteType(GeneratedsSuper):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
         self.anyAttributes_ = {}
         for name, value in attrs.items():
             if name not in already_processed:
                 self.anyAttributes_[name] = value
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
+
+
 # end class noteType
 
 
@@ -4918,72 +6685,106 @@ class altRecordIDType(GeneratedsSuper):
     see Chapter 4 of the METS Primer.
     TYPE (string/O): A description of the identifier type (e.g., OCLC record
     number, LCCN, etc.)."""
+
     subclass = None
     superclass = None
+
     def __init__(self, ID=None, TYPE=None, valueOf_=None, **kwargs_):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
+        self.parent_object_ = kwargs_.get("parent_object_")
         self.ID = _cast(None, ID)
         self.TYPE = _cast(None, TYPE)
         self.valueOf_ = valueOf_
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, altRecordIDType)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, altRecordIDType)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if altRecordIDType.subclass:
             return altRecordIDType.subclass(*args_, **kwargs_)
         else:
             return altRecordIDType(*args_, **kwargs_)
+
     factory = staticmethod(factory)
+
     def get_ID(self):
         return self.ID
+
     def set_ID(self, ID):
         self.ID = ID
+
     def get_TYPE(self):
         return self.TYPE
+
     def set_TYPE(self, TYPE):
         self.TYPE = TYPE
-    def get_valueOf_(self): return self.valueOf_
-    def set_valueOf_(self, valueOf_): self.valueOf_ = valueOf_
+
+    def get_valueOf_(self):
+        return self.valueOf_
+
+    def set_valueOf_(self, valueOf_):
+        self.valueOf_ = valueOf_
+
     def hasContent_(self):
-        if (
-            (1 if type(self.valueOf_) in [int,float] else self.valueOf_)
-        ):
+        if 1 if type(self.valueOf_) in [int, float] else self.valueOf_:
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='altRecordIDType', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('altRecordIDType')
+
+    def export(self, outfile, level, namespaceprefix_="", namespacedef_="", name_="altRecordIDType", pretty_print=True):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("altRecordIDType")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='altRecordIDType')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="altRecordIDType")
         if self.hasContent_():
-            outfile.write('>')
+            outfile.write(">")
             outfile.write(self.convert_unicode(self.valueOf_))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='altRecordIDType', pretty_print=pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            self.exportChildren(
+                outfile, level + 1, "", namespacedef_, name_="altRecordIDType", pretty_print=pretty_print
+            )
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='altRecordIDType'):
-        if self.ID is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
-            outfile.write(' ID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name='ID')), ))
-        if self.TYPE is not None and 'TYPE' not in already_processed:
-            already_processed.add('TYPE')
-            outfile.write(' TYPE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.TYPE), input_name='TYPE')), ))
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='altRecordIDType', fromsubclass_=False, pretty_print=True):
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="altRecordIDType"):
+        if self.ID is not None and "ID" not in already_processed:
+            already_processed.add("ID")
+            outfile.write(" ID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name="ID")),))
+        if self.TYPE is not None and "TYPE" not in already_processed:
+            already_processed.add("TYPE")
+            outfile.write(
+                " TYPE=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.TYPE), input_name="TYPE")),)
+            )
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_="",
+        name_="altRecordIDType",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
         pass
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -4992,17 +6793,21 @@ class altRecordIDType(GeneratedsSuper):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('ID', node)
-        if value is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
+        value = find_attr_value_("ID", node)
+        if value is not None and "ID" not in already_processed:
+            already_processed.add("ID")
             self.ID = value
-        value = find_attr_value_('TYPE', node)
-        if value is not None and 'TYPE' not in already_processed:
-            already_processed.add('TYPE')
+        value = find_attr_value_("TYPE", node)
+        if value is not None and "TYPE" not in already_processed:
+            already_processed.add("TYPE")
             self.TYPE = value
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
+
+
 # end class altRecordIDType
 
 
@@ -5018,72 +6823,108 @@ class metsDocumentIDType(GeneratedsSuper):
     information on using ID attributes for internal and external linking
     see Chapter 4 of the METS Primer.
     TYPE (string/O): A description of the identifier type."""
+
     subclass = None
     superclass = None
+
     def __init__(self, ID=None, TYPE=None, valueOf_=None, **kwargs_):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
+        self.parent_object_ = kwargs_.get("parent_object_")
         self.ID = _cast(None, ID)
         self.TYPE = _cast(None, TYPE)
         self.valueOf_ = valueOf_
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, metsDocumentIDType)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, metsDocumentIDType)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if metsDocumentIDType.subclass:
             return metsDocumentIDType.subclass(*args_, **kwargs_)
         else:
             return metsDocumentIDType(*args_, **kwargs_)
+
     factory = staticmethod(factory)
+
     def get_ID(self):
         return self.ID
+
     def set_ID(self, ID):
         self.ID = ID
+
     def get_TYPE(self):
         return self.TYPE
+
     def set_TYPE(self, TYPE):
         self.TYPE = TYPE
-    def get_valueOf_(self): return self.valueOf_
-    def set_valueOf_(self, valueOf_): self.valueOf_ = valueOf_
+
+    def get_valueOf_(self):
+        return self.valueOf_
+
+    def set_valueOf_(self, valueOf_):
+        self.valueOf_ = valueOf_
+
     def hasContent_(self):
-        if (
-            (1 if type(self.valueOf_) in [int,float] else self.valueOf_)
-        ):
+        if 1 if type(self.valueOf_) in [int, float] else self.valueOf_:
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='metsDocumentIDType', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('metsDocumentIDType')
+
+    def export(
+        self, outfile, level, namespaceprefix_="", namespacedef_="", name_="metsDocumentIDType", pretty_print=True
+    ):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("metsDocumentIDType")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='metsDocumentIDType')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="metsDocumentIDType")
         if self.hasContent_():
-            outfile.write('>')
+            outfile.write(">")
             outfile.write(self.convert_unicode(self.valueOf_))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='metsDocumentIDType', pretty_print=pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            self.exportChildren(
+                outfile, level + 1, "", namespacedef_, name_="metsDocumentIDType", pretty_print=pretty_print
+            )
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='metsDocumentIDType'):
-        if self.ID is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
-            outfile.write(' ID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name='ID')), ))
-        if self.TYPE is not None and 'TYPE' not in already_processed:
-            already_processed.add('TYPE')
-            outfile.write(' TYPE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.TYPE), input_name='TYPE')), ))
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='metsDocumentIDType', fromsubclass_=False, pretty_print=True):
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="metsDocumentIDType"):
+        if self.ID is not None and "ID" not in already_processed:
+            already_processed.add("ID")
+            outfile.write(" ID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name="ID")),))
+        if self.TYPE is not None and "TYPE" not in already_processed:
+            already_processed.add("TYPE")
+            outfile.write(
+                " TYPE=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.TYPE), input_name="TYPE")),)
+            )
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_="",
+        name_="metsDocumentIDType",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
         pass
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -5092,17 +6933,21 @@ class metsDocumentIDType(GeneratedsSuper):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('ID', node)
-        if value is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
+        value = find_attr_value_("ID", node)
+        if value is not None and "ID" not in already_processed:
+            already_processed.add("ID")
             self.ID = value
-        value = find_attr_value_('TYPE', node)
-        if value is not None and 'TYPE' not in already_processed:
-            already_processed.add('TYPE')
+        value = find_attr_value_("TYPE", node)
+        if value is not None and "TYPE" not in already_processed:
+            already_processed.add("TYPE")
             self.TYPE = value
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
+
+
 # end class metsDocumentIDType
 
 
@@ -5115,114 +6960,187 @@ class fileSecType(GeneratedsSuper):
     from another element or document via an IDREF or an XPTR. For more
     information on using ID attributes for internal and external linking
     see Chapter 4 of the METS Primer."""
+
     subclass = None
     superclass = None
+
     def __init__(self, ID=None, fileGrp=None, **kwargs_):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
+        self.parent_object_ = kwargs_.get("parent_object_")
         self.ID = _cast(None, ID)
         if fileGrp is None:
             self.fileGrp = []
         else:
             self.fileGrp = fileGrp
         self.anyAttributes_ = {}
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, fileSecType)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, fileSecType)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if fileSecType.subclass:
             return fileSecType.subclass(*args_, **kwargs_)
         else:
             return fileSecType(*args_, **kwargs_)
+
     factory = staticmethod(factory)
+
     def get_fileGrp(self):
         return self.fileGrp
+
     def set_fileGrp(self, fileGrp):
         self.fileGrp = fileGrp
+
     def add_fileGrp(self, value):
         self.fileGrp.append(value)
+
     def insert_fileGrp_at(self, index, value):
         self.fileGrp.insert(index, value)
+
     def replace_fileGrp_at(self, index, value):
         self.fileGrp[index] = value
+
     def get_ID(self):
         return self.ID
+
     def set_ID(self, ID):
         self.ID = ID
-    def get_anyAttributes_(self): return self.anyAttributes_
-    def set_anyAttributes_(self, anyAttributes_): self.anyAttributes_ = anyAttributes_
+
+    def get_anyAttributes_(self):
+        return self.anyAttributes_
+
+    def set_anyAttributes_(self, anyAttributes_):
+        self.anyAttributes_ = anyAttributes_
+
     def hasContent_(self):
-        if (
-            self.fileGrp
-        ):
+        if self.fileGrp:
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='fileSecType', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('fileSecType')
+
+    def export(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="fileSecType",
+        pretty_print=True,
+    ):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("fileSecType")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='fileSecType')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="fileSecType")
         if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='fileSecType', pretty_print=pretty_print)
+            outfile.write(">%s" % (eol_,))
+            self.exportChildren(outfile, level + 1, "", namespacedef_, name_="fileSecType", pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='fileSecType'):
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="fileSecType"):
         unique_counter = 0
         for name, value in self.anyAttributes_.items():
-            xsinamespaceprefix = 'xsi'
-            xsinamespace1 = 'http://www.w3.org/2001/XMLSchema-instance'
-            xsinamespace2 = '{%s}' % (xsinamespace1, )
+            xsinamespaceprefix = "xsi"
+            xsinamespace1 = "http://www.w3.org/2001/XMLSchema-instance"
+            xsinamespace2 = "{%s}" % (xsinamespace1,)
             if name.startswith(xsinamespace2):
-                name1 = name[len(xsinamespace2):]
-                name2 = '%s:%s' % (xsinamespaceprefix, name1, )
+                name1 = name[len(xsinamespace2) :]
+                name2 = "%s:%s" % (
+                    xsinamespaceprefix,
+                    name1,
+                )
                 if name2 not in already_processed:
                     already_processed.add(name2)
-                    outfile.write(' %s=%s' % (name2, quote_attrib(value), ))
+                    outfile.write(
+                        " %s=%s"
+                        % (
+                            name2,
+                            quote_attrib(value),
+                        )
+                    )
             else:
                 mo = re_.match(Namespace_extract_pat_, name)
                 if mo is not None:
                     namespace, name = mo.group(1, 2)
                     if name not in already_processed:
                         already_processed.add(name)
-                        if namespace == 'http://www.w3.org/XML/1998/namespace':
-                            outfile.write(' %s=%s' % (
-                                name, quote_attrib(value), ))
+                        if namespace == "http://www.w3.org/XML/1998/namespace":
+                            outfile.write(
+                                " %s=%s"
+                                % (
+                                    name,
+                                    quote_attrib(value),
+                                )
+                            )
                         else:
                             unique_counter += 1
-                            outfile.write(' xmlns:%d="%s"' % (
-                                unique_counter, namespace, ))
-                            outfile.write(' %d:%s=%s' % (
-                                unique_counter, name, quote_attrib(value), ))
+                            outfile.write(
+                                ' xmlns:%d="%s"'
+                                % (
+                                    unique_counter,
+                                    namespace,
+                                )
+                            )
+                            outfile.write(
+                                " %d:%s=%s"
+                                % (
+                                    unique_counter,
+                                    name,
+                                    quote_attrib(value),
+                                )
+                            )
                 else:
                     if name not in already_processed:
                         already_processed.add(name)
-                        outfile.write(' %s=%s' % (
-                            name, quote_attrib(value), ))
-        if self.ID is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
-            outfile.write(' ID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name='ID')), ))
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='fileSecType', fromsubclass_=False, pretty_print=True):
+                        outfile.write(
+                            " %s=%s"
+                            % (
+                                name,
+                                quote_attrib(value),
+                            )
+                        )
+        if self.ID is not None and "ID" not in already_processed:
+            already_processed.add("ID")
+            outfile.write(" ID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name="ID")),))
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="fileSecType",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         for fileGrp_ in self.fileGrp:
-            fileGrp_.export(outfile, level, namespaceprefix_, namespacedef_='', name_='fileGrp', pretty_print=pretty_print)
+            fileGrp_.export(
+                outfile, level, namespaceprefix_, namespacedef_="", name_="fileGrp", pretty_print=pretty_print
+            )
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -5230,21 +7148,25 @@ class fileSecType(GeneratedsSuper):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('ID', node)
-        if value is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
+        value = find_attr_value_("ID", node)
+        if value is not None and "ID" not in already_processed:
+            already_processed.add("ID")
             self.ID = value
         self.anyAttributes_ = {}
         for name, value in attrs.items():
             if name not in already_processed:
                 self.anyAttributes_[name] = value
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
-        if nodeName_ == 'fileGrp':
+        if nodeName_ == "fileGrp":
             obj_ = fileGrpType1.factory(parent_object_=self)
             obj_.build(child_)
             self.fileGrp.append(obj_)
-            obj_.original_tagname_ = 'fileGrp'
+            obj_.original_tagname_ = "fileGrp"
+
+
 # end class fileSecType
 
 
@@ -5271,55 +7193,81 @@ class fileGrpType1(fileGrpType):
     each of its pages.
     A <fileGrp> may contain zero or more <fileGrp> elements and or <file>
     elements."""
+
     subclass = None
     superclass = fileGrpType
+
     def __init__(self, ID=None, VERSDATE=None, ADMID=None, USE=None, fileGrp=None, file=None, **kwargs_):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
-        super(fileGrpType1, self).__init__(ID, VERSDATE, ADMID, USE, fileGrp, file,  **kwargs_)
+        self.parent_object_ = kwargs_.get("parent_object_")
+        super(fileGrpType1, self).__init__(ID, VERSDATE, ADMID, USE, fileGrp, file, **kwargs_)
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, fileGrpType1)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, fileGrpType1)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if fileGrpType1.subclass:
             return fileGrpType1.subclass(*args_, **kwargs_)
         else:
             return fileGrpType1(*args_, **kwargs_)
+
     factory = staticmethod(factory)
+
     def hasContent_(self):
-        if (
-            super(fileGrpType1, self).hasContent_()
-        ):
+        if super(fileGrpType1, self).hasContent_():
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='fileGrpType1', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('fileGrpType1')
+
+    def export(self, outfile, level, namespaceprefix_="", namespacedef_="", name_="fileGrpType1", pretty_print=True):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("fileGrpType1")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='fileGrpType1')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="fileGrpType1")
         if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='fileGrpType1', pretty_print=pretty_print)
+            outfile.write(">%s" % (eol_,))
+            self.exportChildren(outfile, level + 1, "", namespacedef_, name_="fileGrpType1", pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='fileGrpType1'):
-        super(fileGrpType1, self).exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='fileGrpType1')
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='fileGrpType1', fromsubclass_=False, pretty_print=True):
-        super(fileGrpType1, self).exportChildren(outfile, level, namespaceprefix_, namespacedef_, name_, True, pretty_print=pretty_print)
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="fileGrpType1"):
+        super(fileGrpType1, self).exportAttributes(
+            outfile, level, already_processed, namespaceprefix_, name_="fileGrpType1"
+        )
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_="",
+        name_="fileGrpType1",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
+        super(fileGrpType1, self).exportChildren(
+            outfile, level, namespaceprefix_, namespacedef_, name_, True, pretty_print=pretty_print
+        )
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -5327,11 +7275,15 @@ class fileGrpType1(fileGrpType):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
         super(fileGrpType1, self).buildAttributes(node, attrs, already_processed)
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         super(fileGrpType1, self).buildChildren(child_, node, nodeName_, True)
         pass
+
+
 # end class fileGrpType1
 
 
@@ -5343,55 +7295,83 @@ class structLinkType2(structLinkType):
     hyperlink between two nodes in the structural map. The <structLink>
     section in the METS document is identified using its XML ID
     attributes."""
+
     subclass = None
     superclass = structLinkType
+
     def __init__(self, ID=None, smLink=None, smLinkGrp=None, **kwargs_):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
-        super(structLinkType2, self).__init__(ID, smLink, smLinkGrp,  **kwargs_)
+        self.parent_object_ = kwargs_.get("parent_object_")
+        super(structLinkType2, self).__init__(ID, smLink, smLinkGrp, **kwargs_)
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, structLinkType2)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, structLinkType2)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if structLinkType2.subclass:
             return structLinkType2.subclass(*args_, **kwargs_)
         else:
             return structLinkType2(*args_, **kwargs_)
+
     factory = staticmethod(factory)
+
     def hasContent_(self):
-        if (
-            super(structLinkType2, self).hasContent_()
-        ):
+        if super(structLinkType2, self).hasContent_():
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='structLinkType2', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('structLinkType2')
+
+    def export(self, outfile, level, namespaceprefix_="", namespacedef_="", name_="structLinkType2", pretty_print=True):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("structLinkType2")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='structLinkType2')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="structLinkType2")
         if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='structLinkType2', pretty_print=pretty_print)
+            outfile.write(">%s" % (eol_,))
+            self.exportChildren(
+                outfile, level + 1, "", namespacedef_, name_="structLinkType2", pretty_print=pretty_print
+            )
             showIndent(outfile, level, pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='structLinkType2'):
-        super(structLinkType2, self).exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='structLinkType2')
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='structLinkType2', fromsubclass_=False, pretty_print=True):
-        super(structLinkType2, self).exportChildren(outfile, level, namespaceprefix_, namespacedef_, name_, True, pretty_print=pretty_print)
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="structLinkType2"):
+        super(structLinkType2, self).exportAttributes(
+            outfile, level, already_processed, namespaceprefix_, name_="structLinkType2"
+        )
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_="",
+        name_="structLinkType2",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
+        super(structLinkType2, self).exportChildren(
+            outfile, level, namespaceprefix_, namespacedef_, name_, True, pretty_print=pretty_print
+        )
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -5399,11 +7379,15 @@ class structLinkType2(structLinkType):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
         super(structLinkType2, self).buildAttributes(node, attrs, already_processed)
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         super(structLinkType2, self).buildChildren(child_, node, nodeName_, True)
         pass
+
+
 # end class structLinkType2
 
 
@@ -5433,11 +7417,27 @@ class mptrType(GeneratedsSuper):
     CONTENTIDS (URI/O): Content IDs for the content represented by the <mptr>
     (equivalent to DIDL DII or Digital Item Identifier, a unique external
     ID)."""
+
     subclass = None
     superclass = None
-    def __init__(self, ID=None, CONTENTIDS=None, LOCTYPE=None, OTHERLOCTYPE=None, type_='simple', href=None, role=None, arcrole=None, title=None, show=None, actuate=None, **kwargs_):
+
+    def __init__(
+        self,
+        ID=None,
+        CONTENTIDS=None,
+        LOCTYPE=None,
+        OTHERLOCTYPE=None,
+        type_="simple",
+        href=None,
+        role=None,
+        arcrole=None,
+        title=None,
+        show=None,
+        actuate=None,
+        **kwargs_,
+    ):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
+        self.parent_object_ = kwargs_.get("parent_object_")
         self.ID = _cast(None, ID)
         self.CONTENTIDS = _cast(None, CONTENTIDS)
         self.LOCTYPE = _cast(None, LOCTYPE)
@@ -5449,127 +7449,184 @@ class mptrType(GeneratedsSuper):
         self.title = _cast(None, title)
         self.show = _cast(None, show)
         self.actuate = _cast(None, actuate)
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, mptrType)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, mptrType)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if mptrType.subclass:
             return mptrType.subclass(*args_, **kwargs_)
         else:
             return mptrType(*args_, **kwargs_)
+
     factory = staticmethod(factory)
+
     def get_ID(self):
         return self.ID
+
     def set_ID(self, ID):
         self.ID = ID
+
     def get_CONTENTIDS(self):
         return self.CONTENTIDS
+
     def set_CONTENTIDS(self, CONTENTIDS):
         self.CONTENTIDS = CONTENTIDS
+
     def get_LOCTYPE(self):
         return self.LOCTYPE
+
     def set_LOCTYPE(self, LOCTYPE):
         self.LOCTYPE = LOCTYPE
+
     def get_OTHERLOCTYPE(self):
         return self.OTHERLOCTYPE
+
     def set_OTHERLOCTYPE(self, OTHERLOCTYPE):
         self.OTHERLOCTYPE = OTHERLOCTYPE
+
     def get_type(self):
         return self.type_
+
     def set_type(self, type_):
         self.type_ = type_
+
     def get_href(self):
         return self.href
+
     def set_href(self, href):
         self.href = href
+
     def get_role(self):
         return self.role
+
     def set_role(self, role):
         self.role = role
+
     def get_arcrole(self):
         return self.arcrole
+
     def set_arcrole(self, arcrole):
         self.arcrole = arcrole
+
     def get_title(self):
         return self.title
+
     def set_title(self, title):
         self.title = title
+
     def get_show(self):
         return self.show
+
     def set_show(self, show):
         self.show = show
+
     def get_actuate(self):
         return self.actuate
+
     def set_actuate(self, actuate):
         self.actuate = actuate
+
     def validate_URIs(self, value):
         # Validate type URIs, a restriction on xsd:anyURI.
         pass
-    def hasContent_(self):
-        if (
 
-        ):
+    def hasContent_(self):
+        if ():
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='mptrType', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('mptrType')
+
+    def export(self, outfile, level, namespaceprefix_="", namespacedef_="", name_="mptrType", pretty_print=True):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("mptrType")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='mptrType')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="mptrType")
         if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='mptrType', pretty_print=pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            outfile.write(">%s" % (eol_,))
+            self.exportChildren(outfile, level + 1, "", namespacedef_, name_="mptrType", pretty_print=pretty_print)
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='mptrType'):
-        if self.ID is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
-            outfile.write(' ID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name='ID')), ))
-        if self.CONTENTIDS is not None and 'CONTENTIDS' not in already_processed:
-            already_processed.add('CONTENTIDS')
-            outfile.write(' CONTENTIDS=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.CONTENTIDS), input_name='CONTENTIDS')), ))
-        if 'LOCTYPE' not in already_processed:
-            already_processed.add('LOCTYPE')
-            outfile.write(' LOCTYPE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.LOCTYPE), input_name='LOCTYPE')), ))
-        if self.OTHERLOCTYPE is not None and 'OTHERLOCTYPE' not in already_processed:
-            already_processed.add('OTHERLOCTYPE')
-            outfile.write(' OTHERLOCTYPE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.OTHERLOCTYPE), input_name='OTHERLOCTYPE')), ))
-        if self.type_ != "simple" and 'type_' not in already_processed:
-            already_processed.add('type_')
-            outfile.write(' type=%s' % (quote_attrib(self.type_), ))
-        if self.href is not None and 'href' not in already_processed:
-            already_processed.add('href')
-            outfile.write(' href=%s' % (quote_attrib(self.href), ))
-        if self.role is not None and 'role' not in already_processed:
-            already_processed.add('role')
-            outfile.write(' role=%s' % (quote_attrib(self.role), ))
-        if self.arcrole is not None and 'arcrole' not in already_processed:
-            already_processed.add('arcrole')
-            outfile.write(' arcrole=%s' % (quote_attrib(self.arcrole), ))
-        if self.title is not None and 'title' not in already_processed:
-            already_processed.add('title')
-            outfile.write(' title=%s' % (quote_attrib(self.title), ))
-        if self.show is not None and 'show' not in already_processed:
-            already_processed.add('show')
-            outfile.write(' show=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.show), input_name='show')), ))
-        if self.actuate is not None and 'actuate' not in already_processed:
-            already_processed.add('actuate')
-            outfile.write(' actuate=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.actuate), input_name='actuate')), ))
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='mptrType', fromsubclass_=False, pretty_print=True):
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="mptrType"):
+        if self.ID is not None and "ID" not in already_processed:
+            already_processed.add("ID")
+            outfile.write(" ID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name="ID")),))
+        if self.CONTENTIDS is not None and "CONTENTIDS" not in already_processed:
+            already_processed.add("CONTENTIDS")
+            outfile.write(
+                " CONTENTIDS=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.CONTENTIDS), input_name="CONTENTIDS")),)
+            )
+        if "LOCTYPE" not in already_processed:
+            already_processed.add("LOCTYPE")
+            outfile.write(
+                " LOCTYPE=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.LOCTYPE), input_name="LOCTYPE")),)
+            )
+        if self.OTHERLOCTYPE is not None and "OTHERLOCTYPE" not in already_processed:
+            already_processed.add("OTHERLOCTYPE")
+            outfile.write(
+                " OTHERLOCTYPE=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.OTHERLOCTYPE), input_name="OTHERLOCTYPE")),)
+            )
+        if self.type_ != "simple" and "type_" not in already_processed:
+            already_processed.add("type_")
+            outfile.write(" type=%s" % (quote_attrib(self.type_),))
+        if self.href is not None and "href" not in already_processed:
+            already_processed.add("href")
+            outfile.write(" href=%s" % (quote_attrib(self.href),))
+        if self.role is not None and "role" not in already_processed:
+            already_processed.add("role")
+            outfile.write(" role=%s" % (quote_attrib(self.role),))
+        if self.arcrole is not None and "arcrole" not in already_processed:
+            already_processed.add("arcrole")
+            outfile.write(" arcrole=%s" % (quote_attrib(self.arcrole),))
+        if self.title is not None and "title" not in already_processed:
+            already_processed.add("title")
+            outfile.write(" title=%s" % (quote_attrib(self.title),))
+        if self.show is not None and "show" not in already_processed:
+            already_processed.add("show")
+            outfile.write(
+                " show=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.show), input_name="show")),)
+            )
+        if self.actuate is not None and "actuate" not in already_processed:
+            already_processed.add("actuate")
+            outfile.write(
+                " actuate=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.actuate), input_name="actuate")),)
+            )
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_="",
+        name_="mptrType",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
         pass
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -5577,54 +7634,58 @@ class mptrType(GeneratedsSuper):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('ID', node)
-        if value is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
+        value = find_attr_value_("ID", node)
+        if value is not None and "ID" not in already_processed:
+            already_processed.add("ID")
             self.ID = value
-        value = find_attr_value_('CONTENTIDS', node)
-        if value is not None and 'CONTENTIDS' not in already_processed:
-            already_processed.add('CONTENTIDS')
+        value = find_attr_value_("CONTENTIDS", node)
+        if value is not None and "CONTENTIDS" not in already_processed:
+            already_processed.add("CONTENTIDS")
             self.CONTENTIDS = value
-            self.validate_URIs(self.CONTENTIDS)    # validate type URIs
-        value = find_attr_value_('LOCTYPE', node)
-        if value is not None and 'LOCTYPE' not in already_processed:
-            already_processed.add('LOCTYPE')
+            self.validate_URIs(self.CONTENTIDS)  # validate type URIs
+        value = find_attr_value_("LOCTYPE", node)
+        if value is not None and "LOCTYPE" not in already_processed:
+            already_processed.add("LOCTYPE")
             self.LOCTYPE = value
-        value = find_attr_value_('OTHERLOCTYPE', node)
-        if value is not None and 'OTHERLOCTYPE' not in already_processed:
-            already_processed.add('OTHERLOCTYPE')
+        value = find_attr_value_("OTHERLOCTYPE", node)
+        if value is not None and "OTHERLOCTYPE" not in already_processed:
+            already_processed.add("OTHERLOCTYPE")
             self.OTHERLOCTYPE = value
-        value = find_attr_value_('type', node)
-        if value is not None and 'type' not in already_processed:
-            already_processed.add('type')
+        value = find_attr_value_("type", node)
+        if value is not None and "type" not in already_processed:
+            already_processed.add("type")
             self.type_ = value
-        value = find_attr_value_('href', node)
-        if value is not None and 'href' not in already_processed:
-            already_processed.add('href')
+        value = find_attr_value_("href", node)
+        if value is not None and "href" not in already_processed:
+            already_processed.add("href")
             self.href = value
-        value = find_attr_value_('role', node)
-        if value is not None and 'role' not in already_processed:
-            already_processed.add('role')
+        value = find_attr_value_("role", node)
+        if value is not None and "role" not in already_processed:
+            already_processed.add("role")
             self.role = value
-        value = find_attr_value_('arcrole', node)
-        if value is not None and 'arcrole' not in already_processed:
-            already_processed.add('arcrole')
+        value = find_attr_value_("arcrole", node)
+        if value is not None and "arcrole" not in already_processed:
+            already_processed.add("arcrole")
             self.arcrole = value
-        value = find_attr_value_('title', node)
-        if value is not None and 'title' not in already_processed:
-            already_processed.add('title')
+        value = find_attr_value_("title", node)
+        if value is not None and "title" not in already_processed:
+            already_processed.add("title")
             self.title = value
-        value = find_attr_value_('show', node)
-        if value is not None and 'show' not in already_processed:
-            already_processed.add('show')
+        value = find_attr_value_("show", node)
+        if value is not None and "show" not in already_processed:
+            already_processed.add("show")
             self.show = value
-        value = find_attr_value_('actuate', node)
-        if value is not None and 'actuate' not in already_processed:
-            already_processed.add('actuate')
+        value = find_attr_value_("actuate", node)
+        if value is not None and "actuate" not in already_processed:
+            already_processed.add("actuate")
             self.actuate = value
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
+
+
 # end class mptrType
 
 
@@ -5657,11 +7718,13 @@ class fptrType(GeneratedsSuper):
     CONTENTIDS (URI/O): Content IDs for the content represented by the <fptr>
     (equivalent to DIDL DII or Digital Item Identifier, a unique external
     ID)."""
+
     subclass = None
     superclass = None
+
     def __init__(self, ID=None, FILEID=None, CONTENTIDS=None, par=None, seq=None, area=None, **kwargs_):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
+        self.parent_object_ = kwargs_.get("parent_object_")
         self.ID = _cast(None, ID)
         self.FILEID = _cast(None, FILEID)
         self.CONTENTIDS = _cast(None, CONTENTIDS)
@@ -5669,128 +7732,209 @@ class fptrType(GeneratedsSuper):
         self.seq = seq
         self.area = area
         self.anyAttributes_ = {}
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, fptrType)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, fptrType)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if fptrType.subclass:
             return fptrType.subclass(*args_, **kwargs_)
         else:
             return fptrType(*args_, **kwargs_)
+
     factory = staticmethod(factory)
+
     def get_par(self):
         return self.par
+
     def set_par(self, par):
         self.par = par
+
     def get_seq(self):
         return self.seq
+
     def set_seq(self, seq):
         self.seq = seq
+
     def get_area(self):
         return self.area
+
     def set_area(self, area):
         self.area = area
+
     def get_ID(self):
         return self.ID
+
     def set_ID(self, ID):
         self.ID = ID
+
     def get_FILEID(self):
         return self.FILEID
+
     def set_FILEID(self, FILEID):
         self.FILEID = FILEID
+
     def get_CONTENTIDS(self):
         return self.CONTENTIDS
+
     def set_CONTENTIDS(self, CONTENTIDS):
         self.CONTENTIDS = CONTENTIDS
-    def get_anyAttributes_(self): return self.anyAttributes_
-    def set_anyAttributes_(self, anyAttributes_): self.anyAttributes_ = anyAttributes_
+
+    def get_anyAttributes_(self):
+        return self.anyAttributes_
+
+    def set_anyAttributes_(self, anyAttributes_):
+        self.anyAttributes_ = anyAttributes_
+
     def validate_URIs(self, value):
         # Validate type URIs, a restriction on xsd:anyURI.
         pass
+
     def hasContent_(self):
-        if (
-            self.par is not None or
-            self.seq is not None or
-            self.area is not None
-        ):
+        if self.par is not None or self.seq is not None or self.area is not None:
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='fptrType', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('fptrType')
+
+    def export(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="fptrType",
+        pretty_print=True,
+    ):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("fptrType")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='fptrType')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="fptrType")
         if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='fptrType', pretty_print=pretty_print)
+            outfile.write(">%s" % (eol_,))
+            self.exportChildren(outfile, level + 1, "", namespacedef_, name_="fptrType", pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='fptrType'):
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="fptrType"):
         unique_counter = 0
         for name, value in self.anyAttributes_.items():
-            xsinamespaceprefix = 'xsi'
-            xsinamespace1 = 'http://www.w3.org/2001/XMLSchema-instance'
-            xsinamespace2 = '{%s}' % (xsinamespace1, )
+            xsinamespaceprefix = "xsi"
+            xsinamespace1 = "http://www.w3.org/2001/XMLSchema-instance"
+            xsinamespace2 = "{%s}" % (xsinamespace1,)
             if name.startswith(xsinamespace2):
-                name1 = name[len(xsinamespace2):]
-                name2 = '%s:%s' % (xsinamespaceprefix, name1, )
+                name1 = name[len(xsinamespace2) :]
+                name2 = "%s:%s" % (
+                    xsinamespaceprefix,
+                    name1,
+                )
                 if name2 not in already_processed:
                     already_processed.add(name2)
-                    outfile.write(' %s=%s' % (name2, quote_attrib(value), ))
+                    outfile.write(
+                        " %s=%s"
+                        % (
+                            name2,
+                            quote_attrib(value),
+                        )
+                    )
             else:
                 mo = re_.match(Namespace_extract_pat_, name)
                 if mo is not None:
                     namespace, name = mo.group(1, 2)
                     if name not in already_processed:
                         already_processed.add(name)
-                        if namespace == 'http://www.w3.org/XML/1998/namespace':
-                            outfile.write(' %s=%s' % (
-                                name, quote_attrib(value), ))
+                        if namespace == "http://www.w3.org/XML/1998/namespace":
+                            outfile.write(
+                                " %s=%s"
+                                % (
+                                    name,
+                                    quote_attrib(value),
+                                )
+                            )
                         else:
                             unique_counter += 1
-                            outfile.write(' xmlns:%d="%s"' % (
-                                unique_counter, namespace, ))
-                            outfile.write(' %d:%s=%s' % (
-                                unique_counter, name, quote_attrib(value), ))
+                            outfile.write(
+                                ' xmlns:%d="%s"'
+                                % (
+                                    unique_counter,
+                                    namespace,
+                                )
+                            )
+                            outfile.write(
+                                " %d:%s=%s"
+                                % (
+                                    unique_counter,
+                                    name,
+                                    quote_attrib(value),
+                                )
+                            )
                 else:
                     if name not in already_processed:
                         already_processed.add(name)
-                        outfile.write(' %s=%s' % (
-                            name, quote_attrib(value), ))
-        if self.ID is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
-            outfile.write(' ID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name='ID')), ))
-        if self.FILEID is not None and 'FILEID' not in already_processed:
-            already_processed.add('FILEID')
-            outfile.write(' FILEID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.FILEID), input_name='FILEID')), ))
-        if self.CONTENTIDS is not None and 'CONTENTIDS' not in already_processed:
-            already_processed.add('CONTENTIDS')
-            outfile.write(' CONTENTIDS=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.CONTENTIDS), input_name='CONTENTIDS')), ))
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='fptrType', fromsubclass_=False, pretty_print=True):
+                        outfile.write(
+                            " %s=%s"
+                            % (
+                                name,
+                                quote_attrib(value),
+                            )
+                        )
+        if self.ID is not None and "ID" not in already_processed:
+            already_processed.add("ID")
+            outfile.write(" ID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name="ID")),))
+        if self.FILEID is not None and "FILEID" not in already_processed:
+            already_processed.add("FILEID")
+            outfile.write(
+                " FILEID=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.FILEID), input_name="FILEID")),)
+            )
+        if self.CONTENTIDS is not None and "CONTENTIDS" not in already_processed:
+            already_processed.add("CONTENTIDS")
+            outfile.write(
+                " CONTENTIDS=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.CONTENTIDS), input_name="CONTENTIDS")),)
+            )
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="fptrType",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.par is not None:
-            self.par.export(outfile, level, namespaceprefix_, namespacedef_='', name_='par', pretty_print=pretty_print)
+            self.par.export(outfile, level, namespaceprefix_, namespacedef_="", name_="par", pretty_print=pretty_print)
         if self.seq is not None:
-            self.seq.export(outfile, level, namespaceprefix_, namespacedef_='', name_='seq', pretty_print=pretty_print)
+            self.seq.export(outfile, level, namespaceprefix_, namespacedef_="", name_="seq", pretty_print=pretty_print)
         if self.area is not None:
-            self.area.export(outfile, level, namespaceprefix_, namespacedef_='', name_='area', pretty_print=pretty_print)
+            self.area.export(
+                outfile, level, namespaceprefix_, namespacedef_="", name_="area", pretty_print=pretty_print
+            )
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -5798,40 +7942,44 @@ class fptrType(GeneratedsSuper):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('ID', node)
-        if value is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
+        value = find_attr_value_("ID", node)
+        if value is not None and "ID" not in already_processed:
+            already_processed.add("ID")
             self.ID = value
-        value = find_attr_value_('FILEID', node)
-        if value is not None and 'FILEID' not in already_processed:
-            already_processed.add('FILEID')
+        value = find_attr_value_("FILEID", node)
+        if value is not None and "FILEID" not in already_processed:
+            already_processed.add("FILEID")
             self.FILEID = value
-        value = find_attr_value_('CONTENTIDS', node)
-        if value is not None and 'CONTENTIDS' not in already_processed:
-            already_processed.add('CONTENTIDS')
+        value = find_attr_value_("CONTENTIDS", node)
+        if value is not None and "CONTENTIDS" not in already_processed:
+            already_processed.add("CONTENTIDS")
             self.CONTENTIDS = value
-            self.validate_URIs(self.CONTENTIDS)    # validate type URIs
+            self.validate_URIs(self.CONTENTIDS)  # validate type URIs
         self.anyAttributes_ = {}
         for name, value in attrs.items():
             if name not in already_processed:
                 self.anyAttributes_[name] = value
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
-        if nodeName_ == 'par':
+        if nodeName_ == "par":
             obj_ = parType.factory(parent_object_=self)
             obj_.build(child_)
             self.par = obj_
-            obj_.original_tagname_ = 'par'
-        elif nodeName_ == 'seq':
+            obj_.original_tagname_ = "par"
+        elif nodeName_ == "seq":
             obj_ = seqType.factory(parent_object_=self)
             obj_.build(child_)
             self.seq = obj_
-            obj_.original_tagname_ = 'seq'
-        elif nodeName_ == 'area':
+            obj_.original_tagname_ = "seq"
+        elif nodeName_ == "area":
             obj_ = areaType.factory(parent_object_=self)
             obj_.build(child_)
             self.area = obj_
-            obj_.original_tagname_ = 'area'
+            obj_.original_tagname_ = "area"
+
+
 # end class fptrType
 
 
@@ -5857,11 +8005,13 @@ class smLinkType(GeneratedsSuper):
     linking to.
     xlink:from - the value of the label for the element in the structMap you
     are linking from."""
+
     subclass = None
     superclass = None
+
     def __init__(self, ID=None, arcrole=None, title=None, show=None, actuate=None, to=None, from_=None, **kwargs_):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
+        self.parent_object_ = kwargs_.get("parent_object_")
         self.ID = _cast(None, ID)
         self.arcrole = _cast(None, arcrole)
         self.title = _cast(None, title)
@@ -5869,96 +8019,135 @@ class smLinkType(GeneratedsSuper):
         self.actuate = _cast(None, actuate)
         self.to = _cast(None, to)
         self.from_ = _cast(None, from_)
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, smLinkType)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, smLinkType)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if smLinkType.subclass:
             return smLinkType.subclass(*args_, **kwargs_)
         else:
             return smLinkType(*args_, **kwargs_)
+
     factory = staticmethod(factory)
+
     def get_ID(self):
         return self.ID
+
     def set_ID(self, ID):
         self.ID = ID
+
     def get_arcrole(self):
         return self.arcrole
+
     def set_arcrole(self, arcrole):
         self.arcrole = arcrole
+
     def get_title(self):
         return self.title
+
     def set_title(self, title):
         self.title = title
+
     def get_show(self):
         return self.show
+
     def set_show(self, show):
         self.show = show
+
     def get_actuate(self):
         return self.actuate
+
     def set_actuate(self, actuate):
         self.actuate = actuate
+
     def get_to(self):
         return self.to
+
     def set_to(self, to):
         self.to = to
+
     def get_from(self):
         return self.from_
+
     def set_from(self, from_):
         self.from_ = from_
-    def hasContent_(self):
-        if (
 
-        ):
+    def hasContent_(self):
+        if ():
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='smLinkType', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('smLinkType')
+
+    def export(self, outfile, level, namespaceprefix_="", namespacedef_="", name_="smLinkType", pretty_print=True):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("smLinkType")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='smLinkType')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="smLinkType")
         if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='smLinkType', pretty_print=pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            outfile.write(">%s" % (eol_,))
+            self.exportChildren(outfile, level + 1, "", namespacedef_, name_="smLinkType", pretty_print=pretty_print)
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='smLinkType'):
-        if self.ID is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
-            outfile.write(' ID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name='ID')), ))
-        if self.arcrole is not None and 'arcrole' not in already_processed:
-            already_processed.add('arcrole')
-            outfile.write(' arcrole=%s' % (quote_attrib(self.arcrole), ))
-        if self.title is not None and 'title' not in already_processed:
-            already_processed.add('title')
-            outfile.write(' title=%s' % (quote_attrib(self.title), ))
-        if self.show is not None and 'show' not in already_processed:
-            already_processed.add('show')
-            outfile.write(' show=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.show), input_name='show')), ))
-        if self.actuate is not None and 'actuate' not in already_processed:
-            already_processed.add('actuate')
-            outfile.write(' actuate=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.actuate), input_name='actuate')), ))
-        if 'to' not in already_processed:
-            already_processed.add('to')
-            outfile.write(' to=%s' % (quote_attrib(self.to), ))
-        if 'from_' not in already_processed:
-            already_processed.add('from_')
-            outfile.write(' from=%s' % (quote_attrib(self.from_), ))
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='smLinkType', fromsubclass_=False, pretty_print=True):
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="smLinkType"):
+        if self.ID is not None and "ID" not in already_processed:
+            already_processed.add("ID")
+            outfile.write(" ID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name="ID")),))
+        if self.arcrole is not None and "arcrole" not in already_processed:
+            already_processed.add("arcrole")
+            outfile.write(" arcrole=%s" % (quote_attrib(self.arcrole),))
+        if self.title is not None and "title" not in already_processed:
+            already_processed.add("title")
+            outfile.write(" title=%s" % (quote_attrib(self.title),))
+        if self.show is not None and "show" not in already_processed:
+            already_processed.add("show")
+            outfile.write(
+                " show=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.show), input_name="show")),)
+            )
+        if self.actuate is not None and "actuate" not in already_processed:
+            already_processed.add("actuate")
+            outfile.write(
+                " actuate=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.actuate), input_name="actuate")),)
+            )
+        if "to" not in already_processed:
+            already_processed.add("to")
+            outfile.write(" to=%s" % (quote_attrib(self.to),))
+        if "from_" not in already_processed:
+            already_processed.add("from_")
+            outfile.write(" from=%s" % (quote_attrib(self.from_),))
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_="",
+        name_="smLinkType",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
         pass
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -5966,37 +8155,41 @@ class smLinkType(GeneratedsSuper):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('ID', node)
-        if value is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
+        value = find_attr_value_("ID", node)
+        if value is not None and "ID" not in already_processed:
+            already_processed.add("ID")
             self.ID = value
-        value = find_attr_value_('arcrole', node)
-        if value is not None and 'arcrole' not in already_processed:
-            already_processed.add('arcrole')
+        value = find_attr_value_("arcrole", node)
+        if value is not None and "arcrole" not in already_processed:
+            already_processed.add("arcrole")
             self.arcrole = value
-        value = find_attr_value_('title', node)
-        if value is not None and 'title' not in already_processed:
-            already_processed.add('title')
+        value = find_attr_value_("title", node)
+        if value is not None and "title" not in already_processed:
+            already_processed.add("title")
             self.title = value
-        value = find_attr_value_('show', node)
-        if value is not None and 'show' not in already_processed:
-            already_processed.add('show')
+        value = find_attr_value_("show", node)
+        if value is not None and "show" not in already_processed:
+            already_processed.add("show")
             self.show = value
-        value = find_attr_value_('actuate', node)
-        if value is not None and 'actuate' not in already_processed:
-            already_processed.add('actuate')
+        value = find_attr_value_("actuate", node)
+        if value is not None and "actuate" not in already_processed:
+            already_processed.add("actuate")
             self.actuate = value
-        value = find_attr_value_('to', node)
-        if value is not None and 'to' not in already_processed:
-            already_processed.add('to')
+        value = find_attr_value_("to", node)
+        if value is not None and "to" not in already_processed:
+            already_processed.add("to")
             self.to = value
-        value = find_attr_value_('from', node)
-        if value is not None and 'from' not in already_processed:
-            already_processed.add('from')
+        value = find_attr_value_("from", node)
+        if value is not None and "from" not in already_processed:
+            already_processed.add("from")
             self.from_ = value
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
+
+
 # end class smLinkType
 
 
@@ -6023,11 +8216,23 @@ class smLinkGrpType(GeneratedsSuper):
     element is significant. If the order is significant, then a value of
     "ordered" should be supplied. Value defaults to "unordered" Note that
     the ARLINKORDER attribute has no xlink specified meaning."""
+
     subclass = None
     superclass = None
-    def __init__(self, ID=None, ARCLINKORDER='unordered', type_='extended', role=None, title=None, smLocatorLink=None, smArcLink=None, **kwargs_):
+
+    def __init__(
+        self,
+        ID=None,
+        ARCLINKORDER="unordered",
+        type_="extended",
+        role=None,
+        title=None,
+        smLocatorLink=None,
+        smArcLink=None,
+        **kwargs_,
+    ):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
+        self.parent_object_ = kwargs_.get("parent_object_")
         self.ID = _cast(None, ID)
         self.ARCLINKORDER = _cast(None, ARCLINKORDER)
         self.type_ = _cast(None, type_)
@@ -6041,111 +8246,165 @@ class smLinkGrpType(GeneratedsSuper):
             self.smArcLink = []
         else:
             self.smArcLink = smArcLink
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, smLinkGrpType)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, smLinkGrpType)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if smLinkGrpType.subclass:
             return smLinkGrpType.subclass(*args_, **kwargs_)
         else:
             return smLinkGrpType(*args_, **kwargs_)
+
     factory = staticmethod(factory)
+
     def get_smLocatorLink(self):
         return self.smLocatorLink
+
     def set_smLocatorLink(self, smLocatorLink):
         self.smLocatorLink = smLocatorLink
+
     def add_smLocatorLink(self, value):
         self.smLocatorLink.append(value)
+
     def insert_smLocatorLink_at(self, index, value):
         self.smLocatorLink.insert(index, value)
+
     def replace_smLocatorLink_at(self, index, value):
         self.smLocatorLink[index] = value
+
     def get_smArcLink(self):
         return self.smArcLink
+
     def set_smArcLink(self, smArcLink):
         self.smArcLink = smArcLink
+
     def add_smArcLink(self, value):
         self.smArcLink.append(value)
+
     def insert_smArcLink_at(self, index, value):
         self.smArcLink.insert(index, value)
+
     def replace_smArcLink_at(self, index, value):
         self.smArcLink[index] = value
+
     def get_ID(self):
         return self.ID
+
     def set_ID(self, ID):
         self.ID = ID
+
     def get_ARCLINKORDER(self):
         return self.ARCLINKORDER
+
     def set_ARCLINKORDER(self, ARCLINKORDER):
         self.ARCLINKORDER = ARCLINKORDER
+
     def get_type(self):
         return self.type_
+
     def set_type(self, type_):
         self.type_ = type_
+
     def get_role(self):
         return self.role
+
     def set_role(self, role):
         self.role = role
+
     def get_title(self):
         return self.title
+
     def set_title(self, title):
         self.title = title
+
     def hasContent_(self):
-        if (
-            self.smLocatorLink or
-            self.smArcLink
-        ):
+        if self.smLocatorLink or self.smArcLink:
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='smLinkGrpType', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('smLinkGrpType')
+
+    def export(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="smLinkGrpType",
+        pretty_print=True,
+    ):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("smLinkGrpType")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='smLinkGrpType')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="smLinkGrpType")
         if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='smLinkGrpType', pretty_print=pretty_print)
+            outfile.write(">%s" % (eol_,))
+            self.exportChildren(outfile, level + 1, "", namespacedef_, name_="smLinkGrpType", pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='smLinkGrpType'):
-        if self.ID is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
-            outfile.write(' ID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name='ID')), ))
-        if self.ARCLINKORDER != "unordered" and 'ARCLINKORDER' not in already_processed:
-            already_processed.add('ARCLINKORDER')
-            outfile.write(' ARCLINKORDER=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ARCLINKORDER), input_name='ARCLINKORDER')), ))
-        if self.type_ != "extended" and 'type_' not in already_processed:
-            already_processed.add('type_')
-            outfile.write(' type=%s' % (quote_attrib(self.type_), ))
-        if self.role is not None and 'role' not in already_processed:
-            already_processed.add('role')
-            outfile.write(' role=%s' % (quote_attrib(self.role), ))
-        if self.title is not None and 'title' not in already_processed:
-            already_processed.add('title')
-            outfile.write(' title=%s' % (quote_attrib(self.title), ))
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='smLinkGrpType', fromsubclass_=False, pretty_print=True):
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="smLinkGrpType"):
+        if self.ID is not None and "ID" not in already_processed:
+            already_processed.add("ID")
+            outfile.write(" ID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name="ID")),))
+        if self.ARCLINKORDER != "unordered" and "ARCLINKORDER" not in already_processed:
+            already_processed.add("ARCLINKORDER")
+            outfile.write(
+                " ARCLINKORDER=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.ARCLINKORDER), input_name="ARCLINKORDER")),)
+            )
+        if self.type_ != "extended" and "type_" not in already_processed:
+            already_processed.add("type_")
+            outfile.write(" type=%s" % (quote_attrib(self.type_),))
+        if self.role is not None and "role" not in already_processed:
+            already_processed.add("role")
+            outfile.write(" role=%s" % (quote_attrib(self.role),))
+        if self.title is not None and "title" not in already_processed:
+            already_processed.add("title")
+            outfile.write(" title=%s" % (quote_attrib(self.title),))
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="smLinkGrpType",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         for smLocatorLink_ in self.smLocatorLink:
-            smLocatorLink_.export(outfile, level, namespaceprefix_, namespacedef_='', name_='smLocatorLink', pretty_print=pretty_print)
+            smLocatorLink_.export(
+                outfile, level, namespaceprefix_, namespacedef_="", name_="smLocatorLink", pretty_print=pretty_print
+            )
         for smArcLink_ in self.smArcLink:
-            smArcLink_.export(outfile, level, namespaceprefix_, namespacedef_='', name_='smArcLink', pretty_print=pretty_print)
+            smArcLink_.export(
+                outfile, level, namespaceprefix_, namespacedef_="", name_="smArcLink", pretty_print=pretty_print
+            )
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -6153,38 +8412,42 @@ class smLinkGrpType(GeneratedsSuper):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('ID', node)
-        if value is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
+        value = find_attr_value_("ID", node)
+        if value is not None and "ID" not in already_processed:
+            already_processed.add("ID")
             self.ID = value
-        value = find_attr_value_('ARCLINKORDER', node)
-        if value is not None and 'ARCLINKORDER' not in already_processed:
-            already_processed.add('ARCLINKORDER')
+        value = find_attr_value_("ARCLINKORDER", node)
+        if value is not None and "ARCLINKORDER" not in already_processed:
+            already_processed.add("ARCLINKORDER")
             self.ARCLINKORDER = value
-        value = find_attr_value_('type', node)
-        if value is not None and 'type' not in already_processed:
-            already_processed.add('type')
+        value = find_attr_value_("type", node)
+        if value is not None and "type" not in already_processed:
+            already_processed.add("type")
             self.type_ = value
-        value = find_attr_value_('role', node)
-        if value is not None and 'role' not in already_processed:
-            already_processed.add('role')
+        value = find_attr_value_("role", node)
+        if value is not None and "role" not in already_processed:
+            already_processed.add("role")
             self.role = value
-        value = find_attr_value_('title', node)
-        if value is not None and 'title' not in already_processed:
-            already_processed.add('title')
+        value = find_attr_value_("title", node)
+        if value is not None and "title" not in already_processed:
+            already_processed.add("title")
             self.title = value
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
-        if nodeName_ == 'smLocatorLink':
+        if nodeName_ == "smLocatorLink":
             obj_ = smLocatorLinkType.factory(parent_object_=self)
             obj_.build(child_)
             self.smLocatorLink.append(obj_)
-            obj_.original_tagname_ = 'smLocatorLink'
-        elif nodeName_ == 'smArcLink':
+            obj_.original_tagname_ = "smLocatorLink"
+        elif nodeName_ == "smArcLink":
             obj_ = smArcLinkType.factory(parent_object_=self)
             obj_.build(child_)
             self.smArcLink.append(obj_)
-            obj_.original_tagname_ = 'smArcLink'
+            obj_.original_tagname_ = "smArcLink"
+
+
 # end class smLinkGrpType
 
 
@@ -6208,100 +8471,138 @@ class smLocatorLinkType(GeneratedsSuper):
     from another element or document via an IDREF or an XPTR. For more
     information on using ID attributes for internal and external linking
     see Chapter 4 of the METS Primer."""
+
     subclass = None
     superclass = None
-    def __init__(self, ID=None, type_='locator', href=None, role=None, title=None, label=None, **kwargs_):
+
+    def __init__(self, ID=None, type_="locator", href=None, role=None, title=None, label=None, **kwargs_):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
+        self.parent_object_ = kwargs_.get("parent_object_")
         self.ID = _cast(None, ID)
         self.type_ = _cast(None, type_)
         self.href = _cast(None, href)
         self.role = _cast(None, role)
         self.title = _cast(None, title)
         self.label = _cast(None, label)
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, smLocatorLinkType)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, smLocatorLinkType)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if smLocatorLinkType.subclass:
             return smLocatorLinkType.subclass(*args_, **kwargs_)
         else:
             return smLocatorLinkType(*args_, **kwargs_)
+
     factory = staticmethod(factory)
+
     def get_ID(self):
         return self.ID
+
     def set_ID(self, ID):
         self.ID = ID
+
     def get_type(self):
         return self.type_
+
     def set_type(self, type_):
         self.type_ = type_
+
     def get_href(self):
         return self.href
+
     def set_href(self, href):
         self.href = href
+
     def get_role(self):
         return self.role
+
     def set_role(self, role):
         self.role = role
+
     def get_title(self):
         return self.title
+
     def set_title(self, title):
         self.title = title
+
     def get_label(self):
         return self.label
+
     def set_label(self, label):
         self.label = label
-    def hasContent_(self):
-        if (
 
-        ):
+    def hasContent_(self):
+        if ():
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='smLocatorLinkType', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('smLocatorLinkType')
+
+    def export(
+        self, outfile, level, namespaceprefix_="", namespacedef_="", name_="smLocatorLinkType", pretty_print=True
+    ):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("smLocatorLinkType")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='smLocatorLinkType')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="smLocatorLinkType")
         if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='smLocatorLinkType', pretty_print=pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            outfile.write(">%s" % (eol_,))
+            self.exportChildren(
+                outfile, level + 1, "", namespacedef_, name_="smLocatorLinkType", pretty_print=pretty_print
+            )
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='smLocatorLinkType'):
-        if self.ID is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
-            outfile.write(' ID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name='ID')), ))
-        if self.type_ != "locator" and 'type_' not in already_processed:
-            already_processed.add('type_')
-            outfile.write(' type=%s' % (quote_attrib(self.type_), ))
-        if 'href' not in already_processed:
-            already_processed.add('href')
-            outfile.write(' href=%s' % (quote_attrib(self.href), ))
-        if self.role is not None and 'role' not in already_processed:
-            already_processed.add('role')
-            outfile.write(' role=%s' % (quote_attrib(self.role), ))
-        if self.title is not None and 'title' not in already_processed:
-            already_processed.add('title')
-            outfile.write(' title=%s' % (quote_attrib(self.title), ))
-        if self.label is not None and 'label' not in already_processed:
-            already_processed.add('label')
-            outfile.write(' label=%s' % (quote_attrib(self.label), ))
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='smLocatorLinkType', fromsubclass_=False, pretty_print=True):
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="smLocatorLinkType"):
+        if self.ID is not None and "ID" not in already_processed:
+            already_processed.add("ID")
+            outfile.write(" ID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name="ID")),))
+        if self.type_ != "locator" and "type_" not in already_processed:
+            already_processed.add("type_")
+            outfile.write(" type=%s" % (quote_attrib(self.type_),))
+        if "href" not in already_processed:
+            already_processed.add("href")
+            outfile.write(" href=%s" % (quote_attrib(self.href),))
+        if self.role is not None and "role" not in already_processed:
+            already_processed.add("role")
+            outfile.write(" role=%s" % (quote_attrib(self.role),))
+        if self.title is not None and "title" not in already_processed:
+            already_processed.add("title")
+            outfile.write(" title=%s" % (quote_attrib(self.title),))
+        if self.label is not None and "label" not in already_processed:
+            already_processed.add("label")
+            outfile.write(" label=%s" % (quote_attrib(self.label),))
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_="",
+        name_="smLocatorLinkType",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
         pass
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -6309,33 +8610,37 @@ class smLocatorLinkType(GeneratedsSuper):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('ID', node)
-        if value is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
+        value = find_attr_value_("ID", node)
+        if value is not None and "ID" not in already_processed:
+            already_processed.add("ID")
             self.ID = value
-        value = find_attr_value_('type', node)
-        if value is not None and 'type' not in already_processed:
-            already_processed.add('type')
+        value = find_attr_value_("type", node)
+        if value is not None and "type" not in already_processed:
+            already_processed.add("type")
             self.type_ = value
-        value = find_attr_value_('href', node)
-        if value is not None and 'href' not in already_processed:
-            already_processed.add('href')
+        value = find_attr_value_("href", node)
+        if value is not None and "href" not in already_processed:
+            already_processed.add("href")
             self.href = value
-        value = find_attr_value_('role', node)
-        if value is not None and 'role' not in already_processed:
-            already_processed.add('role')
+        value = find_attr_value_("role", node)
+        if value is not None and "role" not in already_processed:
+            already_processed.add("role")
             self.role = value
-        value = find_attr_value_('title', node)
-        if value is not None and 'title' not in already_processed:
-            already_processed.add('title')
+        value = find_attr_value_("title", node)
+        if value is not None and "title" not in already_processed:
+            already_processed.add("title")
             self.title = value
-        value = find_attr_value_('label', node)
-        if value is not None and 'label' not in already_processed:
-            already_processed.add('label')
+        value = find_attr_value_("label", node)
+        if value is not None and "label" not in already_processed:
+            already_processed.add("label")
             self.label = value
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
+
+
 # end class smLocatorLinkType
 
 
@@ -6368,11 +8673,26 @@ class smArcLinkType(GeneratedsSuper):
     relationship between the xlink:from and xlink:to sides of the arc. For
     more information on using METS IDREFS and IDREF type attributes for
     internal linking, see Chapter 4 of the METS Primer."""
+
     subclass = None
     superclass = None
-    def __init__(self, ID=None, ARCTYPE=None, ADMID=None, type_='arc', arcrole=None, title=None, show=None, actuate=None, from_=None, to=None, **kwargs_):
+
+    def __init__(
+        self,
+        ID=None,
+        ARCTYPE=None,
+        ADMID=None,
+        type_="arc",
+        arcrole=None,
+        title=None,
+        show=None,
+        actuate=None,
+        from_=None,
+        to=None,
+        **kwargs_,
+    ):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
+        self.parent_object_ = kwargs_.get("parent_object_")
         self.ID = _cast(None, ID)
         self.ARCTYPE = _cast(None, ARCTYPE)
         self.ADMID = _cast(None, ADMID)
@@ -6383,117 +8703,167 @@ class smArcLinkType(GeneratedsSuper):
         self.actuate = _cast(None, actuate)
         self.from_ = _cast(None, from_)
         self.to = _cast(None, to)
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, smArcLinkType)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, smArcLinkType)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if smArcLinkType.subclass:
             return smArcLinkType.subclass(*args_, **kwargs_)
         else:
             return smArcLinkType(*args_, **kwargs_)
+
     factory = staticmethod(factory)
+
     def get_ID(self):
         return self.ID
+
     def set_ID(self, ID):
         self.ID = ID
+
     def get_ARCTYPE(self):
         return self.ARCTYPE
+
     def set_ARCTYPE(self, ARCTYPE):
         self.ARCTYPE = ARCTYPE
+
     def get_ADMID(self):
         return self.ADMID
+
     def set_ADMID(self, ADMID):
         self.ADMID = ADMID
+
     def get_type(self):
         return self.type_
+
     def set_type(self, type_):
         self.type_ = type_
+
     def get_arcrole(self):
         return self.arcrole
+
     def set_arcrole(self, arcrole):
         self.arcrole = arcrole
+
     def get_title(self):
         return self.title
+
     def set_title(self, title):
         self.title = title
+
     def get_show(self):
         return self.show
+
     def set_show(self, show):
         self.show = show
+
     def get_actuate(self):
         return self.actuate
+
     def set_actuate(self, actuate):
         self.actuate = actuate
+
     def get_from(self):
         return self.from_
+
     def set_from(self, from_):
         self.from_ = from_
+
     def get_to(self):
         return self.to
+
     def set_to(self, to):
         self.to = to
-    def hasContent_(self):
-        if (
 
-        ):
+    def hasContent_(self):
+        if ():
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='smArcLinkType', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('smArcLinkType')
+
+    def export(self, outfile, level, namespaceprefix_="", namespacedef_="", name_="smArcLinkType", pretty_print=True):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("smArcLinkType")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='smArcLinkType')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="smArcLinkType")
         if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='smArcLinkType', pretty_print=pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            outfile.write(">%s" % (eol_,))
+            self.exportChildren(outfile, level + 1, "", namespacedef_, name_="smArcLinkType", pretty_print=pretty_print)
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='smArcLinkType'):
-        if self.ID is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
-            outfile.write(' ID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name='ID')), ))
-        if self.ARCTYPE is not None and 'ARCTYPE' not in already_processed:
-            already_processed.add('ARCTYPE')
-            outfile.write(' ARCTYPE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ARCTYPE), input_name='ARCTYPE')), ))
-        if self.ADMID is not None and 'ADMID' not in already_processed:
-            already_processed.add('ADMID')
-            outfile.write(' ADMID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ADMID), input_name='ADMID')), ))
-        if self.type_ != "arc" and 'type_' not in already_processed:
-            already_processed.add('type_')
-            outfile.write(' type=%s' % (quote_attrib(self.type_), ))
-        if self.arcrole is not None and 'arcrole' not in already_processed:
-            already_processed.add('arcrole')
-            outfile.write(' arcrole=%s' % (quote_attrib(self.arcrole), ))
-        if self.title is not None and 'title' not in already_processed:
-            already_processed.add('title')
-            outfile.write(' title=%s' % (quote_attrib(self.title), ))
-        if self.show is not None and 'show' not in already_processed:
-            already_processed.add('show')
-            outfile.write(' show=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.show), input_name='show')), ))
-        if self.actuate is not None and 'actuate' not in already_processed:
-            already_processed.add('actuate')
-            outfile.write(' actuate=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.actuate), input_name='actuate')), ))
-        if self.from_ is not None and 'from_' not in already_processed:
-            already_processed.add('from_')
-            outfile.write(' from=%s' % (quote_attrib(self.from_), ))
-        if self.to is not None and 'to' not in already_processed:
-            already_processed.add('to')
-            outfile.write(' to=%s' % (quote_attrib(self.to), ))
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='smArcLinkType', fromsubclass_=False, pretty_print=True):
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="smArcLinkType"):
+        if self.ID is not None and "ID" not in already_processed:
+            already_processed.add("ID")
+            outfile.write(" ID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name="ID")),))
+        if self.ARCTYPE is not None and "ARCTYPE" not in already_processed:
+            already_processed.add("ARCTYPE")
+            outfile.write(
+                " ARCTYPE=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.ARCTYPE), input_name="ARCTYPE")),)
+            )
+        if self.ADMID is not None and "ADMID" not in already_processed:
+            already_processed.add("ADMID")
+            outfile.write(
+                " ADMID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ADMID), input_name="ADMID")),)
+            )
+        if self.type_ != "arc" and "type_" not in already_processed:
+            already_processed.add("type_")
+            outfile.write(" type=%s" % (quote_attrib(self.type_),))
+        if self.arcrole is not None and "arcrole" not in already_processed:
+            already_processed.add("arcrole")
+            outfile.write(" arcrole=%s" % (quote_attrib(self.arcrole),))
+        if self.title is not None and "title" not in already_processed:
+            already_processed.add("title")
+            outfile.write(" title=%s" % (quote_attrib(self.title),))
+        if self.show is not None and "show" not in already_processed:
+            already_processed.add("show")
+            outfile.write(
+                " show=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.show), input_name="show")),)
+            )
+        if self.actuate is not None and "actuate" not in already_processed:
+            already_processed.add("actuate")
+            outfile.write(
+                " actuate=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.actuate), input_name="actuate")),)
+            )
+        if self.from_ is not None and "from_" not in already_processed:
+            already_processed.add("from_")
+            outfile.write(" from=%s" % (quote_attrib(self.from_),))
+        if self.to is not None and "to" not in already_processed:
+            already_processed.add("to")
+            outfile.write(" to=%s" % (quote_attrib(self.to),))
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_="",
+        name_="smArcLinkType",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
         pass
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -6501,49 +8871,53 @@ class smArcLinkType(GeneratedsSuper):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('ID', node)
-        if value is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
+        value = find_attr_value_("ID", node)
+        if value is not None and "ID" not in already_processed:
+            already_processed.add("ID")
             self.ID = value
-        value = find_attr_value_('ARCTYPE', node)
-        if value is not None and 'ARCTYPE' not in already_processed:
-            already_processed.add('ARCTYPE')
+        value = find_attr_value_("ARCTYPE", node)
+        if value is not None and "ARCTYPE" not in already_processed:
+            already_processed.add("ARCTYPE")
             self.ARCTYPE = value
-        value = find_attr_value_('ADMID', node)
-        if value is not None and 'ADMID' not in already_processed:
-            already_processed.add('ADMID')
+        value = find_attr_value_("ADMID", node)
+        if value is not None and "ADMID" not in already_processed:
+            already_processed.add("ADMID")
             self.ADMID = value
-        value = find_attr_value_('type', node)
-        if value is not None and 'type' not in already_processed:
-            already_processed.add('type')
+        value = find_attr_value_("type", node)
+        if value is not None and "type" not in already_processed:
+            already_processed.add("type")
             self.type_ = value
-        value = find_attr_value_('arcrole', node)
-        if value is not None and 'arcrole' not in already_processed:
-            already_processed.add('arcrole')
+        value = find_attr_value_("arcrole", node)
+        if value is not None and "arcrole" not in already_processed:
+            already_processed.add("arcrole")
             self.arcrole = value
-        value = find_attr_value_('title', node)
-        if value is not None and 'title' not in already_processed:
-            already_processed.add('title')
+        value = find_attr_value_("title", node)
+        if value is not None and "title" not in already_processed:
+            already_processed.add("title")
             self.title = value
-        value = find_attr_value_('show', node)
-        if value is not None and 'show' not in already_processed:
-            already_processed.add('show')
+        value = find_attr_value_("show", node)
+        if value is not None and "show" not in already_processed:
+            already_processed.add("show")
             self.show = value
-        value = find_attr_value_('actuate', node)
-        if value is not None and 'actuate' not in already_processed:
-            already_processed.add('actuate')
+        value = find_attr_value_("actuate", node)
+        if value is not None and "actuate" not in already_processed:
+            already_processed.add("actuate")
             self.actuate = value
-        value = find_attr_value_('from', node)
-        if value is not None and 'from' not in already_processed:
-            already_processed.add('from')
+        value = find_attr_value_("from", node)
+        if value is not None and "from" not in already_processed:
+            already_processed.add("from")
             self.from_ = value
-        value = find_attr_value_('to', node)
-        if value is not None and 'to' not in already_processed:
-            already_processed.add('to')
+        value = find_attr_value_("to", node)
+        if value is not None and "to" not in already_processed:
+            already_processed.add("to")
             self.to = value
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
+
+
 # end class smArcLinkType
 
 
@@ -6562,11 +8936,36 @@ class mdRefType(GeneratedsSuper):
     document that identifies the associated metadata.
     XPTR (string/O): Locates the point within a file to which the <mdRef>
     element refers, if applicable."""
+
     subclass = None
     superclass = None
-    def __init__(self, ID=None, LABEL=None, XPTR=None, LOCTYPE=None, OTHERLOCTYPE=None, type_='simple', href=None, role=None, arcrole=None, title=None, show=None, actuate=None, MDTYPE=None, OTHERMDTYPE=None, MDTYPEVERSION=None, MIMETYPE=None, SIZE=None, CREATED=None, CHECKSUM=None, CHECKSUMTYPE=None, **kwargs_):
+
+    def __init__(
+        self,
+        ID=None,
+        LABEL=None,
+        XPTR=None,
+        LOCTYPE=None,
+        OTHERLOCTYPE=None,
+        type_="simple",
+        href=None,
+        role=None,
+        arcrole=None,
+        title=None,
+        show=None,
+        actuate=None,
+        MDTYPE=None,
+        OTHERMDTYPE=None,
+        MDTYPEVERSION=None,
+        MIMETYPE=None,
+        SIZE=None,
+        CREATED=None,
+        CHECKSUM=None,
+        CHECKSUMTYPE=None,
+        **kwargs_,
+    ):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
+        self.parent_object_ = kwargs_.get("parent_object_")
         self.ID = _cast(None, ID)
         self.LABEL = _cast(None, LABEL)
         self.XPTR = _cast(None, XPTR)
@@ -6585,193 +8984,290 @@ class mdRefType(GeneratedsSuper):
         self.MIMETYPE = _cast(None, MIMETYPE)
         self.SIZE = _cast(int, SIZE)
         if isinstance(CREATED, BaseStrType_):
-            initvalue_ = datetime_.datetime.strptime(CREATED, '%Y-%m-%dT%H:%M:%S')
+            initvalue_ = datetime_.datetime.strptime(CREATED, "%Y-%m-%dT%H:%M:%S")
         else:
             initvalue_ = CREATED
         self.CREATED = initvalue_
         self.CHECKSUM = _cast(None, CHECKSUM)
         self.CHECKSUMTYPE = _cast(None, CHECKSUMTYPE)
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, mdRefType)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, mdRefType)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if mdRefType.subclass:
             return mdRefType.subclass(*args_, **kwargs_)
         else:
             return mdRefType(*args_, **kwargs_)
+
     factory = staticmethod(factory)
+
     def get_ID(self):
         return self.ID
+
     def set_ID(self, ID):
         self.ID = ID
+
     def get_LABEL(self):
         return self.LABEL
+
     def set_LABEL(self, LABEL):
         self.LABEL = LABEL
+
     def get_XPTR(self):
         return self.XPTR
+
     def set_XPTR(self, XPTR):
         self.XPTR = XPTR
+
     def get_LOCTYPE(self):
         return self.LOCTYPE
+
     def set_LOCTYPE(self, LOCTYPE):
         self.LOCTYPE = LOCTYPE
+
     def get_OTHERLOCTYPE(self):
         return self.OTHERLOCTYPE
+
     def set_OTHERLOCTYPE(self, OTHERLOCTYPE):
         self.OTHERLOCTYPE = OTHERLOCTYPE
+
     def get_type(self):
         return self.type_
+
     def set_type(self, type_):
         self.type_ = type_
+
     def get_href(self):
         return self.href
+
     def set_href(self, href):
         self.href = href
+
     def get_role(self):
         return self.role
+
     def set_role(self, role):
         self.role = role
+
     def get_arcrole(self):
         return self.arcrole
+
     def set_arcrole(self, arcrole):
         self.arcrole = arcrole
+
     def get_title(self):
         return self.title
+
     def set_title(self, title):
         self.title = title
+
     def get_show(self):
         return self.show
+
     def set_show(self, show):
         self.show = show
+
     def get_actuate(self):
         return self.actuate
+
     def set_actuate(self, actuate):
         self.actuate = actuate
+
     def get_MDTYPE(self):
         return self.MDTYPE
+
     def set_MDTYPE(self, MDTYPE):
         self.MDTYPE = MDTYPE
+
     def get_OTHERMDTYPE(self):
         return self.OTHERMDTYPE
+
     def set_OTHERMDTYPE(self, OTHERMDTYPE):
         self.OTHERMDTYPE = OTHERMDTYPE
+
     def get_MDTYPEVERSION(self):
         return self.MDTYPEVERSION
+
     def set_MDTYPEVERSION(self, MDTYPEVERSION):
         self.MDTYPEVERSION = MDTYPEVERSION
+
     def get_MIMETYPE(self):
         return self.MIMETYPE
+
     def set_MIMETYPE(self, MIMETYPE):
         self.MIMETYPE = MIMETYPE
+
     def get_SIZE(self):
         return self.SIZE
+
     def set_SIZE(self, SIZE):
         self.SIZE = SIZE
+
     def get_CREATED(self):
         return self.CREATED
+
     def set_CREATED(self, CREATED):
         self.CREATED = CREATED
+
     def get_CHECKSUM(self):
         return self.CHECKSUM
+
     def set_CHECKSUM(self, CHECKSUM):
         self.CHECKSUM = CHECKSUM
+
     def get_CHECKSUMTYPE(self):
         return self.CHECKSUMTYPE
+
     def set_CHECKSUMTYPE(self, CHECKSUMTYPE):
         self.CHECKSUMTYPE = CHECKSUMTYPE
-    def hasContent_(self):
-        if (
 
-        ):
+    def hasContent_(self):
+        if ():
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='mdRefType', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('mdRefType')
+
+    def export(self, outfile, level, namespaceprefix_="", namespacedef_="", name_="mdRefType", pretty_print=True):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("mdRefType")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='mdRefType')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="mdRefType")
         if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='mdRefType', pretty_print=pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            outfile.write(">%s" % (eol_,))
+            self.exportChildren(outfile, level + 1, "", namespacedef_, name_="mdRefType", pretty_print=pretty_print)
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='mdRefType'):
-        if self.ID is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
-            outfile.write(' ID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name='ID')), ))
-        if self.LABEL is not None and 'LABEL' not in already_processed:
-            already_processed.add('LABEL')
-            outfile.write(' LABEL=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.LABEL), input_name='LABEL')), ))
-        if self.XPTR is not None and 'XPTR' not in already_processed:
-            already_processed.add('XPTR')
-            outfile.write(' XPTR=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.XPTR), input_name='XPTR')), ))
-        if 'LOCTYPE' not in already_processed:
-            already_processed.add('LOCTYPE')
-            outfile.write(' LOCTYPE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.LOCTYPE), input_name='LOCTYPE')), ))
-        if self.OTHERLOCTYPE is not None and 'OTHERLOCTYPE' not in already_processed:
-            already_processed.add('OTHERLOCTYPE')
-            outfile.write(' OTHERLOCTYPE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.OTHERLOCTYPE), input_name='OTHERLOCTYPE')), ))
-        if self.type_ != "simple" and 'type_' not in already_processed:
-            already_processed.add('type_')
-            outfile.write(' type=%s' % (quote_attrib(self.type_), ))
-        if self.href is not None and 'href' not in already_processed:
-            already_processed.add('href')
-            outfile.write(' href=%s' % (quote_attrib(self.href), ))
-        if self.role is not None and 'role' not in already_processed:
-            already_processed.add('role')
-            outfile.write(' role=%s' % (quote_attrib(self.role), ))
-        if self.arcrole is not None and 'arcrole' not in already_processed:
-            already_processed.add('arcrole')
-            outfile.write(' arcrole=%s' % (quote_attrib(self.arcrole), ))
-        if self.title is not None and 'title' not in already_processed:
-            already_processed.add('title')
-            outfile.write(' title=%s' % (quote_attrib(self.title), ))
-        if self.show is not None and 'show' not in already_processed:
-            already_processed.add('show')
-            outfile.write(' show=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.show), input_name='show')), ))
-        if self.actuate is not None and 'actuate' not in already_processed:
-            already_processed.add('actuate')
-            outfile.write(' actuate=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.actuate), input_name='actuate')), ))
-        if 'MDTYPE' not in already_processed:
-            already_processed.add('MDTYPE')
-            outfile.write(' MDTYPE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.MDTYPE), input_name='MDTYPE')), ))
-        if self.OTHERMDTYPE is not None and 'OTHERMDTYPE' not in already_processed:
-            already_processed.add('OTHERMDTYPE')
-            outfile.write(' OTHERMDTYPE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.OTHERMDTYPE), input_name='OTHERMDTYPE')), ))
-        if self.MDTYPEVERSION is not None and 'MDTYPEVERSION' not in already_processed:
-            already_processed.add('MDTYPEVERSION')
-            outfile.write(' MDTYPEVERSION=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.MDTYPEVERSION), input_name='MDTYPEVERSION')), ))
-        if self.MIMETYPE is not None and 'MIMETYPE' not in already_processed:
-            already_processed.add('MIMETYPE')
-            outfile.write(' MIMETYPE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.MIMETYPE), input_name='MIMETYPE')), ))
-        if self.SIZE is not None and 'SIZE' not in already_processed:
-            already_processed.add('SIZE')
-            outfile.write(' SIZE="%s"' % self.gds_format_integer(self.SIZE, input_name='SIZE'))
-        if self.CREATED is not None and 'CREATED' not in already_processed:
-            already_processed.add('CREATED')
-            outfile.write(' CREATED="%s"' % self.gds_format_datetime(self.CREATED, input_name='CREATED'))
-        if self.CHECKSUM is not None and 'CHECKSUM' not in already_processed:
-            already_processed.add('CHECKSUM')
-            outfile.write(' CHECKSUM=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.CHECKSUM), input_name='CHECKSUM')), ))
-        if self.CHECKSUMTYPE is not None and 'CHECKSUMTYPE' not in already_processed:
-            already_processed.add('CHECKSUMTYPE')
-            outfile.write(' CHECKSUMTYPE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.CHECKSUMTYPE), input_name='CHECKSUMTYPE')), ))
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='mdRefType', fromsubclass_=False, pretty_print=True):
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="mdRefType"):
+        if self.ID is not None and "ID" not in already_processed:
+            already_processed.add("ID")
+            outfile.write(" ID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name="ID")),))
+        if self.LABEL is not None and "LABEL" not in already_processed:
+            already_processed.add("LABEL")
+            outfile.write(
+                " LABEL=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.LABEL), input_name="LABEL")),)
+            )
+        if self.XPTR is not None and "XPTR" not in already_processed:
+            already_processed.add("XPTR")
+            outfile.write(
+                " XPTR=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.XPTR), input_name="XPTR")),)
+            )
+        if "LOCTYPE" not in already_processed:
+            already_processed.add("LOCTYPE")
+            outfile.write(
+                " LOCTYPE=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.LOCTYPE), input_name="LOCTYPE")),)
+            )
+        if self.OTHERLOCTYPE is not None and "OTHERLOCTYPE" not in already_processed:
+            already_processed.add("OTHERLOCTYPE")
+            outfile.write(
+                " OTHERLOCTYPE=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.OTHERLOCTYPE), input_name="OTHERLOCTYPE")),)
+            )
+        if self.type_ != "simple" and "type_" not in already_processed:
+            already_processed.add("type_")
+            outfile.write(" type=%s" % (quote_attrib(self.type_),))
+        if self.href is not None and "href" not in already_processed:
+            already_processed.add("href")
+            outfile.write(" href=%s" % (quote_attrib(self.href),))
+        if self.role is not None and "role" not in already_processed:
+            already_processed.add("role")
+            outfile.write(" role=%s" % (quote_attrib(self.role),))
+        if self.arcrole is not None and "arcrole" not in already_processed:
+            already_processed.add("arcrole")
+            outfile.write(" arcrole=%s" % (quote_attrib(self.arcrole),))
+        if self.title is not None and "title" not in already_processed:
+            already_processed.add("title")
+            outfile.write(" title=%s" % (quote_attrib(self.title),))
+        if self.show is not None and "show" not in already_processed:
+            already_processed.add("show")
+            outfile.write(
+                " show=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.show), input_name="show")),)
+            )
+        if self.actuate is not None and "actuate" not in already_processed:
+            already_processed.add("actuate")
+            outfile.write(
+                " actuate=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.actuate), input_name="actuate")),)
+            )
+        if "MDTYPE" not in already_processed:
+            already_processed.add("MDTYPE")
+            outfile.write(
+                " MDTYPE=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.MDTYPE), input_name="MDTYPE")),)
+            )
+        if self.OTHERMDTYPE is not None and "OTHERMDTYPE" not in already_processed:
+            already_processed.add("OTHERMDTYPE")
+            outfile.write(
+                " OTHERMDTYPE=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.OTHERMDTYPE), input_name="OTHERMDTYPE")),)
+            )
+        if self.MDTYPEVERSION is not None and "MDTYPEVERSION" not in already_processed:
+            already_processed.add("MDTYPEVERSION")
+            outfile.write(
+                " MDTYPEVERSION=%s"
+                % (
+                    self.gds_encode(
+                        self.gds_format_string(quote_attrib(self.MDTYPEVERSION), input_name="MDTYPEVERSION")
+                    ),
+                )
+            )
+        if self.MIMETYPE is not None and "MIMETYPE" not in already_processed:
+            already_processed.add("MIMETYPE")
+            outfile.write(
+                " MIMETYPE=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.MIMETYPE), input_name="MIMETYPE")),)
+            )
+        if self.SIZE is not None and "SIZE" not in already_processed:
+            already_processed.add("SIZE")
+            outfile.write(' SIZE="%s"' % self.gds_format_integer(self.SIZE, input_name="SIZE"))
+        if self.CREATED is not None and "CREATED" not in already_processed:
+            already_processed.add("CREATED")
+            outfile.write(' CREATED="%s"' % self.gds_format_datetime(self.CREATED, input_name="CREATED"))
+        if self.CHECKSUM is not None and "CHECKSUM" not in already_processed:
+            already_processed.add("CHECKSUM")
+            outfile.write(
+                " CHECKSUM=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.CHECKSUM), input_name="CHECKSUM")),)
+            )
+        if self.CHECKSUMTYPE is not None and "CHECKSUMTYPE" not in already_processed:
+            already_processed.add("CHECKSUMTYPE")
+            outfile.write(
+                " CHECKSUMTYPE=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.CHECKSUMTYPE), input_name="CHECKSUMTYPE")),)
+            )
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_="",
+        name_="mdRefType",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
         pass
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -6779,95 +9275,99 @@ class mdRefType(GeneratedsSuper):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('ID', node)
-        if value is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
+        value = find_attr_value_("ID", node)
+        if value is not None and "ID" not in already_processed:
+            already_processed.add("ID")
             self.ID = value
-        value = find_attr_value_('LABEL', node)
-        if value is not None and 'LABEL' not in already_processed:
-            already_processed.add('LABEL')
+        value = find_attr_value_("LABEL", node)
+        if value is not None and "LABEL" not in already_processed:
+            already_processed.add("LABEL")
             self.LABEL = value
-        value = find_attr_value_('XPTR', node)
-        if value is not None and 'XPTR' not in already_processed:
-            already_processed.add('XPTR')
+        value = find_attr_value_("XPTR", node)
+        if value is not None and "XPTR" not in already_processed:
+            already_processed.add("XPTR")
             self.XPTR = value
-        value = find_attr_value_('LOCTYPE', node)
-        if value is not None and 'LOCTYPE' not in already_processed:
-            already_processed.add('LOCTYPE')
+        value = find_attr_value_("LOCTYPE", node)
+        if value is not None and "LOCTYPE" not in already_processed:
+            already_processed.add("LOCTYPE")
             self.LOCTYPE = value
-        value = find_attr_value_('OTHERLOCTYPE', node)
-        if value is not None and 'OTHERLOCTYPE' not in already_processed:
-            already_processed.add('OTHERLOCTYPE')
+        value = find_attr_value_("OTHERLOCTYPE", node)
+        if value is not None and "OTHERLOCTYPE" not in already_processed:
+            already_processed.add("OTHERLOCTYPE")
             self.OTHERLOCTYPE = value
-        value = find_attr_value_('type', node)
-        if value is not None and 'type' not in already_processed:
-            already_processed.add('type')
+        value = find_attr_value_("type", node)
+        if value is not None and "type" not in already_processed:
+            already_processed.add("type")
             self.type_ = value
-        value = find_attr_value_('href', node)
-        if value is not None and 'href' not in already_processed:
-            already_processed.add('href')
+        value = find_attr_value_("href", node)
+        if value is not None and "href" not in already_processed:
+            already_processed.add("href")
             self.href = value
-        value = find_attr_value_('role', node)
-        if value is not None and 'role' not in already_processed:
-            already_processed.add('role')
+        value = find_attr_value_("role", node)
+        if value is not None and "role" not in already_processed:
+            already_processed.add("role")
             self.role = value
-        value = find_attr_value_('arcrole', node)
-        if value is not None and 'arcrole' not in already_processed:
-            already_processed.add('arcrole')
+        value = find_attr_value_("arcrole", node)
+        if value is not None and "arcrole" not in already_processed:
+            already_processed.add("arcrole")
             self.arcrole = value
-        value = find_attr_value_('title', node)
-        if value is not None and 'title' not in already_processed:
-            already_processed.add('title')
+        value = find_attr_value_("title", node)
+        if value is not None and "title" not in already_processed:
+            already_processed.add("title")
             self.title = value
-        value = find_attr_value_('show', node)
-        if value is not None and 'show' not in already_processed:
-            already_processed.add('show')
+        value = find_attr_value_("show", node)
+        if value is not None and "show" not in already_processed:
+            already_processed.add("show")
             self.show = value
-        value = find_attr_value_('actuate', node)
-        if value is not None and 'actuate' not in already_processed:
-            already_processed.add('actuate')
+        value = find_attr_value_("actuate", node)
+        if value is not None and "actuate" not in already_processed:
+            already_processed.add("actuate")
             self.actuate = value
-        value = find_attr_value_('MDTYPE', node)
-        if value is not None and 'MDTYPE' not in already_processed:
-            already_processed.add('MDTYPE')
+        value = find_attr_value_("MDTYPE", node)
+        if value is not None and "MDTYPE" not in already_processed:
+            already_processed.add("MDTYPE")
             self.MDTYPE = value
-        value = find_attr_value_('OTHERMDTYPE', node)
-        if value is not None and 'OTHERMDTYPE' not in already_processed:
-            already_processed.add('OTHERMDTYPE')
+        value = find_attr_value_("OTHERMDTYPE", node)
+        if value is not None and "OTHERMDTYPE" not in already_processed:
+            already_processed.add("OTHERMDTYPE")
             self.OTHERMDTYPE = value
-        value = find_attr_value_('MDTYPEVERSION', node)
-        if value is not None and 'MDTYPEVERSION' not in already_processed:
-            already_processed.add('MDTYPEVERSION')
+        value = find_attr_value_("MDTYPEVERSION", node)
+        if value is not None and "MDTYPEVERSION" not in already_processed:
+            already_processed.add("MDTYPEVERSION")
             self.MDTYPEVERSION = value
-        value = find_attr_value_('MIMETYPE', node)
-        if value is not None and 'MIMETYPE' not in already_processed:
-            already_processed.add('MIMETYPE')
+        value = find_attr_value_("MIMETYPE", node)
+        if value is not None and "MIMETYPE" not in already_processed:
+            already_processed.add("MIMETYPE")
             self.MIMETYPE = value
-        value = find_attr_value_('SIZE', node)
-        if value is not None and 'SIZE' not in already_processed:
-            already_processed.add('SIZE')
+        value = find_attr_value_("SIZE", node)
+        if value is not None and "SIZE" not in already_processed:
+            already_processed.add("SIZE")
             try:
                 self.SIZE = int(value)
             except ValueError as exp:
-                raise_parse_error(node, 'Bad integer attribute: %s' % exp)
-        value = find_attr_value_('CREATED', node)
-        if value is not None and 'CREATED' not in already_processed:
-            already_processed.add('CREATED')
+                raise_parse_error(node, "Bad integer attribute: %s" % exp)
+        value = find_attr_value_("CREATED", node)
+        if value is not None and "CREATED" not in already_processed:
+            already_processed.add("CREATED")
             try:
                 self.CREATED = self.gds_parse_datetime(value)
             except ValueError as exp:
-                raise ValueError('Bad date-time attribute (CREATED): %s' % exp)
-        value = find_attr_value_('CHECKSUM', node)
-        if value is not None and 'CHECKSUM' not in already_processed:
-            already_processed.add('CHECKSUM')
+                raise ValueError("Bad date-time attribute (CREATED): %s" % exp)
+        value = find_attr_value_("CHECKSUM", node)
+        if value is not None and "CHECKSUM" not in already_processed:
+            already_processed.add("CHECKSUM")
             self.CHECKSUM = value
-        value = find_attr_value_('CHECKSUMTYPE', node)
-        if value is not None and 'CHECKSUMTYPE' not in already_processed:
-            already_processed.add('CHECKSUMTYPE')
+        value = find_attr_value_("CHECKSUMTYPE", node)
+        if value is not None and "CHECKSUMTYPE" not in already_processed:
+            already_processed.add("CHECKSUMTYPE")
             self.CHECKSUMTYPE = value
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
+
+
 # end class mdRefType
 
 
@@ -6886,11 +9386,28 @@ class mdWrapType(GeneratedsSuper):
     see Chapter 4 of the METS Primer.
     LABEL: an optional string attribute providing a label to display to the
     viewer of the METS document identifying the metadata."""
+
     subclass = None
     superclass = None
-    def __init__(self, ID=None, LABEL=None, MDTYPE=None, OTHERMDTYPE=None, MDTYPEVERSION=None, MIMETYPE=None, SIZE=None, CREATED=None, CHECKSUM=None, CHECKSUMTYPE=None, binData=None, xmlData=None, **kwargs_):
+
+    def __init__(
+        self,
+        ID=None,
+        LABEL=None,
+        MDTYPE=None,
+        OTHERMDTYPE=None,
+        MDTYPEVERSION=None,
+        MIMETYPE=None,
+        SIZE=None,
+        CREATED=None,
+        CHECKSUM=None,
+        CHECKSUMTYPE=None,
+        binData=None,
+        xmlData=None,
+        **kwargs_,
+    ):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
+        self.parent_object_ = kwargs_.get("parent_object_")
         self.ID = _cast(None, ID)
         self.LABEL = _cast(None, LABEL)
         self.MDTYPE = _cast(None, MDTYPE)
@@ -6899,7 +9416,7 @@ class mdWrapType(GeneratedsSuper):
         self.MIMETYPE = _cast(None, MIMETYPE)
         self.SIZE = _cast(int, SIZE)
         if isinstance(CREATED, BaseStrType_):
-            initvalue_ = datetime_.datetime.strptime(CREATED, '%Y-%m-%dT%H:%M:%S')
+            initvalue_ = datetime_.datetime.strptime(CREATED, "%Y-%m-%dT%H:%M:%S")
         else:
             initvalue_ = CREATED
         self.CREATED = initvalue_
@@ -6907,135 +9424,215 @@ class mdWrapType(GeneratedsSuper):
         self.CHECKSUMTYPE = _cast(None, CHECKSUMTYPE)
         self.binData = binData
         self.xmlData = xmlData
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, mdWrapType)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, mdWrapType)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if mdWrapType.subclass:
             return mdWrapType.subclass(*args_, **kwargs_)
         else:
             return mdWrapType(*args_, **kwargs_)
+
     factory = staticmethod(factory)
+
     def get_binData(self):
         return self.binData
+
     def set_binData(self, binData):
         self.binData = binData
+
     def get_xmlData(self):
         return self.xmlData
+
     def set_xmlData(self, xmlData):
         self.xmlData = xmlData
+
     def get_ID(self):
         return self.ID
+
     def set_ID(self, ID):
         self.ID = ID
+
     def get_LABEL(self):
         return self.LABEL
+
     def set_LABEL(self, LABEL):
         self.LABEL = LABEL
+
     def get_MDTYPE(self):
         return self.MDTYPE
+
     def set_MDTYPE(self, MDTYPE):
         self.MDTYPE = MDTYPE
+
     def get_OTHERMDTYPE(self):
         return self.OTHERMDTYPE
+
     def set_OTHERMDTYPE(self, OTHERMDTYPE):
         self.OTHERMDTYPE = OTHERMDTYPE
+
     def get_MDTYPEVERSION(self):
         return self.MDTYPEVERSION
+
     def set_MDTYPEVERSION(self, MDTYPEVERSION):
         self.MDTYPEVERSION = MDTYPEVERSION
+
     def get_MIMETYPE(self):
         return self.MIMETYPE
+
     def set_MIMETYPE(self, MIMETYPE):
         self.MIMETYPE = MIMETYPE
+
     def get_SIZE(self):
         return self.SIZE
+
     def set_SIZE(self, SIZE):
         self.SIZE = SIZE
+
     def get_CREATED(self):
         return self.CREATED
+
     def set_CREATED(self, CREATED):
         self.CREATED = CREATED
+
     def get_CHECKSUM(self):
         return self.CHECKSUM
+
     def set_CHECKSUM(self, CHECKSUM):
         self.CHECKSUM = CHECKSUM
+
     def get_CHECKSUMTYPE(self):
         return self.CHECKSUMTYPE
+
     def set_CHECKSUMTYPE(self, CHECKSUMTYPE):
         self.CHECKSUMTYPE = CHECKSUMTYPE
+
     def hasContent_(self):
-        if (
-            self.binData is not None or
-            self.xmlData is not None
-        ):
+        if self.binData is not None or self.xmlData is not None:
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='mdWrapType', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('mdWrapType')
+
+    def export(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="mdWrapType",
+        pretty_print=True,
+    ):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("mdWrapType")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='mdWrapType')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="mdWrapType")
         if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='mdWrapType', pretty_print=pretty_print)
+            outfile.write(">%s" % (eol_,))
+            self.exportChildren(outfile, level + 1, "", namespacedef_, name_="mdWrapType", pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='mdWrapType'):
-        if self.ID is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
-            outfile.write(' ID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name='ID')), ))
-        if self.LABEL is not None and 'LABEL' not in already_processed:
-            already_processed.add('LABEL')
-            outfile.write(' LABEL=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.LABEL), input_name='LABEL')), ))
-        if 'MDTYPE' not in already_processed:
-            already_processed.add('MDTYPE')
-            outfile.write(' MDTYPE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.MDTYPE), input_name='MDTYPE')), ))
-        if self.OTHERMDTYPE is not None and 'OTHERMDTYPE' not in already_processed:
-            already_processed.add('OTHERMDTYPE')
-            outfile.write(' OTHERMDTYPE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.OTHERMDTYPE), input_name='OTHERMDTYPE')), ))
-        if self.MDTYPEVERSION is not None and 'MDTYPEVERSION' not in already_processed:
-            already_processed.add('MDTYPEVERSION')
-            outfile.write(' MDTYPEVERSION=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.MDTYPEVERSION), input_name='MDTYPEVERSION')), ))
-        if self.MIMETYPE is not None and 'MIMETYPE' not in already_processed:
-            already_processed.add('MIMETYPE')
-            outfile.write(' MIMETYPE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.MIMETYPE), input_name='MIMETYPE')), ))
-        if self.SIZE is not None and 'SIZE' not in already_processed:
-            already_processed.add('SIZE')
-            outfile.write(' SIZE="%s"' % self.gds_format_integer(self.SIZE, input_name='SIZE'))
-        if self.CREATED is not None and 'CREATED' not in already_processed:
-            already_processed.add('CREATED')
-            outfile.write(' CREATED="%s"' % self.gds_format_datetime(self.CREATED, input_name='CREATED'))
-        if self.CHECKSUM is not None and 'CHECKSUM' not in already_processed:
-            already_processed.add('CHECKSUM')
-            outfile.write(' CHECKSUM=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.CHECKSUM), input_name='CHECKSUM')), ))
-        if self.CHECKSUMTYPE is not None and 'CHECKSUMTYPE' not in already_processed:
-            already_processed.add('CHECKSUMTYPE')
-            outfile.write(' CHECKSUMTYPE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.CHECKSUMTYPE), input_name='CHECKSUMTYPE')), ))
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='mdWrapType', fromsubclass_=False, pretty_print=True):
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="mdWrapType"):
+        if self.ID is not None and "ID" not in already_processed:
+            already_processed.add("ID")
+            outfile.write(" ID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name="ID")),))
+        if self.LABEL is not None and "LABEL" not in already_processed:
+            already_processed.add("LABEL")
+            outfile.write(
+                " LABEL=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.LABEL), input_name="LABEL")),)
+            )
+        if "MDTYPE" not in already_processed:
+            already_processed.add("MDTYPE")
+            outfile.write(
+                " MDTYPE=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.MDTYPE), input_name="MDTYPE")),)
+            )
+        if self.OTHERMDTYPE is not None and "OTHERMDTYPE" not in already_processed:
+            already_processed.add("OTHERMDTYPE")
+            outfile.write(
+                " OTHERMDTYPE=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.OTHERMDTYPE), input_name="OTHERMDTYPE")),)
+            )
+        if self.MDTYPEVERSION is not None and "MDTYPEVERSION" not in already_processed:
+            already_processed.add("MDTYPEVERSION")
+            outfile.write(
+                " MDTYPEVERSION=%s"
+                % (
+                    self.gds_encode(
+                        self.gds_format_string(quote_attrib(self.MDTYPEVERSION), input_name="MDTYPEVERSION")
+                    ),
+                )
+            )
+        if self.MIMETYPE is not None and "MIMETYPE" not in already_processed:
+            already_processed.add("MIMETYPE")
+            outfile.write(
+                " MIMETYPE=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.MIMETYPE), input_name="MIMETYPE")),)
+            )
+        if self.SIZE is not None and "SIZE" not in already_processed:
+            already_processed.add("SIZE")
+            outfile.write(' SIZE="%s"' % self.gds_format_integer(self.SIZE, input_name="SIZE"))
+        if self.CREATED is not None and "CREATED" not in already_processed:
+            already_processed.add("CREATED")
+            outfile.write(' CREATED="%s"' % self.gds_format_datetime(self.CREATED, input_name="CREATED"))
+        if self.CHECKSUM is not None and "CHECKSUM" not in already_processed:
+            already_processed.add("CHECKSUM")
+            outfile.write(
+                " CHECKSUM=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.CHECKSUM), input_name="CHECKSUM")),)
+            )
+        if self.CHECKSUMTYPE is not None and "CHECKSUMTYPE" not in already_processed:
+            already_processed.add("CHECKSUMTYPE")
+            outfile.write(
+                " CHECKSUMTYPE=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.CHECKSUMTYPE), input_name="CHECKSUMTYPE")),)
+            )
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="mdWrapType",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.binData is not None:
             showIndent(outfile, level, pretty_print)
-            outfile.write('<%sbinData>%s</%sbinData>%s' % (namespaceprefix_ , self.gds_format_base64(self.binData, input_name='binData'), namespaceprefix_ , eol_))
+            outfile.write(
+                "<%sbinData>%s</%sbinData>%s"
+                % (namespaceprefix_, self.gds_format_base64(self.binData, input_name="binData"), namespaceprefix_, eol_)
+            )
         if self.xmlData is not None:
-            self.xmlData.export(outfile, level, namespaceprefix_, namespacedef_='', name_='xmlData', pretty_print=pretty_print)
+            self.xmlData.export(
+                outfile, level, namespaceprefix_, namespacedef_="", name_="xmlData", pretty_print=pretty_print
+            )
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -7043,70 +9640,74 @@ class mdWrapType(GeneratedsSuper):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('ID', node)
-        if value is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
+        value = find_attr_value_("ID", node)
+        if value is not None and "ID" not in already_processed:
+            already_processed.add("ID")
             self.ID = value
-        value = find_attr_value_('LABEL', node)
-        if value is not None and 'LABEL' not in already_processed:
-            already_processed.add('LABEL')
+        value = find_attr_value_("LABEL", node)
+        if value is not None and "LABEL" not in already_processed:
+            already_processed.add("LABEL")
             self.LABEL = value
-        value = find_attr_value_('MDTYPE', node)
-        if value is not None and 'MDTYPE' not in already_processed:
-            already_processed.add('MDTYPE')
+        value = find_attr_value_("MDTYPE", node)
+        if value is not None and "MDTYPE" not in already_processed:
+            already_processed.add("MDTYPE")
             self.MDTYPE = value
-        value = find_attr_value_('OTHERMDTYPE', node)
-        if value is not None and 'OTHERMDTYPE' not in already_processed:
-            already_processed.add('OTHERMDTYPE')
+        value = find_attr_value_("OTHERMDTYPE", node)
+        if value is not None and "OTHERMDTYPE" not in already_processed:
+            already_processed.add("OTHERMDTYPE")
             self.OTHERMDTYPE = value
-        value = find_attr_value_('MDTYPEVERSION', node)
-        if value is not None and 'MDTYPEVERSION' not in already_processed:
-            already_processed.add('MDTYPEVERSION')
+        value = find_attr_value_("MDTYPEVERSION", node)
+        if value is not None and "MDTYPEVERSION" not in already_processed:
+            already_processed.add("MDTYPEVERSION")
             self.MDTYPEVERSION = value
-        value = find_attr_value_('MIMETYPE', node)
-        if value is not None and 'MIMETYPE' not in already_processed:
-            already_processed.add('MIMETYPE')
+        value = find_attr_value_("MIMETYPE", node)
+        if value is not None and "MIMETYPE" not in already_processed:
+            already_processed.add("MIMETYPE")
             self.MIMETYPE = value
-        value = find_attr_value_('SIZE', node)
-        if value is not None and 'SIZE' not in already_processed:
-            already_processed.add('SIZE')
+        value = find_attr_value_("SIZE", node)
+        if value is not None and "SIZE" not in already_processed:
+            already_processed.add("SIZE")
             try:
                 self.SIZE = int(value)
             except ValueError as exp:
-                raise_parse_error(node, 'Bad integer attribute: %s' % exp)
-        value = find_attr_value_('CREATED', node)
-        if value is not None and 'CREATED' not in already_processed:
-            already_processed.add('CREATED')
+                raise_parse_error(node, "Bad integer attribute: %s" % exp)
+        value = find_attr_value_("CREATED", node)
+        if value is not None and "CREATED" not in already_processed:
+            already_processed.add("CREATED")
             try:
                 self.CREATED = self.gds_parse_datetime(value)
             except ValueError as exp:
-                raise ValueError('Bad date-time attribute (CREATED): %s' % exp)
-        value = find_attr_value_('CHECKSUM', node)
-        if value is not None and 'CHECKSUM' not in already_processed:
-            already_processed.add('CHECKSUM')
+                raise ValueError("Bad date-time attribute (CREATED): %s" % exp)
+        value = find_attr_value_("CHECKSUM", node)
+        if value is not None and "CHECKSUM" not in already_processed:
+            already_processed.add("CHECKSUM")
             self.CHECKSUM = value
-        value = find_attr_value_('CHECKSUMTYPE', node)
-        if value is not None and 'CHECKSUMTYPE' not in already_processed:
-            already_processed.add('CHECKSUMTYPE')
+        value = find_attr_value_("CHECKSUMTYPE", node)
+        if value is not None and "CHECKSUMTYPE" not in already_processed:
+            already_processed.add("CHECKSUMTYPE")
             self.CHECKSUMTYPE = value
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
-        if nodeName_ == 'binData':
+        if nodeName_ == "binData":
             sval_ = child_.text
             if sval_ is not None:
                 try:
                     bval_ = base64.b64decode(sval_)
                 except (TypeError, ValueError) as exp:
-                    raise_parse_error(child_, 'requires base64 encoded string: %s' % exp)
-                bval_ = self.gds_validate_base64(bval_, node, 'binData')
+                    raise_parse_error(child_, "requires base64 encoded string: %s" % exp)
+                bval_ = self.gds_validate_base64(bval_, node, "binData")
             else:
                 bval_ = None
             self.binData = bval_
-        elif nodeName_ == 'xmlData':
+        elif nodeName_ == "xmlData":
             obj_ = xmlDataType.factory(parent_object_=self)
             obj_.build(child_)
             self.xmlData = obj_
-            obj_.original_tagname_ = 'xmlData'
+            obj_.original_tagname_ = "xmlData"
+
+
 # end class mdWrapType
 
 
@@ -7122,67 +9723,105 @@ class xmlDataType(GeneratedsSuper):
     at the specified schemaLocation, then an XML validator will check for
     well-formedness, but otherwise skip over the elements appearing in the
     <xmlData> element."""
+
     subclass = None
     superclass = None
+
     def __init__(self, anytypeobjs_=None, **kwargs_):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
+        self.parent_object_ = kwargs_.get("parent_object_")
         if anytypeobjs_ is None:
             self.anytypeobjs_ = []
         else:
             self.anytypeobjs_ = anytypeobjs_
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, xmlDataType)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, xmlDataType)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if xmlDataType.subclass:
             return xmlDataType.subclass(*args_, **kwargs_)
         else:
             return xmlDataType(*args_, **kwargs_)
+
     factory = staticmethod(factory)
-    def get_anytypeobjs_(self): return self.anytypeobjs_
-    def set_anytypeobjs_(self, anytypeobjs_): self.anytypeobjs_ = anytypeobjs_
-    def add_anytypeobjs_(self, value): self.anytypeobjs_.append(value)
-    def insert_anytypeobjs_(self, index, value): self._anytypeobjs_[index] = value
+
+    def get_anytypeobjs_(self):
+        return self.anytypeobjs_
+
+    def set_anytypeobjs_(self, anytypeobjs_):
+        self.anytypeobjs_ = anytypeobjs_
+
+    def add_anytypeobjs_(self, value):
+        self.anytypeobjs_.append(value)
+
+    def insert_anytypeobjs_(self, index, value):
+        self._anytypeobjs_[index] = value
+
     def hasContent_(self):
-        if (
-            self.anytypeobjs_
-        ):
+        if self.anytypeobjs_:
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='xmlDataType', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('xmlDataType')
+
+    def export(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="xmlDataType",
+        pretty_print=True,
+    ):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("xmlDataType")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='xmlDataType')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="xmlDataType")
         if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='xmlDataType', pretty_print=pretty_print)
+            outfile.write(">%s" % (eol_,))
+            self.exportChildren(outfile, level + 1, "", namespacedef_, name_="xmlDataType", pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='xmlDataType'):
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="xmlDataType"):
         pass
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='xmlDataType', fromsubclass_=False, pretty_print=True):
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="xmlDataType",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         for obj_ in self.anytypeobjs_:
             obj_.export(outfile, level, namespaceprefix_, pretty_print=pretty_print)
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -7190,11 +9829,15 @@ class xmlDataType(GeneratedsSuper):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
         pass
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
-        content_ = self.gds_build_any(child_, 'xmlDataType')
+        content_ = self.gds_build_any(child_, "xmlDataType")
         self.add_anytypeobjs_(content_)
+
+
 # end class xmlDataType
 
 
@@ -7220,11 +9863,27 @@ class FLocatType(GeneratedsSuper):
     subsidiary <FLocat> and/or <FContent> elements. A USE attribute at the
     <FLocat> or <FContent> level pertains to the particular copy of the
     file that is either referenced (<FLocat>) or wrapped (<FContent>)."""
+
     subclass = None
     superclass = None
-    def __init__(self, ID=None, USE=None, LOCTYPE=None, OTHERLOCTYPE=None, type_='simple', href=None, role=None, arcrole=None, title=None, show=None, actuate=None, **kwargs_):
+
+    def __init__(
+        self,
+        ID=None,
+        USE=None,
+        LOCTYPE=None,
+        OTHERLOCTYPE=None,
+        type_="simple",
+        href=None,
+        role=None,
+        arcrole=None,
+        title=None,
+        show=None,
+        actuate=None,
+        **kwargs_,
+    ):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
+        self.parent_object_ = kwargs_.get("parent_object_")
         self.ID = _cast(None, ID)
         self.USE = _cast(None, USE)
         self.LOCTYPE = _cast(None, LOCTYPE)
@@ -7236,124 +9895,179 @@ class FLocatType(GeneratedsSuper):
         self.title = _cast(None, title)
         self.show = _cast(None, show)
         self.actuate = _cast(None, actuate)
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, FLocatType)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, FLocatType)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if FLocatType.subclass:
             return FLocatType.subclass(*args_, **kwargs_)
         else:
             return FLocatType(*args_, **kwargs_)
+
     factory = staticmethod(factory)
+
     def get_ID(self):
         return self.ID
+
     def set_ID(self, ID):
         self.ID = ID
+
     def get_USE(self):
         return self.USE
+
     def set_USE(self, USE):
         self.USE = USE
+
     def get_LOCTYPE(self):
         return self.LOCTYPE
+
     def set_LOCTYPE(self, LOCTYPE):
         self.LOCTYPE = LOCTYPE
+
     def get_OTHERLOCTYPE(self):
         return self.OTHERLOCTYPE
+
     def set_OTHERLOCTYPE(self, OTHERLOCTYPE):
         self.OTHERLOCTYPE = OTHERLOCTYPE
+
     def get_type(self):
         return self.type_
+
     def set_type(self, type_):
         self.type_ = type_
+
     def get_href(self):
         return self.href
+
     def set_href(self, href):
         self.href = href
+
     def get_role(self):
         return self.role
+
     def set_role(self, role):
         self.role = role
+
     def get_arcrole(self):
         return self.arcrole
+
     def set_arcrole(self, arcrole):
         self.arcrole = arcrole
+
     def get_title(self):
         return self.title
+
     def set_title(self, title):
         self.title = title
+
     def get_show(self):
         return self.show
+
     def set_show(self, show):
         self.show = show
+
     def get_actuate(self):
         return self.actuate
+
     def set_actuate(self, actuate):
         self.actuate = actuate
-    def hasContent_(self):
-        if (
 
-        ):
+    def hasContent_(self):
+        if ():
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='FLocatType', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('FLocatType')
+
+    def export(self, outfile, level, namespaceprefix_="", namespacedef_="", name_="FLocatType", pretty_print=True):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("FLocatType")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='FLocatType')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="FLocatType")
         if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='FLocatType', pretty_print=pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            outfile.write(">%s" % (eol_,))
+            self.exportChildren(outfile, level + 1, "", namespacedef_, name_="FLocatType", pretty_print=pretty_print)
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='FLocatType'):
-        if self.ID is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
-            outfile.write(' ID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name='ID')), ))
-        if self.USE is not None and 'USE' not in already_processed:
-            already_processed.add('USE')
-            outfile.write(' USE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.USE), input_name='USE')), ))
-        if 'LOCTYPE' not in already_processed:
-            already_processed.add('LOCTYPE')
-            outfile.write(' LOCTYPE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.LOCTYPE), input_name='LOCTYPE')), ))
-        if self.OTHERLOCTYPE is not None and 'OTHERLOCTYPE' not in already_processed:
-            already_processed.add('OTHERLOCTYPE')
-            outfile.write(' OTHERLOCTYPE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.OTHERLOCTYPE), input_name='OTHERLOCTYPE')), ))
-        if self.type_ != "simple" and 'type_' not in already_processed:
-            already_processed.add('type_')
-            outfile.write(' type=%s' % (quote_attrib(self.type_), ))
-        if self.href is not None and 'href' not in already_processed:
-            already_processed.add('href')
-            outfile.write(' href=%s' % (quote_attrib(self.href), ))
-        if self.role is not None and 'role' not in already_processed:
-            already_processed.add('role')
-            outfile.write(' role=%s' % (quote_attrib(self.role), ))
-        if self.arcrole is not None and 'arcrole' not in already_processed:
-            already_processed.add('arcrole')
-            outfile.write(' arcrole=%s' % (quote_attrib(self.arcrole), ))
-        if self.title is not None and 'title' not in already_processed:
-            already_processed.add('title')
-            outfile.write(' title=%s' % (quote_attrib(self.title), ))
-        if self.show is not None and 'show' not in already_processed:
-            already_processed.add('show')
-            outfile.write(' show=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.show), input_name='show')), ))
-        if self.actuate is not None and 'actuate' not in already_processed:
-            already_processed.add('actuate')
-            outfile.write(' actuate=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.actuate), input_name='actuate')), ))
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='FLocatType', fromsubclass_=False, pretty_print=True):
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="FLocatType"):
+        if self.ID is not None and "ID" not in already_processed:
+            already_processed.add("ID")
+            outfile.write(" ID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name="ID")),))
+        if self.USE is not None and "USE" not in already_processed:
+            already_processed.add("USE")
+            outfile.write(
+                " USE=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.USE), input_name="USE")),)
+            )
+        if "LOCTYPE" not in already_processed:
+            already_processed.add("LOCTYPE")
+            outfile.write(
+                " LOCTYPE=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.LOCTYPE), input_name="LOCTYPE")),)
+            )
+        if self.OTHERLOCTYPE is not None and "OTHERLOCTYPE" not in already_processed:
+            already_processed.add("OTHERLOCTYPE")
+            outfile.write(
+                " OTHERLOCTYPE=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.OTHERLOCTYPE), input_name="OTHERLOCTYPE")),)
+            )
+        if self.type_ != "simple" and "type_" not in already_processed:
+            already_processed.add("type_")
+            outfile.write(" type=%s" % (quote_attrib(self.type_),))
+        if self.href is not None and "href" not in already_processed:
+            already_processed.add("href")
+            outfile.write(" href=%s" % (quote_attrib(self.href),))
+        if self.role is not None and "role" not in already_processed:
+            already_processed.add("role")
+            outfile.write(" role=%s" % (quote_attrib(self.role),))
+        if self.arcrole is not None and "arcrole" not in already_processed:
+            already_processed.add("arcrole")
+            outfile.write(" arcrole=%s" % (quote_attrib(self.arcrole),))
+        if self.title is not None and "title" not in already_processed:
+            already_processed.add("title")
+            outfile.write(" title=%s" % (quote_attrib(self.title),))
+        if self.show is not None and "show" not in already_processed:
+            already_processed.add("show")
+            outfile.write(
+                " show=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.show), input_name="show")),)
+            )
+        if self.actuate is not None and "actuate" not in already_processed:
+            already_processed.add("actuate")
+            outfile.write(
+                " actuate=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.actuate), input_name="actuate")),)
+            )
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_="",
+        name_="FLocatType",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
         pass
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -7361,53 +10075,57 @@ class FLocatType(GeneratedsSuper):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('ID', node)
-        if value is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
+        value = find_attr_value_("ID", node)
+        if value is not None and "ID" not in already_processed:
+            already_processed.add("ID")
             self.ID = value
-        value = find_attr_value_('USE', node)
-        if value is not None and 'USE' not in already_processed:
-            already_processed.add('USE')
+        value = find_attr_value_("USE", node)
+        if value is not None and "USE" not in already_processed:
+            already_processed.add("USE")
             self.USE = value
-        value = find_attr_value_('LOCTYPE', node)
-        if value is not None and 'LOCTYPE' not in already_processed:
-            already_processed.add('LOCTYPE')
+        value = find_attr_value_("LOCTYPE", node)
+        if value is not None and "LOCTYPE" not in already_processed:
+            already_processed.add("LOCTYPE")
             self.LOCTYPE = value
-        value = find_attr_value_('OTHERLOCTYPE', node)
-        if value is not None and 'OTHERLOCTYPE' not in already_processed:
-            already_processed.add('OTHERLOCTYPE')
+        value = find_attr_value_("OTHERLOCTYPE", node)
+        if value is not None and "OTHERLOCTYPE" not in already_processed:
+            already_processed.add("OTHERLOCTYPE")
             self.OTHERLOCTYPE = value
-        value = find_attr_value_('type', node)
-        if value is not None and 'type' not in already_processed:
-            already_processed.add('type')
+        value = find_attr_value_("type", node)
+        if value is not None and "type" not in already_processed:
+            already_processed.add("type")
             self.type_ = value
-        value = find_attr_value_('href', node)
-        if value is not None and 'href' not in already_processed:
-            already_processed.add('href')
+        value = find_attr_value_("href", node)
+        if value is not None and "href" not in already_processed:
+            already_processed.add("href")
             self.href = value
-        value = find_attr_value_('role', node)
-        if value is not None and 'role' not in already_processed:
-            already_processed.add('role')
+        value = find_attr_value_("role", node)
+        if value is not None and "role" not in already_processed:
+            already_processed.add("role")
             self.role = value
-        value = find_attr_value_('arcrole', node)
-        if value is not None and 'arcrole' not in already_processed:
-            already_processed.add('arcrole')
+        value = find_attr_value_("arcrole", node)
+        if value is not None and "arcrole" not in already_processed:
+            already_processed.add("arcrole")
             self.arcrole = value
-        value = find_attr_value_('title', node)
-        if value is not None and 'title' not in already_processed:
-            already_processed.add('title')
+        value = find_attr_value_("title", node)
+        if value is not None and "title" not in already_processed:
+            already_processed.add("title")
             self.title = value
-        value = find_attr_value_('show', node)
-        if value is not None and 'show' not in already_processed:
-            already_processed.add('show')
+        value = find_attr_value_("show", node)
+        if value is not None and "show" not in already_processed:
+            already_processed.add("show")
             self.show = value
-        value = find_attr_value_('actuate', node)
-        if value is not None and 'actuate' not in already_processed:
-            already_processed.add('actuate')
+        value = find_attr_value_("actuate", node)
+        if value is not None and "actuate" not in already_processed:
+            already_processed.add("actuate")
             self.actuate = value
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
+
+
 # end class FLocatType
 
 
@@ -7432,88 +10150,132 @@ class FContentType(GeneratedsSuper):
     subsidiary <FLocat> and/or <FContent> elements. A USE attribute at the
     <FLocat> or <FContent> level pertains to the particular copy of the
     file that is either referenced (<FLocat>) or wrapped (<FContent>)."""
+
     subclass = None
     superclass = None
+
     def __init__(self, ID=None, USE=None, binData=None, xmlData=None, **kwargs_):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
+        self.parent_object_ = kwargs_.get("parent_object_")
         self.ID = _cast(None, ID)
         self.USE = _cast(None, USE)
         self.binData = binData
         self.xmlData = xmlData
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, FContentType)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, FContentType)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if FContentType.subclass:
             return FContentType.subclass(*args_, **kwargs_)
         else:
             return FContentType(*args_, **kwargs_)
+
     factory = staticmethod(factory)
+
     def get_binData(self):
         return self.binData
+
     def set_binData(self, binData):
         self.binData = binData
+
     def get_xmlData(self):
         return self.xmlData
+
     def set_xmlData(self, xmlData):
         self.xmlData = xmlData
+
     def get_ID(self):
         return self.ID
+
     def set_ID(self, ID):
         self.ID = ID
+
     def get_USE(self):
         return self.USE
+
     def set_USE(self, USE):
         self.USE = USE
+
     def hasContent_(self):
-        if (
-            self.binData is not None or
-            self.xmlData is not None
-        ):
+        if self.binData is not None or self.xmlData is not None:
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='FContentType', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('FContentType')
+
+    def export(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="FContentType",
+        pretty_print=True,
+    ):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("FContentType")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='FContentType')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="FContentType")
         if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='FContentType', pretty_print=pretty_print)
+            outfile.write(">%s" % (eol_,))
+            self.exportChildren(outfile, level + 1, "", namespacedef_, name_="FContentType", pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='FContentType'):
-        if self.ID is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
-            outfile.write(' ID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name='ID')), ))
-        if self.USE is not None and 'USE' not in already_processed:
-            already_processed.add('USE')
-            outfile.write(' USE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.USE), input_name='USE')), ))
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='FContentType', fromsubclass_=False, pretty_print=True):
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="FContentType"):
+        if self.ID is not None and "ID" not in already_processed:
+            already_processed.add("ID")
+            outfile.write(" ID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name="ID")),))
+        if self.USE is not None and "USE" not in already_processed:
+            already_processed.add("USE")
+            outfile.write(
+                " USE=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.USE), input_name="USE")),)
+            )
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="FContentType",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.binData is not None:
             showIndent(outfile, level, pretty_print)
-            outfile.write('<%sbinData>%s</%sbinData>%s' % (namespaceprefix_ , self.gds_format_base64(self.binData, input_name='binData'), namespaceprefix_ , eol_))
+            outfile.write(
+                "<%sbinData>%s</%sbinData>%s"
+                % (namespaceprefix_, self.gds_format_base64(self.binData, input_name="binData"), namespaceprefix_, eol_)
+            )
         if self.xmlData is not None:
-            self.xmlData.export(outfile, level, namespaceprefix_, namespacedef_='', name_='xmlData', pretty_print=pretty_print)
+            self.xmlData.export(
+                outfile, level, namespaceprefix_, namespacedef_="", name_="xmlData", pretty_print=pretty_print
+            )
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -7521,32 +10283,36 @@ class FContentType(GeneratedsSuper):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('ID', node)
-        if value is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
+        value = find_attr_value_("ID", node)
+        if value is not None and "ID" not in already_processed:
+            already_processed.add("ID")
             self.ID = value
-        value = find_attr_value_('USE', node)
-        if value is not None and 'USE' not in already_processed:
-            already_processed.add('USE')
+        value = find_attr_value_("USE", node)
+        if value is not None and "USE" not in already_processed:
+            already_processed.add("USE")
             self.USE = value
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
-        if nodeName_ == 'binData':
+        if nodeName_ == "binData":
             sval_ = child_.text
             if sval_ is not None:
                 try:
                     bval_ = base64.b64decode(sval_)
                 except (TypeError, ValueError) as exp:
-                    raise_parse_error(child_, 'requires base64 encoded string: %s' % exp)
-                bval_ = self.gds_validate_base64(bval_, node, 'binData')
+                    raise_parse_error(child_, "requires base64 encoded string: %s" % exp)
+                bval_ = self.gds_validate_base64(bval_, node, "binData")
             else:
                 bval_ = None
             self.binData = bval_
-        elif nodeName_ == 'xmlData':
+        elif nodeName_ == "xmlData":
             obj_ = xmlDataType3.factory(parent_object_=self)
             obj_.build(child_)
             self.xmlData = obj_
-            obj_.original_tagname_ = 'xmlData'
+            obj_.original_tagname_ = "xmlData"
+
+
 # end class FContentType
 
 
@@ -7562,67 +10328,105 @@ class xmlDataType3(GeneratedsSuper):
     at the specified schemaLocation, then an XML validator will check for
     well-formedness, but otherwise skip over the elements appearing in the
     <xmlData> element."""
+
     subclass = None
     superclass = None
+
     def __init__(self, anytypeobjs_=None, **kwargs_):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
+        self.parent_object_ = kwargs_.get("parent_object_")
         if anytypeobjs_ is None:
             self.anytypeobjs_ = []
         else:
             self.anytypeobjs_ = anytypeobjs_
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, xmlDataType3)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, xmlDataType3)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if xmlDataType3.subclass:
             return xmlDataType3.subclass(*args_, **kwargs_)
         else:
             return xmlDataType3(*args_, **kwargs_)
+
     factory = staticmethod(factory)
-    def get_anytypeobjs_(self): return self.anytypeobjs_
-    def set_anytypeobjs_(self, anytypeobjs_): self.anytypeobjs_ = anytypeobjs_
-    def add_anytypeobjs_(self, value): self.anytypeobjs_.append(value)
-    def insert_anytypeobjs_(self, index, value): self._anytypeobjs_[index] = value
+
+    def get_anytypeobjs_(self):
+        return self.anytypeobjs_
+
+    def set_anytypeobjs_(self, anytypeobjs_):
+        self.anytypeobjs_ = anytypeobjs_
+
+    def add_anytypeobjs_(self, value):
+        self.anytypeobjs_.append(value)
+
+    def insert_anytypeobjs_(self, index, value):
+        self._anytypeobjs_[index] = value
+
     def hasContent_(self):
-        if (
-            self.anytypeobjs_
-        ):
+        if self.anytypeobjs_:
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='xmlDataType3', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('xmlDataType3')
+
+    def export(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="xmlDataType3",
+        pretty_print=True,
+    ):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("xmlDataType3")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='xmlDataType3')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="xmlDataType3")
         if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='xmlDataType3', pretty_print=pretty_print)
+            outfile.write(">%s" % (eol_,))
+            self.exportChildren(outfile, level + 1, "", namespacedef_, name_="xmlDataType3", pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='xmlDataType3'):
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="xmlDataType3"):
         pass
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ', name_='xmlDataType3', fromsubclass_=False, pretty_print=True):
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_=' xmlns:None="http://www.w3.org/2001/XMLSchema" ',
+        name_="xmlDataType3",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         for obj_ in self.anytypeobjs_:
             obj_.export(outfile, level, namespaceprefix_, pretty_print=pretty_print)
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -7630,11 +10434,15 @@ class xmlDataType3(GeneratedsSuper):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
         pass
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
-        content_ = self.gds_build_any(child_, 'xmlDataType3')
+        content_ = self.gds_build_any(child_, "xmlDataType3")
         self.add_anytypeobjs_(content_)
+
+
 # end class xmlDataType3
 
 
@@ -7684,11 +10492,24 @@ class streamType(GeneratedsSuper):
     BETYPE (string/O): An attribute that specifies the kind of BEGIN and/or END
     values that are being used. Currently BYTE is the only valid value that
     can be used in conjunction with nested <file> or <stream> elements."""
+
     subclass = None
     superclass = None
-    def __init__(self, ID=None, streamType_member=None, OWNERID=None, ADMID=None, DMDID=None, BEGIN=None, END=None, BETYPE=None, **kwargs_):
+
+    def __init__(
+        self,
+        ID=None,
+        streamType_member=None,
+        OWNERID=None,
+        ADMID=None,
+        DMDID=None,
+        BEGIN=None,
+        END=None,
+        BETYPE=None,
+        **kwargs_,
+    ):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
+        self.parent_object_ = kwargs_.get("parent_object_")
         self.ID = _cast(None, ID)
         self.streamType = _cast(None, streamType_member)
         self.OWNERID = _cast(None, OWNERID)
@@ -7697,103 +10518,156 @@ class streamType(GeneratedsSuper):
         self.BEGIN = _cast(None, BEGIN)
         self.END = _cast(None, END)
         self.BETYPE = _cast(None, BETYPE)
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, streamType)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, streamType)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if streamType.subclass:
             return streamType.subclass(*args_, **kwargs_)
         else:
             return streamType(*args_, **kwargs_)
+
     factory = staticmethod(factory)
+
     def get_ID(self):
         return self.ID
+
     def set_ID(self, ID):
         self.ID = ID
+
     def get_streamType(self):
         return self.streamType
+
     def set_streamType(self, streamType):
         self.streamType = streamType
+
     def get_OWNERID(self):
         return self.OWNERID
+
     def set_OWNERID(self, OWNERID):
         self.OWNERID = OWNERID
+
     def get_ADMID(self):
         return self.ADMID
+
     def set_ADMID(self, ADMID):
         self.ADMID = ADMID
+
     def get_DMDID(self):
         return self.DMDID
+
     def set_DMDID(self, DMDID):
         self.DMDID = DMDID
+
     def get_BEGIN(self):
         return self.BEGIN
+
     def set_BEGIN(self, BEGIN):
         self.BEGIN = BEGIN
+
     def get_END(self):
         return self.END
+
     def set_END(self, END):
         self.END = END
+
     def get_BETYPE(self):
         return self.BETYPE
+
     def set_BETYPE(self, BETYPE):
         self.BETYPE = BETYPE
-    def hasContent_(self):
-        if (
 
-        ):
+    def hasContent_(self):
+        if ():
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='streamType', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('streamType')
+
+    def export(self, outfile, level, namespaceprefix_="", namespacedef_="", name_="streamType", pretty_print=True):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("streamType")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='streamType')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="streamType")
         if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='streamType', pretty_print=pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            outfile.write(">%s" % (eol_,))
+            self.exportChildren(outfile, level + 1, "", namespacedef_, name_="streamType", pretty_print=pretty_print)
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='streamType'):
-        if self.ID is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
-            outfile.write(' ID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name='ID')), ))
-        if self.streamType is not None and 'streamType' not in already_processed:
-            already_processed.add('streamType')
-            outfile.write(' streamType=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.streamType), input_name='streamType')), ))
-        if self.OWNERID is not None and 'OWNERID' not in already_processed:
-            already_processed.add('OWNERID')
-            outfile.write(' OWNERID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.OWNERID), input_name='OWNERID')), ))
-        if self.ADMID is not None and 'ADMID' not in already_processed:
-            already_processed.add('ADMID')
-            outfile.write(' ADMID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ADMID), input_name='ADMID')), ))
-        if self.DMDID is not None and 'DMDID' not in already_processed:
-            already_processed.add('DMDID')
-            outfile.write(' DMDID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.DMDID), input_name='DMDID')), ))
-        if self.BEGIN is not None and 'BEGIN' not in already_processed:
-            already_processed.add('BEGIN')
-            outfile.write(' BEGIN=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.BEGIN), input_name='BEGIN')), ))
-        if self.END is not None and 'END' not in already_processed:
-            already_processed.add('END')
-            outfile.write(' END=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.END), input_name='END')), ))
-        if self.BETYPE is not None and 'BETYPE' not in already_processed:
-            already_processed.add('BETYPE')
-            outfile.write(' BETYPE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.BETYPE), input_name='BETYPE')), ))
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='streamType', fromsubclass_=False, pretty_print=True):
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="streamType"):
+        if self.ID is not None and "ID" not in already_processed:
+            already_processed.add("ID")
+            outfile.write(" ID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name="ID")),))
+        if self.streamType is not None and "streamType" not in already_processed:
+            already_processed.add("streamType")
+            outfile.write(
+                " streamType=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.streamType), input_name="streamType")),)
+            )
+        if self.OWNERID is not None and "OWNERID" not in already_processed:
+            already_processed.add("OWNERID")
+            outfile.write(
+                " OWNERID=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.OWNERID), input_name="OWNERID")),)
+            )
+        if self.ADMID is not None and "ADMID" not in already_processed:
+            already_processed.add("ADMID")
+            outfile.write(
+                " ADMID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ADMID), input_name="ADMID")),)
+            )
+        if self.DMDID is not None and "DMDID" not in already_processed:
+            already_processed.add("DMDID")
+            outfile.write(
+                " DMDID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.DMDID), input_name="DMDID")),)
+            )
+        if self.BEGIN is not None and "BEGIN" not in already_processed:
+            already_processed.add("BEGIN")
+            outfile.write(
+                " BEGIN=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.BEGIN), input_name="BEGIN")),)
+            )
+        if self.END is not None and "END" not in already_processed:
+            already_processed.add("END")
+            outfile.write(
+                " END=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.END), input_name="END")),)
+            )
+        if self.BETYPE is not None and "BETYPE" not in already_processed:
+            already_processed.add("BETYPE")
+            outfile.write(
+                " BETYPE=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.BETYPE), input_name="BETYPE")),)
+            )
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_="",
+        name_="streamType",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
         pass
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -7801,41 +10675,45 @@ class streamType(GeneratedsSuper):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('ID', node)
-        if value is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
+        value = find_attr_value_("ID", node)
+        if value is not None and "ID" not in already_processed:
+            already_processed.add("ID")
             self.ID = value
-        value = find_attr_value_('streamType', node)
-        if value is not None and 'streamType' not in already_processed:
-            already_processed.add('streamType')
+        value = find_attr_value_("streamType", node)
+        if value is not None and "streamType" not in already_processed:
+            already_processed.add("streamType")
             self.streamType = value
-        value = find_attr_value_('OWNERID', node)
-        if value is not None and 'OWNERID' not in already_processed:
-            already_processed.add('OWNERID')
+        value = find_attr_value_("OWNERID", node)
+        if value is not None and "OWNERID" not in already_processed:
+            already_processed.add("OWNERID")
             self.OWNERID = value
-        value = find_attr_value_('ADMID', node)
-        if value is not None and 'ADMID' not in already_processed:
-            already_processed.add('ADMID')
+        value = find_attr_value_("ADMID", node)
+        if value is not None and "ADMID" not in already_processed:
+            already_processed.add("ADMID")
             self.ADMID = value
-        value = find_attr_value_('DMDID', node)
-        if value is not None and 'DMDID' not in already_processed:
-            already_processed.add('DMDID')
+        value = find_attr_value_("DMDID", node)
+        if value is not None and "DMDID" not in already_processed:
+            already_processed.add("DMDID")
             self.DMDID = value
-        value = find_attr_value_('BEGIN', node)
-        if value is not None and 'BEGIN' not in already_processed:
-            already_processed.add('BEGIN')
+        value = find_attr_value_("BEGIN", node)
+        if value is not None and "BEGIN" not in already_processed:
+            already_processed.add("BEGIN")
             self.BEGIN = value
-        value = find_attr_value_('END', node)
-        if value is not None and 'END' not in already_processed:
-            already_processed.add('END')
+        value = find_attr_value_("END", node)
+        if value is not None and "END" not in already_processed:
+            already_processed.add("END")
             self.END = value
-        value = find_attr_value_('BETYPE', node)
-        if value is not None and 'BETYPE' not in already_processed:
-            already_processed.add('BETYPE')
+        value = find_attr_value_("BETYPE", node)
+        if value is not None and "BETYPE" not in already_processed:
+            already_processed.add("BETYPE")
             self.BETYPE = value
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
+
+
 # end class streamType
 
 
@@ -7868,100 +10746,173 @@ class transformFileType(GeneratedsSuper):
     for this transformation.TRANSFORMORDER (postive-integer/R): The order
     in which the instructions must be followed in order to unpack or
     transform the container file."""
+
     subclass = None
     superclass = None
-    def __init__(self, ID=None, TRANSFORMTYPE=None, TRANSFORMALGORITHM=None, TRANSFORMKEY=None, TRANSFORMBEHAVIOR=None, TRANSFORMORDER=None, **kwargs_):
+
+    def __init__(
+        self,
+        ID=None,
+        TRANSFORMTYPE=None,
+        TRANSFORMALGORITHM=None,
+        TRANSFORMKEY=None,
+        TRANSFORMBEHAVIOR=None,
+        TRANSFORMORDER=None,
+        **kwargs_,
+    ):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
+        self.parent_object_ = kwargs_.get("parent_object_")
         self.ID = _cast(None, ID)
         self.TRANSFORMTYPE = _cast(None, TRANSFORMTYPE)
         self.TRANSFORMALGORITHM = _cast(None, TRANSFORMALGORITHM)
         self.TRANSFORMKEY = _cast(None, TRANSFORMKEY)
         self.TRANSFORMBEHAVIOR = _cast(None, TRANSFORMBEHAVIOR)
         self.TRANSFORMORDER = _cast(int, TRANSFORMORDER)
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, transformFileType)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, transformFileType)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if transformFileType.subclass:
             return transformFileType.subclass(*args_, **kwargs_)
         else:
             return transformFileType(*args_, **kwargs_)
+
     factory = staticmethod(factory)
+
     def get_ID(self):
         return self.ID
+
     def set_ID(self, ID):
         self.ID = ID
+
     def get_TRANSFORMTYPE(self):
         return self.TRANSFORMTYPE
+
     def set_TRANSFORMTYPE(self, TRANSFORMTYPE):
         self.TRANSFORMTYPE = TRANSFORMTYPE
+
     def get_TRANSFORMALGORITHM(self):
         return self.TRANSFORMALGORITHM
+
     def set_TRANSFORMALGORITHM(self, TRANSFORMALGORITHM):
         self.TRANSFORMALGORITHM = TRANSFORMALGORITHM
+
     def get_TRANSFORMKEY(self):
         return self.TRANSFORMKEY
+
     def set_TRANSFORMKEY(self, TRANSFORMKEY):
         self.TRANSFORMKEY = TRANSFORMKEY
+
     def get_TRANSFORMBEHAVIOR(self):
         return self.TRANSFORMBEHAVIOR
+
     def set_TRANSFORMBEHAVIOR(self, TRANSFORMBEHAVIOR):
         self.TRANSFORMBEHAVIOR = TRANSFORMBEHAVIOR
+
     def get_TRANSFORMORDER(self):
         return self.TRANSFORMORDER
+
     def set_TRANSFORMORDER(self, TRANSFORMORDER):
         self.TRANSFORMORDER = TRANSFORMORDER
-    def hasContent_(self):
-        if (
 
-        ):
+    def hasContent_(self):
+        if ():
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='transformFileType', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('transformFileType')
+
+    def export(
+        self, outfile, level, namespaceprefix_="", namespacedef_="", name_="transformFileType", pretty_print=True
+    ):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("transformFileType")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='transformFileType')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="transformFileType")
         if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='transformFileType', pretty_print=pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            outfile.write(">%s" % (eol_,))
+            self.exportChildren(
+                outfile, level + 1, "", namespacedef_, name_="transformFileType", pretty_print=pretty_print
+            )
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='transformFileType'):
-        if self.ID is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
-            outfile.write(' ID=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name='ID')), ))
-        if 'TRANSFORMTYPE' not in already_processed:
-            already_processed.add('TRANSFORMTYPE')
-            outfile.write(' TRANSFORMTYPE=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.TRANSFORMTYPE), input_name='TRANSFORMTYPE')), ))
-        if 'TRANSFORMALGORITHM' not in already_processed:
-            already_processed.add('TRANSFORMALGORITHM')
-            outfile.write(' TRANSFORMALGORITHM=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.TRANSFORMALGORITHM), input_name='TRANSFORMALGORITHM')), ))
-        if self.TRANSFORMKEY is not None and 'TRANSFORMKEY' not in already_processed:
-            already_processed.add('TRANSFORMKEY')
-            outfile.write(' TRANSFORMKEY=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.TRANSFORMKEY), input_name='TRANSFORMKEY')), ))
-        if self.TRANSFORMBEHAVIOR is not None and 'TRANSFORMBEHAVIOR' not in already_processed:
-            already_processed.add('TRANSFORMBEHAVIOR')
-            outfile.write(' TRANSFORMBEHAVIOR=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.TRANSFORMBEHAVIOR), input_name='TRANSFORMBEHAVIOR')), ))
-        if 'TRANSFORMORDER' not in already_processed:
-            already_processed.add('TRANSFORMORDER')
-            outfile.write(' TRANSFORMORDER="%s"' % self.gds_format_integer(self.TRANSFORMORDER, input_name='TRANSFORMORDER'))
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='transformFileType', fromsubclass_=False, pretty_print=True):
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="transformFileType"):
+        if self.ID is not None and "ID" not in already_processed:
+            already_processed.add("ID")
+            outfile.write(" ID=%s" % (self.gds_encode(self.gds_format_string(quote_attrib(self.ID), input_name="ID")),))
+        if "TRANSFORMTYPE" not in already_processed:
+            already_processed.add("TRANSFORMTYPE")
+            outfile.write(
+                " TRANSFORMTYPE=%s"
+                % (
+                    self.gds_encode(
+                        self.gds_format_string(quote_attrib(self.TRANSFORMTYPE), input_name="TRANSFORMTYPE")
+                    ),
+                )
+            )
+        if "TRANSFORMALGORITHM" not in already_processed:
+            already_processed.add("TRANSFORMALGORITHM")
+            outfile.write(
+                " TRANSFORMALGORITHM=%s"
+                % (
+                    self.gds_encode(
+                        self.gds_format_string(quote_attrib(self.TRANSFORMALGORITHM), input_name="TRANSFORMALGORITHM")
+                    ),
+                )
+            )
+        if self.TRANSFORMKEY is not None and "TRANSFORMKEY" not in already_processed:
+            already_processed.add("TRANSFORMKEY")
+            outfile.write(
+                " TRANSFORMKEY=%s"
+                % (self.gds_encode(self.gds_format_string(quote_attrib(self.TRANSFORMKEY), input_name="TRANSFORMKEY")),)
+            )
+        if self.TRANSFORMBEHAVIOR is not None and "TRANSFORMBEHAVIOR" not in already_processed:
+            already_processed.add("TRANSFORMBEHAVIOR")
+            outfile.write(
+                " TRANSFORMBEHAVIOR=%s"
+                % (
+                    self.gds_encode(
+                        self.gds_format_string(quote_attrib(self.TRANSFORMBEHAVIOR), input_name="TRANSFORMBEHAVIOR")
+                    ),
+                )
+            )
+        if "TRANSFORMORDER" not in already_processed:
+            already_processed.add("TRANSFORMORDER")
+            outfile.write(
+                ' TRANSFORMORDER="%s"' % self.gds_format_integer(self.TRANSFORMORDER, input_name="TRANSFORMORDER")
+            )
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_="",
+        name_="transformFileType",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
         pass
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -7969,38 +10920,42 @@ class transformFileType(GeneratedsSuper):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('ID', node)
-        if value is not None and 'ID' not in already_processed:
-            already_processed.add('ID')
+        value = find_attr_value_("ID", node)
+        if value is not None and "ID" not in already_processed:
+            already_processed.add("ID")
             self.ID = value
-        value = find_attr_value_('TRANSFORMTYPE', node)
-        if value is not None and 'TRANSFORMTYPE' not in already_processed:
-            already_processed.add('TRANSFORMTYPE')
+        value = find_attr_value_("TRANSFORMTYPE", node)
+        if value is not None and "TRANSFORMTYPE" not in already_processed:
+            already_processed.add("TRANSFORMTYPE")
             self.TRANSFORMTYPE = value
-        value = find_attr_value_('TRANSFORMALGORITHM', node)
-        if value is not None and 'TRANSFORMALGORITHM' not in already_processed:
-            already_processed.add('TRANSFORMALGORITHM')
+        value = find_attr_value_("TRANSFORMALGORITHM", node)
+        if value is not None and "TRANSFORMALGORITHM" not in already_processed:
+            already_processed.add("TRANSFORMALGORITHM")
             self.TRANSFORMALGORITHM = value
-        value = find_attr_value_('TRANSFORMKEY', node)
-        if value is not None and 'TRANSFORMKEY' not in already_processed:
-            already_processed.add('TRANSFORMKEY')
+        value = find_attr_value_("TRANSFORMKEY", node)
+        if value is not None and "TRANSFORMKEY" not in already_processed:
+            already_processed.add("TRANSFORMKEY")
             self.TRANSFORMKEY = value
-        value = find_attr_value_('TRANSFORMBEHAVIOR', node)
-        if value is not None and 'TRANSFORMBEHAVIOR' not in already_processed:
-            already_processed.add('TRANSFORMBEHAVIOR')
+        value = find_attr_value_("TRANSFORMBEHAVIOR", node)
+        if value is not None and "TRANSFORMBEHAVIOR" not in already_processed:
+            already_processed.add("TRANSFORMBEHAVIOR")
             self.TRANSFORMBEHAVIOR = value
-        value = find_attr_value_('TRANSFORMORDER', node)
-        if value is not None and 'TRANSFORMORDER' not in already_processed:
-            already_processed.add('TRANSFORMORDER')
+        value = find_attr_value_("TRANSFORMORDER", node)
+        if value is not None and "TRANSFORMORDER" not in already_processed:
+            already_processed.add("TRANSFORMORDER")
             try:
                 self.TRANSFORMORDER = int(value)
             except ValueError as exp:
-                raise_parse_error(node, 'Bad integer attribute: %s' % exp)
+                raise_parse_error(node, "Bad integer attribute: %s" % exp)
             if self.TRANSFORMORDER <= 0:
-                raise_parse_error(node, 'Invalid PositiveInteger')
+                raise_parse_error(node, "Invalid PositiveInteger")
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
+
+
 # end class transformFileType
 
 
@@ -8014,55 +10969,108 @@ class mets(metsType):
     Open Archival Information System. The root element <mets> establishes
     the container for the information being stored and/or transmitted by
     the standard."""
+
     subclass = None
     superclass = metsType
-    def __init__(self, ID=None, OBJID=None, LABEL=None, TYPE=None, PROFILE=None, metsHdr=None, dmdSec=None, amdSec=None, fileSec=None, structMap=None, structLink=None, behaviorSec=None, **kwargs_):
+
+    def __init__(
+        self,
+        ID=None,
+        OBJID=None,
+        LABEL=None,
+        TYPE=None,
+        PROFILE=None,
+        metsHdr=None,
+        dmdSec=None,
+        amdSec=None,
+        fileSec=None,
+        structMap=None,
+        structLink=None,
+        behaviorSec=None,
+        **kwargs_,
+    ):
         self.original_tagname_ = None
-        self.parent_object_ = kwargs_.get('parent_object_')
-        super(mets, self).__init__(ID, OBJID, LABEL, TYPE, PROFILE, metsHdr, dmdSec, amdSec, fileSec, structMap, structLink, behaviorSec,  **kwargs_)
+        self.parent_object_ = kwargs_.get("parent_object_")
+        super(mets, self).__init__(
+            ID,
+            OBJID,
+            LABEL,
+            TYPE,
+            PROFILE,
+            metsHdr,
+            dmdSec,
+            amdSec,
+            fileSec,
+            structMap,
+            structLink,
+            behaviorSec,
+            **kwargs_,
+        )
+
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, mets)
+            subclass = getSubclassFromModule_(CurrentSubclassModule_, mets)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
         if mets.subclass:
             return mets.subclass(*args_, **kwargs_)
         else:
             return mets(*args_, **kwargs_)
+
     factory = staticmethod(factory)
+
     def hasContent_(self):
-        if (
-            super(mets, self).hasContent_()
-        ):
+        if super(mets, self).hasContent_():
             return True
         else:
             return False
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='mets', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('mets')
+
+    def export(self, outfile, level, namespaceprefix_="", namespacedef_="", name_="mets", pretty_print=True):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get("mets")
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
-            eol_ = '\n'
+            eol_ = "\n"
         else:
-            eol_ = ''
+            eol_ = ""
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write(
+            "<%s%s%s"
+            % (
+                namespaceprefix_,
+                name_,
+                namespacedef_ and " " + namespacedef_ or "",
+            )
+        )
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='mets')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="mets")
         if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, '', namespacedef_, name_='mets', pretty_print=pretty_print)
+            outfile.write(">%s" % (eol_,))
+            self.exportChildren(outfile, level + 1, "", namespacedef_, name_="mets", pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+            outfile.write("</%s%s>%s" % (namespaceprefix_, name_, eol_))
         else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='', name_='mets'):
-        super(mets, self).exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='mets')
-    def exportChildren(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='mets', fromsubclass_=False, pretty_print=True):
-        super(mets, self).exportChildren(outfile, level, namespaceprefix_, namespacedef_, name_, True, pretty_print=pretty_print)
+            outfile.write("/>%s" % (eol_,))
+
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_="", name_="mets"):
+        super(mets, self).exportAttributes(outfile, level, already_processed, namespaceprefix_, name_="mets")
+
+    def exportChildren(
+        self,
+        outfile,
+        level,
+        namespaceprefix_="",
+        namespacedef_="",
+        name_="mets",
+        fromsubclass_=False,
+        pretty_print=True,
+    ):
+        super(mets, self).exportChildren(
+            outfile, level, namespaceprefix_, namespacedef_, name_, True, pretty_print=pretty_print
+        )
+
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -8070,16 +11078,19 @@ class mets(metsType):
             nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
             self.buildChildren(child, node, nodeName_)
         return self
+
     def buildAttributes(self, node, attrs, already_processed):
         super(mets, self).buildAttributes(node, attrs, already_processed)
+
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         super(mets, self).buildChildren(child_, node, nodeName_, True)
         pass
+
+
 # end class mets
 
 
-GDSClassesMapping = {
-}
+GDSClassesMapping = {}
 
 
 USAGE_TEXT = """
@@ -8106,7 +11117,7 @@ def parse(inFileName, silence=False):
     rootNode = doc.getroot()
     rootTag, rootClass = get_root_tag(rootNode)
     if rootClass is None:
-        rootTag = 'mets'
+        rootTag = "mets"
         rootClass = mets
     rootObj = rootClass.factory()
     rootObj.build(rootNode)
@@ -8114,10 +11125,7 @@ def parse(inFileName, silence=False):
     doc = None
     if not silence:
         sys.stdout.write('<?xml version="1.0" ?>\n')
-        rootObj.export(
-            sys.stdout, 0, name_=rootTag,
-            namespacedef_='',
-            pretty_print=True)
+        rootObj.export(sys.stdout, 0, name_=rootTag, namespacedef_="", pretty_print=True)
     return rootObj
 
 
@@ -8127,7 +11135,7 @@ def parseEtree(inFileName, silence=False):
     rootNode = doc.getroot()
     rootTag, rootClass = get_root_tag(rootNode)
     if rootClass is None:
-        rootTag = 'mets'
+        rootTag = "mets"
         rootClass = mets
     rootObj = rootClass.factory()
     rootObj.build(rootNode)
@@ -8137,11 +11145,9 @@ def parseEtree(inFileName, silence=False):
     rootElement = rootObj.to_etree(None, name_=rootTag, mapping_=mapping)
     reverse_mapping = rootObj.gds_reverse_node_mapping(mapping)
     if not silence:
-        content = etree_.tostring(
-            rootElement, pretty_print=True,
-            xml_declaration=True, encoding="utf-8")
+        content = etree_.tostring(rootElement, pretty_print=True, xml_declaration=True, encoding="utf-8")
         sys.stdout.write(content)
-        sys.stdout.write('\n')
+        sys.stdout.write("\n")
     return rootObj, rootElement, mapping, reverse_mapping
 
 
@@ -8155,19 +11161,17 @@ def parseString(inString, silence=False):
     Return -- The root object in the tree.
     """
     parser = None
-    rootNode= parsexmlstring_(inString, parser)
+    rootNode = parsexmlstring_(inString, parser)
     rootTag, rootClass = get_root_tag(rootNode)
     if rootClass is None:
-        rootTag = 'mets'
+        rootTag = "mets"
         rootClass = mets
     rootObj = rootClass.factory()
     rootObj.build(rootNode)
     # Enable Python to collect the space used by the DOM.
     if not silence:
         sys.stdout.write('<?xml version="1.0" ?>\n')
-        rootObj.export(
-            sys.stdout, 0, name_=rootTag,
-            namespacedef_='')
+        rootObj.export(sys.stdout, 0, name_=rootTag, namespacedef_="")
     return rootObj
 
 
@@ -8177,18 +11181,18 @@ def parseLiteral(inFileName, silence=False):
     rootNode = doc.getroot()
     rootTag, rootClass = get_root_tag(rootNode)
     if rootClass is None:
-        rootTag = 'mets'
+        rootTag = "mets"
         rootClass = mets
     rootObj = rootClass.factory()
     rootObj.build(rootNode)
     # Enable Python to collect the space used by the DOM.
     doc = None
     if not silence:
-        sys.stdout.write('#from mets_generateds import *\n\n')
-        sys.stdout.write('import mets_generateds as model_\n\n')
-        sys.stdout.write('rootObj = model_.rootClass(\n')
+        sys.stdout.write("#from mets_generateds import *\n\n")
+        sys.stdout.write("import mets_generateds as model_\n\n")
+        sys.stdout.write("rootObj = model_.rootClass(\n")
         rootObj.exportLiteral(sys.stdout, 0, name_=rootTag)
-        sys.stdout.write(')\n')
+        sys.stdout.write(")\n")
     return rootObj
 
 
@@ -8200,12 +11204,11 @@ def main():
         usage()
 
 
-if __name__ == '__main__':
-    #import pdb; pdb.set_trace()
+if __name__ == "__main__":
+    # import pdb; pdb.set_trace()
     main()
 
-RenameMappings_ = {
-}
+RenameMappings_ = {}
 
 __all__ = [
     "FContentType",
@@ -8244,5 +11247,5 @@ __all__ = [
     "structMapType",
     "transformFileType",
     "xmlDataType",
-    "xmlDataType3"
+    "xmlDataType3",
 ]
