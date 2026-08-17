@@ -1,14 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import os
-import pytest
-import warnings
+from pathlib import Path
 
-# the import of dir_util introduces a deprecation warning
-# we can't do much about it
-with warnings.catch_warnings():
-    warnings.simplefilter("ignore")
-    from distutils import dir_util
+import pytest
 
 from mets_mods2tei import Mets
 
@@ -19,12 +13,13 @@ def datadir(tmpdir, request):
     module and, if available, moving all contents to a temporary directory so
     tests can use them freely.
     """
-    filename = request.module.__file__
-    test_dir, _ = os.path.splitext(filename)
-
-    if os.path.isdir(test_dir):
-        dir_util.copy_tree(test_dir, str(tmpdir))
-
+    src = Path(request.module.__file__).with_suffix('')
+    if src.is_dir():
+        for src_path in src.glob('**/*'):
+            if src_path.is_file():
+                dest_path = Path(str(tmpdir)) / src_path.relative_to(src)
+                dest_path.parent.mkdir(parents=True, exist_ok=True)
+                dest_path.write_bytes(src_path.read_bytes())
     return tmpdir
 
 def test_constructor():
