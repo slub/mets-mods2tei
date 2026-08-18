@@ -11,6 +11,8 @@ from .util import NS
 
 norm_alto_ns_re = re.compile(rb'alto/ns-v.#')
 
+XML_PARSER = etree.XMLParser(remove_blank_text=True)
+
 
 class Alto:
     """A class to handle ALTO (Analyzed Layout and Text Object) files."""
@@ -80,8 +82,7 @@ class Alto:
         Args:
             path (str): The path to the ALTO file.
         """
-        parser = etree.XMLParser(remove_blank_text=True)
-        self.tree = etree.XML(norm_alto_ns_re.sub(b"alto/ns-v4#", path.read()), parser)
+        self.tree = etree.XML(norm_alto_ns_re.sub(b"alto/ns-v4#", path.read()), XML_PARSER)
         self.path = path
 
     @classmethod
@@ -99,8 +100,7 @@ class Alto:
         Reads in ALTO from a given byte string.
         :param bytes content: Content of a ALTO document.
         """
-        parser = etree.XMLParser(remove_blank_text=True)
-        self.tree = etree.XML(norm_alto_ns_re.sub(b"alto/ns-v4#", content), parser)
+        self.tree = etree.XML(norm_alto_ns_re.sub(b"alto/ns-v4#", content), XML_PARSER)
 
     def get_text_blocks(self) -> list[etree._Element]:
         """
