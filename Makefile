@@ -38,7 +38,7 @@ deps-test:
 
 # Run all unit tests
 test:
-	$(PYTHON) -m pytest --continue-on-collection-errors $(TESTDIR)
+	$(PYTHON) -m pytest --junitxml=junit.xml -o junit_family=legacy --continue-on-collection-errors $(TESTDIR)
 
 # Run coverage tests
 coverage:
