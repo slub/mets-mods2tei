@@ -2,7 +2,6 @@
 multi-purpose METS editing and file handling tool purposed for DFG Viewer
 """
 
-
 import sys
 from datetime import datetime
 from pathlib import Path
