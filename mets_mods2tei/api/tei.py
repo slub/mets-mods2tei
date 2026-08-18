@@ -474,49 +474,49 @@ class Tei:
         """
         Set the main title of the tei:titleStmt.
         """
-        titleStmt = self.tree.xpath('//tei:titleStmt', namespaces=NS)[0]
-        for node in titleStmt.xpath('tei:title[@type="main"]', namespaces=NS):
+        title_stmt = self.tree.find('.//{*}titleStmt')
+        for node in title_stmt.xpath('tei:title[@type="main"]', namespaces=NS):
             node.text = string
 
     def add_sub_title(self, string):
         """
         Add a sub-title of the tei:titleStmt.
         """
-        titleStmt = self.tree.xpath('//tei:titleStmt', namespaces=NS)[0]
+        title_stmt = self.tree.xpath('//tei:titleStmt', namespaces=NS)[0]
         node = etree.Element(f"{PX['tei']}title")
         node.set("type", "sub")
         node.text = string
-        titleStmt.append(copy.deepcopy(node))
+        title_stmt.append(copy.deepcopy(node))
 
     def add_part_title(self, number, string):
         """
         Add a part title of the tei:titleStmt.
         """
-        titleStmt = self.tree.xpath('//tei:titleStmt', namespaces=NS)[0]
+        title_stmt = self.tree.xpath('//tei:titleStmt', namespaces=NS)[0]
         node = etree.Element(f"{PX['tei']}title")
         node.set("type", "part")
         node.set("n", number)
         node.text = string
-        titleStmt.append(copy.deepcopy(node))
+        title_stmt.append(copy.deepcopy(node))
 
     def add_volume_title(self, number, typ, string):
         """
         Add a volume title of the tei:titleStmt.
         """
-        titleStmt = self.tree.xpath('//tei:titleStmt', namespaces=NS)[0]
+        title_stmt = self.tree.xpath('//tei:titleStmt', namespaces=NS)[0]
         node = etree.Element(f"{PX['tei']}title")
         node.set("type", typ)
         node.set("n", number)
         node.text = string
-        titleStmt.append(copy.deepcopy(node))
+        title_stmt.append(copy.deepcopy(node))
 
     def init_biblFull(self):
         """
         Set the main, sub, and part/volume titles of the tei:biblFull by copying from tei:titleStmt.
         """
-        titleStmt = self.tree.xpath('//tei:titleStmt', namespaces=NS)[0]
+        title_stmt = self.tree.find('.//{*}titleStmt')
         bibl = self.tree.xpath('//tei:sourceDesc/tei:biblFull', namespaces=NS)[0]
-        bibl.append(copy.deepcopy(titleStmt))
+        bibl.append(copy.deepcopy(title_stmt))
 
     def set_publication_level(self, level):
         """
@@ -628,8 +628,8 @@ class Tei:
         """
         Add an edition statement with details on the digital edition.
         """
-        title_stmt = self.tree.xpath('//tei:fileDesc', namespaces=NS)[0]
-        edition_stmt = etree.SubElement(title_stmt, f"{PX['tei']}editionStmt")
+        file_desc = self.tree.xpath('//tei:fileDesc', namespaces=NS)[0]
+        edition_stmt = etree.SubElement(file_desc, f"{PX['tei']}editionStmt")
         edition = etree.SubElement(edition_stmt, f"{PX['tei']}edition")
         edition.text = digital_edition
 
