@@ -12,6 +12,7 @@ from .util import NS
 norm_alto_ns_re = re.compile(rb'alto/ns-v.#')
 
 XML_PARSER = etree.XMLParser(remove_blank_text=True)
+TRANS_TABLE = str.maketrans('', '', '. ')
 
 
 class Alto:
@@ -150,8 +151,8 @@ class Alto:
         Returns:
             int: The Levenshtein distance between the two strings.
         """
-        text1 = text1.translate({ord(i): None for i in '. '})
-        text2 = text2.translate({ord(i): None for i in '. '})
+        text1 = text1.translate(TRANS_TABLE)
+        text2 = text2.translate(TRANS_TABLE)
         return Levenshtein.distance(text1, text2)
 
     def get_best_insert_index(self, label: str, lower: bool = False) -> int:
