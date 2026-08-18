@@ -7,7 +7,7 @@ def test_constructor():
     Test the creation of an Iso15924 instance
     """
     iso = Iso15924()
-    assert(iso.map is not {})
+    assert(iso.map != {})
 
 def test_existing_script():
     """

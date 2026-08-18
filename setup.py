@@ -1,19 +1,22 @@
-# -*- coding: utf-8 -*-
+from setuptools import find_packages, setup
 
-from setuptools import setup, find_packages
+
+def open_read(path):
+    with open(path) as f:
+        return f.read()
 
 setup(
     name='mets-mods2tei',
     version='0.1.6',
     description='Convert digital documents in METS/MODS format to TEI',
-    long_description=open('README.md').read(),
+    long_description=open_read('README.md'),
     long_description_content_type="text/markdown",
     author='Kay-Michael Würzner',
     author_email='kay-michael.wuerzner@slub-dresden.de',
     license_files=('LICENSE',),
     packages=find_packages(exclude=('tests', 'docs')),
-    package_data={'mets_mods2tei' : ['data/tei_skeleton.xml', 'data/iso15924-utf8-20180827.txt']},
-    install_requires=open('requirements.txt').read().split('\n'),
+    package_data={'mets_mods2tei': ['data/tei_skeleton.xml', 'data/iso15924-utf8-20180827.txt']},
+    install_requires=open_read('requirements.txt').split('\n'),
     python_requires=">=3.10",
     classifiers=[
         'Development Status :: 5 - Production/Stable',
@@ -32,9 +35,9 @@ setup(
         'Topic :: Text Processing :: Markup :: XML',
     ],
     entry_points={
-          'console_scripts': [
-              'mm2tei=mets_mods2tei.scripts.mets_mods2tei:cli',
-              'mm-update=mets_mods2tei.scripts.update:cli',
-          ]
+        'console_scripts': [
+            'mm2tei=mets_mods2tei.scripts.mets_mods2tei:cli',
+            'mm-update=mets_mods2tei.scripts.update:cli',
+        ]
     },
 )
