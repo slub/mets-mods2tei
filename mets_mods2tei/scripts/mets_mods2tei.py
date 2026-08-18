@@ -1,14 +1,14 @@
-# -*- coding: utf-8 -*-
-from __future__ import absolute_import
 
-import sys
-import os
 import logging
-import click
+import os
+import sys
+from urllib.error import URLError
 from urllib.request import urlopen
 
-from mets_mods2tei import Mets
-from mets_mods2tei import Tei
+import click
+
+from mets_mods2tei import Mets, Tei
+
 
 @click.command(context_settings={'help_option_names': ['-h', '--help']})
 @click.argument('mets', required=True)
@@ -44,8 +44,8 @@ def cli(mets, output, ocr, text_group, img_group, add_refs, log_level):
     # interpret mets argument
     try:
         f = urlopen(mets)
-    except:
-        f = open(mets, "rb")
+    except (ValueError, URLError):
+        f = open(mets, "rb")  # noqa: SIM115
         # physical file: enter METS directory for relative FLocat refs
         os.chdir(os.path.normpath(os.path.dirname(mets)))
 
@@ -54,7 +54,8 @@ def cli(mets, output, ocr, text_group, img_group, add_refs, log_level):
     mets = Mets()
     mets.fulltext_group_name = text_group
     mets.image_group_name = img_group
-    mets.fromfile(f)
+    with f as mets_file:
+        mets.fromfile(mets_file)
 
     #
     # create TEI (from skeleton)
