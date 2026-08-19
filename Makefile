@@ -25,7 +25,7 @@ help:
 # Tests
 #
 
-.PHONY: install test coverage deps deps-test
+.PHONY: install check test coverage deps deps-test
 
 install:
 	$(PIP) install .
@@ -36,9 +36,12 @@ deps:
 deps-test:
 	$(PIP) install -r requirements-test.txt
 
+check:
+	ruff check
+
 # Run all unit tests
-test:
-	$(PYTHON) -m pytest --continue-on-collection-errors $(TESTDIR)
+test: check
+	$(PYTHON) -m pytest --junitxml=junit.xml -o junit_family=legacy --continue-on-collection-errors $(TESTDIR)
 
 # Run coverage tests
 coverage:
