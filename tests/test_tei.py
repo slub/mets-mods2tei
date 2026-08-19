@@ -103,7 +103,7 @@ def test_reading_remote_url(tmpdir, datadir, monkeypatch):
     def mock_urlopen(url, *args, **kwargs):
         if url == URL:
             return MockUrlOpen(mets_xml_bytes)
-        return urllib.request.urlopen(url)
+        return urlopen(url)
 
     monkeypatch.setattr("urllib.request.urlopen", mock_urlopen)
 
