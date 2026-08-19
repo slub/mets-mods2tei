@@ -12,6 +12,9 @@ from .util import NS
 norm_alto_ns_re = re.compile(rb'alto/ns-v.#')
 
 XML_PARSER = etree.XMLParser(remove_blank_text=True)
+XPATH_TEXTBLOCK = etree.XPath('//alto:TextBlock', namespaces=NS)
+XPATH_TEXTLINE = etree.XPath('.//alto:TextLine', namespaces=NS)
+XPATH_CONTENTSTRING = etree.XPath('.//alto:String/@CONTENT', namespaces=NS)
 TRANS_TABLE = str.maketrans('', '', '. ')
 
 
@@ -110,7 +113,7 @@ class Alto:
         Returns:
             List[etree._Element]: A list of text block elements.
         """
-        return self.tree.xpath('//alto:TextBlock', namespaces=NS)
+        return XPATH_TEXTBLOCK(self.tree)
 
     def get_lines_in_text_block(self, text_block: etree._Element) -> list[etree._Element]:
         """
@@ -122,7 +125,7 @@ class Alto:
         Returns:
             List[etree._Element]: A list of line elements.
         """
-        return text_block.xpath('.//alto:TextLine', namespaces=NS)
+        return XPATH_TEXTLINE(text_block)
 
     def get_text_in_line(self, line: etree._Element) -> str:
         """
@@ -134,7 +137,7 @@ class Alto:
         Returns:
             str: The text content of the line.
         """
-        text = ' '.join(line.xpath('.//alto:String/@CONTENT', namespaces=NS))
+        text = ' '.join(XPATH_CONTENTSTRING(line))
         hyp = line.find("alto:HYP", namespaces=NS)
         if hyp is not None:
             text += hyp.get("CONTENT")

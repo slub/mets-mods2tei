@@ -13,6 +13,13 @@ from .mods_generateds import parseString as parse_mods
 from .util import NS, PX, resource_filename
 
 
+XPATH_DV_OWNER = etree.XPath("//dv:owner", namespaces=NS)
+XPATH_DV_LICENSE = etree.XPath("//dv:license", namespaces=NS)
+XPATH_FILE_GRP = etree.XPath("//mets:fileGrp[@USE=$use]", namespaces=NS)
+XPATH_METS_FILE = etree.XPath("./mets:file", namespaces=NS)
+XPATH_STRUCTLINK_CHILDREN = etree.XPath("//mets:structLink/*", namespaces=NS)
+
+
 class Iso15924:
     """A class to handle ISO 15924 script codes."""
 
@@ -385,14 +392,14 @@ class Mets:
             dv = None
 
         # owner of the digital edition
-        owner = dv.xpath("//dv:owner", namespaces=NS) if dv is not None else []
+        owner = XPATH_DV_OWNER(dv) if dv is not None else []
         self.owner_digital = owner[0].text if len(owner) else ""
 
         # availability/license
         # common case
         self.license = ""
         self.license_url = ""
-        license_nodes = dv.xpath("//dv:license", namespaces=NS) if dv is not None else []
+        license_nodes = XPATH_DV_LICENSE(dv) if dv is not None else []
         if len(license_nodes):
             self.license = license_nodes[0].text
             self.license_url = ""
@@ -468,19 +475,19 @@ class Mets:
 
         # fulltext
         fulltext_map = {}
-        fulltext_group = self.tree.xpath(f"//mets:fileGrp[@USE='{self.fulltext_group_name}']", namespaces=NS)
+        fulltext_group = XPATH_FILE_GRP(self.tree, use=self.fulltext_group_name)
         if fulltext_group:
             fulltext_map = {}
-            for entry in fulltext_group[0].xpath("./mets:file", namespaces=NS):
+            for entry in XPATH_METS_FILE(fulltext_group[0]):
                 url = entry.find("./" + PX['mets'] + "FLocat").get(PX['xlink'] + "href")
                 self.logger.debug("Found full-text file: %s", url)
                 fulltext_map[entry.get("ID")] = url
 
         # image
         image_map = {}
-        image_group = self.tree.xpath(f"//mets:fileGrp[@USE='{self.image_group_name}']", namespaces=NS)
+        image_group = XPATH_FILE_GRP(self.tree, use=self.image_group_name)
         if image_group:
-            for entry in image_group[0].xpath("./mets:file", namespaces=NS):
+            for entry in XPATH_METS_FILE(image_group[0]):
                 url = entry.find("./" + PX['mets'] + "FLocat").get(PX['xlink'] + "href")
                 self.logger.debug("Found image file: %s", url)
                 image_map[entry.get("ID")] = url
@@ -501,7 +508,7 @@ class Mets:
                     self.img_map[page] = image_map[fptr.get_FILEID()]
 
         # struct links
-        structlinks = self.tree.xpath("//mets:structLink/*", namespaces=NS)
+        structlinks = XPATH_STRUCTLINK_CHILDREN(self.tree)
         for sm_link in structlinks:
             logical = sm_link.get(PX['xlink'] + "from")
             physical = sm_link.get(PX['xlink'] + "to")

@@ -13,6 +13,9 @@ from requests.adapters import HTTPAdapter, Retry
 from .alto import Alto
 from .util import NS, PX, resource_filename
 
+XPATH_PB = etree.XPath("tei:pb", namespaces=NS)
+XPATH_FACSIMILE = etree.XPath("//tei:facsimile", namespaces=NS)
+
 # FIXME: add more structural mappings from METS-Anwendungsprofil (DFG Strukturdatenset) to TEI-P5 tagset (DTAbf)
 # ruff: disable[F601]
 DIV_METS2TEI = {
@@ -918,8 +921,8 @@ class Tei:
                     pagenum = list(mets.page_map.keys()).index(struct_link)
                 except ValueError:
                     self.logger.warning("cannot determine image number for link '%s'", struct_link)
-                    pagenum = len(node.xpath("tei:pb", namespaces=NS))
-                pageid = f"f{pagenum + 1:04d}"
+                    pagenum = len(XPATH_PB(node))
+                pageid = "f{:04d}".format(pagenum + 1)
                 pb.set("facs", "#" + pageid)
                 orderlabel = mets.get_orderlabel(struct_link) or mets.get_order(struct_link)
                 if orderlabel:
@@ -929,7 +932,7 @@ class Tei:
                         pb.set("corresp", self.purl + "/" + pageid[1:])
                     img_url = mets.get_img(struct_link)
                     if img_url:
-                        facsimile = self.tree.xpath('//tei:facsimile', namespaces=NS)[0]
+                        facsimile = XPATH_FACSIMILE(self.tree)[0]
                         # facsimile.set("base", ...common url_prefix...)
                         # todo: DTABf seems to use "graphic" directly, but other dialects wrap them inside a "surface"
                         graphic = etree.SubElement(facsimile, f"{PX['tei']}graphic")
