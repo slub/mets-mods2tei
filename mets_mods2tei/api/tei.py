@@ -440,7 +440,7 @@ class Tei:
     @property
     def extents(self):
         """
-        Return information on the extent of the work represented
+        Return information on the extent of the work represented.
         by the TEI Header.
         """
         return [
@@ -453,7 +453,7 @@ class Tei:
     @property
     def collections(self):
         """
-        Return information on the collections of the work represented
+        Return information on the collections of the work represented.
         by the TEI Header.
         """
         return [
@@ -464,7 +464,7 @@ class Tei:
     @property
     def bibl(self):
         """
-        Return the short citation of the work represented
+        Return the short citation of the work represented.
         by the TEI Header.
         """
         return self.tree.xpath("//tei:fileDesc/tei:sourceDesc/tei:bibl", namespaces=NS)[0]
@@ -473,49 +473,49 @@ class Tei:
         """
         Set the main title of the tei:titleStmt.
         """
-        titleStmt = self.tree.xpath('//tei:titleStmt', namespaces=NS)[0]
-        for node in titleStmt.xpath('tei:title[@type="main"]', namespaces=NS):
+        title_stmt = self.tree.xpath('//tei:titleStmt', namespaces=NS)[0]
+        for node in title_stmt.xpath('tei:title[@type="main"]', namespaces=NS):
             node.text = string
 
     def add_sub_title(self, string):
         """
         Add a sub-title of the tei:titleStmt.
         """
-        titleStmt = self.tree.xpath('//tei:titleStmt', namespaces=NS)[0]
+        title_stmt = self.tree.xpath('//tei:titleStmt', namespaces=NS)[0]
         node = etree.Element(f"{PX['tei']}title")
         node.set("type", "sub")
         node.text = string
-        titleStmt.append(copy.deepcopy(node))
+        title_stmt.append(copy.deepcopy(node))
 
     def add_part_title(self, number, string):
         """
         Add a part title of the tei:titleStmt.
         """
-        titleStmt = self.tree.xpath('//tei:titleStmt', namespaces=NS)[0]
+        title_stmt = self.tree.xpath('//tei:titleStmt', namespaces=NS)[0]
         node = etree.Element(f"{PX['tei']}title")
         node.set("type", "part")
         node.set("n", number)
         node.text = string
-        titleStmt.append(copy.deepcopy(node))
+        title_stmt.append(copy.deepcopy(node))
 
     def add_volume_title(self, number, typ, string):
         """
         Add a volume title of the tei:titleStmt.
         """
-        titleStmt = self.tree.xpath('//tei:titleStmt', namespaces=NS)[0]
+        title_stmt = self.tree.xpath('//tei:titleStmt', namespaces=NS)[0]
         node = etree.Element(f"{PX['tei']}title")
         node.set("type", typ)
         node.set("n", number)
         node.text = string
-        titleStmt.append(copy.deepcopy(node))
+        title_stmt.append(copy.deepcopy(node))
 
     def init_biblFull(self):
         """
         Set the main, sub, and part/volume titles of the tei:biblFull by copying from tei:titleStmt.
         """
-        titleStmt = self.tree.xpath('//tei:titleStmt', namespaces=NS)[0]
+        title_stmt = self.tree.xpath('//tei:titleStmt', namespaces=NS)[0]
         bibl = self.tree.xpath('//tei:sourceDesc/tei:biblFull', namespaces=NS)[0]
-        bibl.append(copy.deepcopy(titleStmt))
+        bibl.append(copy.deepcopy(title_stmt))
 
     def set_publication_level(self, level):
         """
@@ -627,14 +627,14 @@ class Tei:
         """
         Add an edition statement with details on the digital edition.
         """
-        title_stmt = self.tree.xpath('//tei:fileDesc', namespaces=NS)[0]
-        edition_stmt = etree.SubElement(title_stmt, f"{PX['tei']}editionStmt")
+        file_desc = self.tree.xpath('//tei:fileDesc', namespaces=NS)[0]
+        edition_stmt = etree.SubElement(file_desc, f"{PX['tei']}editionStmt")
         edition = etree.SubElement(edition_stmt, f"{PX['tei']}edition")
         edition.text = digital_edition
 
     def add_hoster(self, hoster):
         """
-        Add a publisher of the digital edition
+        Add a publisher of the digital edition.
         """
         publication_stmt = self.tree.xpath('//tei:publicationStmt', namespaces=NS)[0]
         publisher = etree.SubElement(publication_stmt, f"{PX['tei']}publisher")
@@ -642,7 +642,7 @@ class Tei:
 
     def set_availability(self, status, licence_text, licence_url):
         """
-        Set the availability conditions of the digital edition
+        Set the availability conditions of the digital edition.
         """
         publication_stmt = self.tree.xpath('//tei:publicationStmt', namespaces=NS)[0]
         availability = publication_stmt.find(f"{PX['tei']}availability")
@@ -671,7 +671,7 @@ class Tei:
 
     def add_encoding_date(self, date):
         """
-        Add the date of encoding for the digital edition
+        Add the date of encoding for the digital edition.
         """
         publication_stmt = self.tree.xpath('//tei:publicationStmt', namespaces=NS)[0]
         encoding_date = etree.SubElement(publication_stmt, f"{PX['tei']}date")
@@ -681,7 +681,7 @@ class Tei:
 
     def set_encoding_description(self, creator):
         """
-        Set some details on the encoding of the digital edition
+        Set some details on the encoding of the digital edition.
         """
         encoding_desc = self.tree.xpath('//tei:encodingDesc', namespaces=NS)[0]
         if creator:
@@ -690,7 +690,7 @@ class Tei:
 
     def add_repository(self, name):
         """
-        Add the repository of the (original) manuscript
+        Add the repository of the (original) manuscript.
         """
         ms_ident = self.tree.xpath('//tei:msDesc/tei:msIdentifier', namespaces=NS)[0]
         repository = etree.SubElement(ms_ident, f"{PX['tei']}repository")
@@ -698,7 +698,7 @@ class Tei:
 
     def add_identifier(self, type_, value):
         """
-        Add the URN, PURL, VD ID, shelfmark etc. of the digital edition
+        Add the URN, PURL, VD ID, shelfmark etc. of the digital edition.
         """
         ms_ident = self.tree.xpath('//tei:msDesc/tei:msIdentifier/tei:idno', namespaces=NS)[0]
         # FIXME: URN, DTAID, ... should go to /tei:fileDesc/tei:publicationStmt/tei:idno instead
@@ -708,7 +708,7 @@ class Tei:
 
     def set_type_desc(self, description):
         """
-        Set the type description
+        Set the type description.
         """
         phys_desc = self.tree.xpath('//tei:msDesc/tei:physDesc', namespaces=NS)[0]
         type_desc = etree.SubElement(phys_desc, f"{PX['tei']}typeDesc")
@@ -748,7 +748,7 @@ class Tei:
 
     def add_language(self, language):
         """
-        Add a language of the source document
+        Add a language of the source document.
         """
         lang_usage = self.tree.xpath('//tei:profileDesc/tei:langUsage', namespaces=NS)[0]
         lang = etree.SubElement(lang_usage, f"{PX['tei']}language")
@@ -757,7 +757,7 @@ class Tei:
 
     def add_extent(self, extent):
         """
-        Add information on the extent of the source document
+        Add information on the extent of the source document.
         """
         phys_desc = self.tree.xpath('//tei:msDesc/tei:physDesc', namespaces=NS)[0]
         if not phys_desc.xpath('/tei:objectDesc/tei:supportDesc', namespaces=NS):
@@ -770,7 +770,7 @@ class Tei:
 
     def add_collection(self, collection):
         """
-        Add a (free-text) collection of the digital document
+        Add a (free-text) collection of the digital document.
         """
         profile_desc = self.tree.xpath('//tei:msDesc/tei:msIdentifier', namespaces=NS)[0]
         coll = etree.SubElement(profile_desc, f"{PX['tei']}collection")
@@ -778,7 +778,7 @@ class Tei:
 
     def compile_bibl(self, type_):
         """
-        Compile the content of the short citation element 'bibl' based on the current state
+        Compile the content of the short citation element 'bibl' based on the current state.
         """
         if type_:
             self.bibl.set("type", type_)
@@ -818,7 +818,7 @@ class Tei:
 
     def __add_ocr_to_node(self, node, mets):
         """
-        Add text to a given node and recursively add text to children too (post order!)
+        Add text to a given node and recursively add text to children too (post order!).
         """
 
         node_id = node.get("id")
@@ -995,7 +995,7 @@ class Tei:
 
     def add_div_structure(self, div):
         """
-        Add logical div elements to the text font/body/back according to the given div hierarchy
+        Add logical div elements to the text font/body/back according to the given div hierarchy.
         """
 
         # div structure has to be added to text
@@ -1081,7 +1081,7 @@ class Tei:
 
     def add_physical_pages(self, pages):
         """
-        Add logical div elements to the text font/body/back according to the given div hierarchy
+        Add logical div elements to the text font/body/back according to the given div hierarchy.
         """
 
         # div structure has to be added to text
@@ -1093,7 +1093,7 @@ class Tei:
 
     def __add_div(self, insert_node, div, n, tag="div", divtype=""):
         """
-        Add div element to a given node and recursively add children too
+        Add div element to a given node and recursively add children too.
         """
         div_id = div.get_ID()
         new_div = etree.SubElement(insert_node, f"{PX['tei']}{tag}")
