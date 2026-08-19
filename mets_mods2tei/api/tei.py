@@ -923,9 +923,9 @@ class Tei:
                 self.alto_map[alto_link] = alto
 
                 pb = etree.SubElement(node, f"{PX['tei']}pb")
-                try:
-                    pagenum = list(mets.page_map.keys()).index(struct_link)
-                except ValueError:
+                if struct_link in mets.page_index_map:
+                    pagenum = mets.page_index_map[struct_link]
+                else:
                     self.logger.warning("cannot determine image number for link '%s'", struct_link)
                     pagenum = len(XPATH_PB(node))
                 pageid = "f{:04d}".format(pagenum + 1)

@@ -68,6 +68,7 @@ class Mets:
         self.mets: Any | None = None
         self.mods: Any | None = None
         self.page_map: dict[str, Any] = {}
+        self.page_index_map: dict[str, int] = {}
         self.order_map: dict[str, str] = {}
         self.orderlabel_map: dict[str, str] = {}
         self.img_map: dict[str, str] = {}
@@ -493,19 +494,22 @@ class Mets:
                 image_map[entry.get("ID")] = url
 
         # struct map physical
-        for div in self.get_page_structure().get_div():
-            page = div.get_ID()
-            self.logger.debug("Found physical page: %s", page)
-            self.page_map[page] = div
-            if div.get_ORDER():
-                self.order_map[page] = div.get_ORDER()
-            if div.get_ORDERLABEL():
-                self.orderlabel_map[page] = div.get_ORDERLABEL()
-            for fptr in div.get_fptr():
-                if fptr.get_FILEID() in fulltext_map:
-                    self.alto_map[page] = fulltext_map[fptr.get_FILEID()]
-                elif fptr.get_FILEID() in image_map:
-                    self.img_map[page] = image_map[fptr.get_FILEID()]
+        page_struct = self.get_page_structure()
+        if page_struct:
+            for idx, div in enumerate(page_struct.get_div()):
+                page = div.get_ID()
+                self.logger.debug("Found physical page: %s", page)
+                self.page_map[page] = div
+                self.page_index_map[page] = idx
+                if div.get_ORDER():
+                    self.order_map[page] = div.get_ORDER()
+                if div.get_ORDERLABEL():
+                    self.orderlabel_map[page] = div.get_ORDERLABEL()
+                for fptr in div.get_fptr():
+                    if fptr.get_FILEID() in fulltext_map:
+                        self.alto_map[page] = fulltext_map[fptr.get_FILEID()]
+                    elif fptr.get_FILEID() in image_map:
+                        self.img_map[page] = image_map[fptr.get_FILEID()]
 
         # struct links
         structlinks = XPATH_STRUCTLINK_CHILDREN(self.tree)
