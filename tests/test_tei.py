@@ -91,7 +91,7 @@ def test_reading_remote_url(tmpdir, datadir, monkeypatch):
 
     URL = ("https://digital.slub-dresden.de/oai/?verb=GetRecord&metadataPrefix=mets"
            "&identifier=oai:de:slub-dresden:db:id-453779263")
-    test_mets_path = datadir.join('test_mets_oai_pmh.xml')
+    test_mets_path = Path(datadir) / 'test_mets_oai_pmh.xml'
     mets_xml_bytes = test_mets_path.read_bytes()
 
     class MockUrlOpen:
