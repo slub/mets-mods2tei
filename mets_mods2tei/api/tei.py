@@ -474,7 +474,7 @@ class Tei:
         """
         Set the main title of the tei:titleStmt.
         """
-        title_stmt = self.tree.find('.//{*}titleStmt')
+        title_stmt = self.tree.xpath('//tei:titleStmt', namespaces=NS)[0]
         for node in title_stmt.xpath('tei:title[@type="main"]', namespaces=NS):
             node.text = string
 
@@ -514,7 +514,7 @@ class Tei:
         """
         Set the main, sub, and part/volume titles of the tei:biblFull by copying from tei:titleStmt.
         """
-        title_stmt = self.tree.find('.//{*}titleStmt')
+        title_stmt = self.tree.xpath('//tei:titleStmt', namespaces=NS)[0]
         bibl = self.tree.xpath('//tei:sourceDesc/tei:biblFull', namespaces=NS)[0]
         bibl.append(copy.deepcopy(title_stmt))
 
