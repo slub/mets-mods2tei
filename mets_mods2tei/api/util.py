@@ -8,10 +8,7 @@ NS = {
     'tei': "http://www.tei-c.org/ns/1.0",
     'xlink': "http://www.w3.org/1999/xlink",
 }
-PX = {
-    key: '{' + val + '}'
-    for key, val in NS.items()
-}
+PX = {key: '{' + val + '}' for key, val in NS.items()}
 
 
 def resource_filename(pkg, fname):
