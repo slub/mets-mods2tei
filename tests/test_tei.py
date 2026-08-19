@@ -65,14 +65,18 @@ def test_reading_local_file_local_ocr(subtests, datadir):
         assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:body//tei:div//tei:pb', namespaces=NS)) > 55
         assert len(tei.tree.xpath('/tei:TEI/tei:text/tei:body//tei:div//tei:p//tei:lb', namespaces=NS)) > 800
 
-def test_reading_remote_url(tmpdir):
+def test_reading_remote_url(tmpdir, datadir, monkeypatch):
     """
     Test reading from a remote METS link.
     """
-    from urllib.request import urlopen
+    import urllib.request
+    def mock_open(url):
+        return open(datadir.join('test_mets_oai_pmh.xml'))
+    monkeypatch.setattr(urllib.request, "urlopen", mock_open)
     mets = Mets()
-    mets.fromfile(urlopen("https://digital.slub-dresden.de/oai/?verb=GetRecord&metadataPrefix=mets"
-                          "&identifier=oai:de:slub-dresden:db:id-453779263"))
+    mets.fromfile(urllib.request.urlopen(
+        "https://digital.slub-dresden.de/oai/?verb=GetRecord&metadataPrefix=mets"
+        "&identifier=oai:de:slub-dresden:db:id-453779263"))
     tei = Tei()
     tei.fill_from_mets(mets, ocr=True, refs=["page", "line"])
     assert tei.tree is not None
