@@ -458,9 +458,8 @@ def test_tei_ocr_unknown_phys_link_and_order():
 
     tei = Tei()
     from lxml import etree
-    from mets_mods2tei.api.tei import TEI
     body = tei.tree.xpath('//tei:body', namespaces=NS)[0]
-    node = etree.SubElement(body, "%sdiv" % TEI)
+    node = etree.SubElement(body, f"{{{NS['tei']}}}div")
     node.set("id", "DIV1")
 
     tei.add_ocr_text(mets)
@@ -471,24 +470,22 @@ def test_tei_ocr_unknown_phys_link_and_order():
 
 def test_tei_tostring_with_lb_text():
     from lxml import etree
-    from mets_mods2tei.api.tei import TEI
     tei = Tei()
     body = tei.tree.xpath('//tei:body', namespaces=NS)[0]
-    p = etree.SubElement(body, "%sp" % TEI)
+    p = etree.SubElement(body, f"{{{NS['tei']}}}p")
     p.text = "Indented"
-    lb = etree.SubElement(p, "%slb" % TEI)
+    lb = etree.SubElement(p, f"{{{NS['tei']}}}lb")
     lb.tail = "Tail text"
     xml_out = tei.tostring()
     assert b"Tail text" in xml_out
 
 def test_tei_remaining_uncovered_nodes():
     from lxml import etree
-    from mets_mods2tei.api.tei import TEI
     tei = Tei()
 
     # 1. tei.tree with multiple titleStmt (line 519)
     file_desc = tei.tree.xpath('//tei:fileDesc', namespaces=NS)[0]
-    ts2 = etree.Element("%stitleStmt" % TEI)
+    ts2 = etree.Element(f"{{{NS['tei']}}}titleStmt")
     file_desc.append(ts2)
     tei.add_author({"family": "CorpOrg"}, "corporate")
 
@@ -496,15 +493,15 @@ def test_tei_remaining_uncovered_nodes():
     # Note: xpath('/tei:notesStmt') starts with '/' so it checks root element rather than children unless relative
     # add_note when root has notesStmt
     root = tei.tree.getroot()
-    notes_stmt = etree.SubElement(root, "%snotesStmt" % TEI)
+    notes_stmt = etree.SubElement(root, f"{{{NS['tei']}}}notesStmt")
     tei.add_note("Root note")
 
     # add_classcode when root has textClass
-    text_class = etree.SubElement(root, "%stextClass" % TEI)
+    text_class = etree.SubElement(root, f"{{{NS['tei']}}}textClass")
     tei.add_classcode("ddc", "300")
 
     # add_extent when root has supportDesc
-    sup_desc = etree.SubElement(root, "%ssupportDesc" % TEI)
+    sup_desc = etree.SubElement(root, f"{{{NS['tei']}}}supportDesc")
     tei.add_extent("300 p.")
 
     # 3. add_place with code key
@@ -519,7 +516,7 @@ def test_tei_remaining_uncovered_nodes():
 
     tei_fp = Tei()
     body = tei_fp.tree.xpath('//tei:body', namespaces=NS)[0]
-    node = etree.SubElement(body, "%sdiv" % TEI)
+    node = etree.SubElement(body, f"{{{NS['tei']}}}div")
     node.set("id", "DIV1")
     tei_fp.add_ocr_text(mets_fpath)
 
@@ -568,11 +565,10 @@ def test_tei_scripts_empty_and_childnode_ocr_and_orderlabel():
 
     tei_child = Tei()
     from lxml import etree
-    from mets_mods2tei.api.tei import TEI
     body = tei_child.tree.xpath('//tei:body', namespaces=NS)[0]
-    parent_node = etree.SubElement(body, "%sdiv" % TEI)
+    parent_node = etree.SubElement(body, f"{{{NS['tei']}}}div")
     parent_node.set("id", "PARENT_DIV")
-    child_node = etree.SubElement(parent_node, "%sdiv" % TEI)
+    child_node = etree.SubElement(parent_node, f"{{{NS['tei']}}}div")
     child_node.set("id", "CHILD_DIV")
 
     tei_child.add_ocr_text(mets_child)
@@ -591,9 +587,8 @@ def test_tei_final_branches_coverage():
 
     tei_ds = Tei()
     from lxml import etree
-    from mets_mods2tei.api.tei import TEI
     body = tei_ds.tree.xpath('//tei:body', namespaces=NS)[0]
-    node = etree.SubElement(body, "%sdiv" % TEI)
+    node = etree.SubElement(body, f"{{{NS['tei']}}}div")
     node.set("id", "DIV1")
     tei_ds.add_ocr_text(mets_double_slash)
 
@@ -616,7 +611,7 @@ def test_tei_final_branches_coverage():
 
     tei_nl = Tei()
     body_nl = tei_nl.tree.xpath('//tei:body', namespaces=NS)[0]
-    node_nl = etree.SubElement(body_nl, "%sdiv" % TEI)
+    node_nl = etree.SubElement(body_nl, f"{{{NS['tei']}}}div")
     node_nl.set("id", "DIV1")
     tei_nl.add_ocr_text(mets_no_orderlabel)
     monkeypatch.undo()
@@ -633,9 +628,8 @@ def test_tei_more_branch_coverage():
     mets_abs.page_map = {"P1": None}
     tei_abs = Tei()
     from lxml import etree
-    from mets_mods2tei.api.tei import TEI
     body_abs = tei_abs.tree.xpath('//tei:body', namespaces=NS)[0]
-    node_abs = etree.SubElement(body_abs, "%sdiv" % TEI)
+    node_abs = etree.SubElement(body_abs, f"{{{NS['tei']}}}div")
     node_abs.set("id", "DIV1")
     tei_abs.add_ocr_text(mets_abs)
 
@@ -659,7 +653,7 @@ def test_tei_more_branch_coverage():
     tei_nomime = Tei()
     tei_nomime.refs = ["page"]
     body_nomime = tei_nomime.tree.xpath('//tei:body', namespaces=NS)[0]
-    node_nomime = etree.SubElement(body_nomime, "%sdiv" % TEI)
+    node_nomime = etree.SubElement(body_nomime, f"{{{NS['tei']}}}div")
     node_nomime.set("id", "DIV1")
     tei_nomime.add_ocr_text(mets_img_nomime)
     monkeypatch.undo()
@@ -683,7 +677,7 @@ def test_tei_more_branch_coverage():
     monkeypatch.setattr(builtins, "open", mock_open_empty)
     tei_empty_line = Tei()
     body_el = tei_empty_line.tree.xpath('//tei:body', namespaces=NS)[0]
-    node_el = etree.SubElement(body_el, "%sdiv" % TEI)
+    node_el = etree.SubElement(body_el, f"{{{NS['tei']}}}div")
     node_el.set("id", "DIV1")
     tei_empty_line.add_ocr_text(mets_empty_line)
     monkeypatch.undo()
@@ -703,7 +697,7 @@ def test_tei_more_branch_coverage():
     monkeypatch.setattr(builtins, "open", mock_open_arg)
     tei_arg = Tei()
     body_arg = tei_arg.tree.xpath('//tei:body', namespaces=NS)[0]
-    node_arg = etree.SubElement(body_arg, "%sdiv" % TEI)
+    node_arg = etree.SubElement(body_arg, f"{{{NS['tei']}}}div")
     node_arg.set("id", "DIV1")
     node_arg.set("rend", "Head line")
     tei_arg.add_ocr_text(mets_arg)
@@ -746,9 +740,8 @@ def test_tei_additional_branches_coverage():
     mets_bad_url.page_map = {"P1": None}
     tei_bad = Tei()
     from lxml import etree
-    from mets_mods2tei.api.tei import TEI
     body = tei_bad.tree.xpath('//tei:body', namespaces=NS)[0]
-    node = etree.SubElement(body, "%sdiv" % TEI)
+    node = etree.SubElement(body, f"{{{NS['tei']}}}div")
     node.set("id", "DIV1")
     tei_bad.add_ocr_text(mets_bad_url)
 
@@ -760,7 +753,7 @@ def test_tei_additional_branches_coverage():
     mets_rel_file.page_map = {"P1": None}
     tei_rel = Tei()
     body_rel = tei_rel.tree.xpath('//tei:body', namespaces=NS)[0]
-    node_rel = etree.SubElement(body_rel, "%sdiv" % TEI)
+    node_rel = etree.SubElement(body_rel, f"{{{NS['tei']}}}div")
     node_rel.set("id", "DIV1")
     tei_rel.add_ocr_text(mets_rel_file)
 
@@ -784,7 +777,7 @@ def test_tei_additional_branches_coverage():
     tei_img = Tei()
     tei_img.refs = ["page"]
     body_img = tei_img.tree.xpath('//tei:body', namespaces=NS)[0]
-    node_img = etree.SubElement(body_img, "%sdiv" % TEI)
+    node_img = etree.SubElement(body_img, f"{{{NS['tei']}}}div")
     node_img.set("id", "DIV1")
     tei_img.add_ocr_text(mets_img)
     monkeypatch.undo()
@@ -948,9 +941,8 @@ def test_tei_no_front_back_and_bibl_compile_types():
     monkeypatch.setattr(builtins, "open", mock_open)
 
     from lxml import etree
-    from mets_mods2tei.api.tei import TEI
     body = tei.tree.xpath('//tei:body', namespaces=NS)[0]
-    node = etree.SubElement(body, "%sdiv" % TEI)
+    node = etree.SubElement(body, f"{{{NS['tei']}}}div")
     node.set("id", "DIV1")
 
     tei.add_ocr_text(mets)
@@ -970,7 +962,6 @@ def test_tei_ocr_line_refs_without_id_and_head_split_branches():
     """
     from lxml import etree
     from mets_mods2tei.api.alto import Alto
-    from mets_mods2tei.api.tei import TEI
 
     xml_alto = b'''<?xml version="1.0" encoding="UTF-8"?>
     <alto xmlns="http://www.loc.gov/standards/alto/ns-v4#">
@@ -997,7 +988,7 @@ def test_tei_ocr_line_refs_without_id_and_head_split_branches():
     tei.refs = ["line", "page"]
 
     body = tei.tree.xpath('//tei:body', namespaces=NS)[0]
-    node = etree.SubElement(body, "%sdiv" % TEI)
+    node = etree.SubElement(body, f"{{{NS['tei']}}}div")
     node.set("id", "DIV_1")
     node.set("rend", "Header Line")
 
@@ -1022,7 +1013,6 @@ def test_tei_add_ocr_text_head_and_argument_splitting():
     """
     from lxml import etree
     from mets_mods2tei.api.alto import Alto
-    from mets_mods2tei.api.tei import TEI
 
     xml_alto = b'''<?xml version="1.0" encoding="UTF-8"?>
     <alto xmlns="http://www.loc.gov/standards/alto/ns-v4#">
@@ -1048,7 +1038,7 @@ def test_tei_add_ocr_text_head_and_argument_splitting():
     tei = Tei()
 
     body = tei.tree.xpath('//tei:body', namespaces=NS)[0]
-    node = etree.SubElement(body, "%sdiv" % TEI)
+    node = etree.SubElement(body, f"{{{NS['tei']}}}div")
     node.set("id", "DIV_1")
     node.set("rend", "Vorbericht")
 
@@ -1196,7 +1186,6 @@ def test_tei_ocr_error_handling_and_path_variations(monkeypatch):
     import requests
     from lxml import etree
     from requests.exceptions import RetryError
-    from mets_mods2tei.api.tei import TEI
 
     mets = Mets()
     mets.alto_map = {
@@ -1221,7 +1210,7 @@ def test_tei_ocr_error_handling_and_path_variations(monkeypatch):
 
     tei = Tei()
     body = tei.tree.xpath('//tei:body', namespaces=NS)[0]
-    node = etree.SubElement(body, "%sdiv" % TEI)
+    node = etree.SubElement(body, f"{{{NS['tei']}}}div")
     node.set("id", "DIV_1")
 
     # Should run without raising uncaught exceptions
