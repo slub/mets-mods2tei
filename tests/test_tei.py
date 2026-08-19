@@ -69,14 +69,16 @@ def test_reading_remote_url(tmpdir, datadir, monkeypatch):
     """
     Test reading from a remote METS link.
     """
+    URL = ("https://digital.slub-dresden.de/oai/?verb=GetRecord&metadataPrefix=mets"
+           "&identifier=oai:de:slub-dresden:db:id-453779263")
     import urllib.request
     def mock_open(url):
-        return open(datadir.join('test_mets_oai_pmh.xml'))
+        if url == URL:
+            return open(datadir.join('test_mets_oai_pmh.xml'))
+        return urllib.request.urlopen(url)
     monkeypatch.setattr(urllib.request, "urlopen", mock_open)
     mets = Mets()
-    mets.fromfile(urllib.request.urlopen(
-        "https://digital.slub-dresden.de/oai/?verb=GetRecord&metadataPrefix=mets"
-        "&identifier=oai:de:slub-dresden:db:id-453779263"))
+    mets.fromfile(urllib.request.urlopen(URL))
     tei = Tei()
     tei.fill_from_mets(mets, ocr=True, refs=["page", "line"])
     assert tei.tree is not None
