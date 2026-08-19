@@ -138,9 +138,8 @@ class Alto:
             str: The text content of the line.
         """
         text = ' '.join(XPATH_CONTENTSTRING(line))
-        hyp = line.find("alto:HYP", namespaces=NS)
-        if hyp is not None:
-            text += hyp.get("CONTENT")
+        if len(line) and etree.QName(line[-1]).localname == 'HYP':
+            text += line[-1].get("CONTENT")
         return text
 
     def __compute_fuzzy_distance(self, text1: str, text2: str) -> int:
