@@ -862,6 +862,15 @@ class Tei:
             ],
         )
         adapter = HTTPAdapter(max_retries=retries)
+        session = requests.Session()
+        session.mount('http://', adapter)
+        session.mount('https://', adapter)
+        try:
+            self.__add_ocr_to_node_with_session(node, mets, struct_links, first, session)
+        finally:
+            session.close()
+
+    def __add_ocr_to_node_with_session(self, node, mets, struct_links, first, session):
         # iterate over all struct links for a div
         for struct_link in struct_links:
             alto_link = mets.get_alto(struct_link)
@@ -903,15 +912,12 @@ class Tei:
                         self.logger.error("cannot open OCR result for '%s': %s", mod_link, e)
                         continue
                 else:
-                    with requests.Session() as session:
-                        session.mount('http://', adapter)
-                        session.mount('https://', adapter)
-                        try:
-                            response = session.get(mod_link, timeout=3, stream=True)
-                        except requests.exceptions.RetryError as e:
-                            self.logger.error("cannot fetch OCR result for '%s': %s", mod_link, e)
-                            continue
-                        alto = Alto.frombytes(response.content)
+                    try:
+                        response = session.get(mod_link, timeout=3, stream=True)
+                    except requests.exceptions.RetryError as e:
+                        self.logger.error("cannot fetch OCR result for '%s': %s", mod_link, e)
+                        continue
+                    alto = Alto.frombytes(response.content)
 
                 # save original link!
                 self.alto_map[alto_link] = alto
