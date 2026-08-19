@@ -123,7 +123,7 @@ def test_reading_remote_url(tmpdir, datadir, monkeypatch):
     monkeypatch.setattr(requests.Session, "get", mock_get)
 
     mets = Mets()
-    mets.fromfile(urllib.request.urlopen(URL))
+    mets.fromfile(urlopen(URL))
     tei = Tei()
     tei.fill_from_mets(mets, ocr=True, refs=["page", "line"])
     assert tei.tree is not None
