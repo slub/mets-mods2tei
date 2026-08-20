@@ -11,7 +11,6 @@ from .mets_generateds import parseString as parse_mets
 from .mods_generateds import parseString as parse_mods
 from .util import NS, PX, resource_filename
 
-
 XPATH_DV_OWNER = etree.XPath("//dv:owner", namespaces=NS)
 XPATH_DV_LICENSE = etree.XPath("//dv:license", namespaces=NS)
 XPATH_FILE_GRP = etree.XPath("//mets:fileGrp[@USE=$use]", namespaces=NS)

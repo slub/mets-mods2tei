@@ -927,7 +927,7 @@ class Tei:
                 else:
                     self.logger.warning("cannot determine image number for link '%s'", struct_link)
                     pagenum = len(XPATH_PB(node))
-                pageid = "f{:04d}".format(pagenum + 1)
+                pageid = f"f{pagenum + 1:04d}"
                 pb.set("facs", "#" + pageid)
                 orderlabel = mets.get_orderlabel(struct_link) or mets.get_order(struct_link)
                 if orderlabel:
