@@ -12,6 +12,9 @@ from requests.adapters import HTTPAdapter, Retry
 from .alto import Alto
 from .util import NS, PX, resource_filename
 
+XPATH_PB = etree.XPath("tei:pb", namespaces=NS)
+XPATH_FACSIMILE = etree.XPath("//tei:facsimile", namespaces=NS)
+
 # FIXME: add more structural mappings from METS-Anwendungsprofil (DFG Strukturdatenset) to TEI-P5 tagset (DTAbf)
 # ruff: disable[F601]
 DIV_METS2TEI = {
@@ -858,6 +861,15 @@ class Tei:
             ],
         )
         adapter = HTTPAdapter(max_retries=retries)
+        session = requests.Session()
+        session.mount('http://', adapter)
+        session.mount('https://', adapter)
+        try:
+            self.__add_ocr_to_node_with_session(node, mets, struct_links, first, session)
+        finally:
+            session.close()
+
+    def __add_ocr_to_node_with_session(self, node, mets, struct_links, first, session):
         # iterate over all struct links for a div
         for struct_link in struct_links:
             alto_link = mets.get_alto(struct_link)
@@ -899,25 +911,22 @@ class Tei:
                         self.logger.error("cannot open OCR result for '%s': %s", mod_link, e)
                         continue
                 else:
-                    with requests.Session() as session:
-                        session.mount('http://', adapter)
-                        session.mount('https://', adapter)
-                        try:
-                            response = session.get(mod_link, timeout=3, stream=True)
-                        except requests.exceptions.RetryError as e:
-                            self.logger.error("cannot fetch OCR result for '%s': %s", mod_link, e)
-                            continue
-                        alto = Alto.frombytes(response.content)
+                    try:
+                        response = session.get(mod_link, timeout=3, stream=True)
+                    except requests.exceptions.RetryError as e:
+                        self.logger.error("cannot fetch OCR result for '%s': %s", mod_link, e)
+                        continue
+                    alto = Alto.frombytes(response.content)
 
                 # save original link!
                 self.alto_map[alto_link] = alto
 
                 pb = etree.SubElement(node, f"{PX['tei']}pb")
-                try:
-                    pagenum = list(mets.page_map.keys()).index(struct_link)
-                except ValueError:
+                if struct_link in mets.page_index_map:
+                    pagenum = mets.page_index_map[struct_link]
+                else:
                     self.logger.warning("cannot determine image number for link '%s'", struct_link)
-                    pagenum = len(node.xpath("tei:pb", namespaces=NS))
+                    pagenum = len(XPATH_PB(node))
                 pageid = f"f{pagenum + 1:04d}"
                 pb.set("facs", "#" + pageid)
                 orderlabel = mets.get_orderlabel(struct_link) or mets.get_order(struct_link)
@@ -928,7 +937,7 @@ class Tei:
                         pb.set("corresp", self.purl + "/" + pageid[1:])
                     img_url = mets.get_img(struct_link)
                     if img_url:
-                        facsimile = self.tree.xpath('//tei:facsimile', namespaces=NS)[0]
+                        facsimile = XPATH_FACSIMILE(self.tree)[0]
                         # facsimile.set("base", ...common url_prefix...)
                         # todo: DTABf seems to use "graphic" directly, but other dialects wrap them inside a "surface"
                         graphic = etree.SubElement(facsimile, f"{PX['tei']}graphic")
