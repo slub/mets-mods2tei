@@ -11,10 +11,7 @@ from .mets_generateds import parseString as parse_mets
 from .mods_generateds import parseString as parse_mods
 from .util import NS, PX, resource_filename
 
-XPATH_DV_OWNER = etree.XPath("//dv:owner", namespaces=NS)
-XPATH_DV_LICENSE = etree.XPath("//dv:license", namespaces=NS)
 XPATH_FILE_GRP = etree.XPath("//mets:fileGrp[@USE=$use]", namespaces=NS)
-XPATH_METS_FILE = etree.XPath("./mets:file", namespaces=NS)
 XPATH_STRUCTLINK_CHILDREN = etree.XPath("//mets:structLink/*", namespaces=NS)
 
 
@@ -155,7 +152,10 @@ class Mets:
         else:
             self.wd = os.path.dirname(path)
         self.tree = etree.parse(path)
-        self.mets = parse_mets(etree.tostring(self.tree.getroot().xpath('//mets:mets', namespaces=NS)[0]), silence=True)
+        root = self.tree.getroot()
+        if root.tag != PX['mets'] + 'mets':
+            root = root.find('.//mets:mets', namespaces=NS)
+        self.mets = parse_mets(etree.tostring(root), silence=True)
         self.mods = parse_mods(self.mets.get_dmdSec()[0].get_mdWrap().get_xmlData().get_anytypeobjs_()[0], silence=True)
         self.__spur()
 
@@ -384,28 +384,26 @@ class Mets:
 
         #
         # dv FIXME: replace with generated code as soon as schema is available
-        amdsec = self.mets.get_amdSec()
-        if amdsec and amdsec[0].get_rightsMD():
-            dv = etree.fromstring(amdsec[0].get_rightsMD()[0].get_mdWrap().get_xmlData().get_anytypeobjs_()[0])
-        else:
-            dv = None
+        owner = None
+        license_node = None
+        if (amdsec := self.mets.get_amdSec()) and (rightsmd := amdsec[0].get_rightsMD()):
+            dv = etree.fromstring(rightsmd[0].get_mdWrap().get_xmlData().get_anytypeobjs_()[0])
+            owner = dv.find('dv:owner', namespaces=NS)
+            license_node = dv.find('dv:license', namespaces=NS)
 
         # owner of the digital edition
-        owner = XPATH_DV_OWNER(dv) if dv is not None else []
-        self.owner_digital = owner[0].text if len(owner) else ""
+        self.owner_digital = owner.text if owner is not None else ""
 
         # availability/license
         # common case
-        self.license = ""
-        self.license_url = ""
-        license_nodes = XPATH_DV_LICENSE(dv) if dv is not None else []
-        if len(license_nodes):
-            self.license = license_nodes[0].text
+        if license_node is not None:
+            self.license = license_node.text
             self.license_url = ""
         # slub case
         else:
-            license_nodes = self.mods.get_accessCondition()
-            for license_node in license_nodes:
+            self.license = ""
+            self.license_url = ""
+            for license_node in self.mods.get_accessCondition():
                 if license_node.get_type() == 'use and reproduction':
                     self.license = license_node.get_valueOf_()
                     self.license_url = license_node.get_href() if license_node.get_href() else ""
@@ -475,19 +473,19 @@ class Mets:
         # fulltext
         fulltext_map = {}
         fulltext_group = XPATH_FILE_GRP(self.tree, use=self.fulltext_group_name)
-        if fulltext_group:
+        if len(fulltext_group):
             fulltext_map = {}
-            for entry in XPATH_METS_FILE(fulltext_group[0]):
-                url = entry.find("./" + PX['mets'] + "FLocat").get(PX['xlink'] + "href")
+            for entry in fulltext_group[0].findall(f"{PX['mets']}file"):
+                url = entry.find(f"{PX['mets']}FLocat").get(PX['xlink'] + "href")
                 self.logger.debug("Found full-text file: %s", url)
                 fulltext_map[entry.get("ID")] = url
 
         # image
         image_map = {}
         image_group = XPATH_FILE_GRP(self.tree, use=self.image_group_name)
-        if image_group:
-            for entry in XPATH_METS_FILE(image_group[0]):
-                url = entry.find("./" + PX['mets'] + "FLocat").get(PX['xlink'] + "href")
+        if len(image_group):
+            for entry in image_group[0].findall(f"{PX['mets']}file"):
+                url = entry.find(f"{PX['mets']}FLocat").get(PX['xlink'] + "href")
                 self.logger.debug("Found image file: %s", url)
                 image_map[entry.get("ID")] = url
 
