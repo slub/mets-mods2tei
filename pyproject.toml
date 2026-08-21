@@ -55,7 +55,7 @@ optional-dependencies = {test = { file = ["requirements-test.txt"] }}
 [tool.ruff]
 line-length = 120
 indent-width = 4
-extend-exclude = ["tests", "*_generateds.py"]
+extend-exclude = ["tests", "*_generateds.py", ".#*"]
 
 [tool.ruff.lint]
 ignore = ["DTZ005"]

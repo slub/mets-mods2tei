@@ -18,5 +18,5 @@ def test_failure():
 def test_test_file():
 
     runner = CliRunner()
-    result = runner.invoke(cli, ['tests/test_mets/test_mets.xml'])
-    assert(result.exit_code == 0)
+    result = runner.invoke(cli, ['tests/test_mets/test_mets.xml'], catch_exceptions=False)
+    assert result.exit_code == 0, result.stdout
