@@ -15,11 +15,17 @@ from .util import NS, PX, resource_filename
 
 XPATH_PB = etree.XPath("tei:pb", namespaces=NS)
 XPATH_LB = etree.XPath('//tei:lb', namespaces=NS)
+XPATH_RECURSIVE_TEXT = etree.XPath('descendant-or-self::*/text()')
+XPATH_MAINTITLE = etree.XPath('tei:title[@type="main"]', namespaces=NS)
+XPATH_SUBTITLE = etree.XPath('tei:title[@type="sub"]', namespaces=NS)
+XPATH_IDNO_SHELF = etree.XPath('tei:idno/tei:idno[@type="shelfmark"]', namespaces=NS)
+XPATH_IDNO_PURL = etree.XPath('tei:idno/tei:idno[@type="PURL"]', namespaces=NS)
+XPATH_IDNO_URN = etree.XPath('tei:idno/tei:idno[@type="URN"]', namespaces=NS)
+XPATH_IDNO_VDID = etree.XPath('tei:idno/tei:idno[@type="VD"]', namespaces=NS)
 XPATH_FILE = etree.XPath('//tei:fileDesc', namespaces=NS)
 XPATH_PROF = etree.XPath('//tei:profileDesc', namespaces=NS)
 XPATH_ID = etree.XPath('//tei:msDesc/tei:msIdentifier', namespaces=NS)
 XPATH_PHY = etree.XPath('//tei:msDesc/tei:physDesc', namespaces=NS)
-XPATH_FAC = etree.XPath("//tei:facsimile", namespaces=NS)
 XPATH_TIT = etree.XPath('//tei:fileDesc/tei:titleStmt', namespaces=NS) # or in biblFull??
 XPATH_PUB = etree.XPath('//tei:fileDesc/tei:publicationStmt', namespaces=NS)
 XPATH_EDN = etree.XPath('//tei:fileDesc/tei:editionStmt', namespaces=NS)
@@ -29,6 +35,7 @@ XPATH_BIBLFULL = etree.XPath('//tei:sourceDesc/tei:biblFull', namespaces=NS)
 XPATH_BIBLFULL_TIT = etree.XPath('//tei:sourceDesc/tei:biblFull/tei:titleStmt', namespaces=NS)
 XPATH_BIBLFULL_PUB = etree.XPath('//tei:sourceDesc/tei:biblFull/tei:publicationStmt', namespaces=NS)
 XPATH_BIBLFULL_EDN = etree.XPath('//tei:sourceDesc/tei:biblFull/tei:editionStmt', namespaces=NS)
+XPATH_FACS = etree.XPath("//tei:facsimile", namespaces=NS)
 XPATH_FRONT = etree.XPath('//tei:text/tei:front', namespaces=NS)
 XPATH_BODY = etree.XPath('//tei:text/tei:body', namespaces=NS)
 XPATH_BODY_DIV = etree.XPath('//tei:text/tei:body/tei:div', namespaces=NS)
@@ -97,7 +104,7 @@ class Tei:
 
     def xpath(self, pattern):
         if pattern not in self._cache:
-            if pattern is XPATH_FAC:
+            if pattern is XPATH_FACS:
                 # fill only when needed
                 facsimile = etree.Element(f"{PX['tei']}facsimile")
                 self.tree.getroot().insert(1, facsimile)
@@ -269,7 +276,7 @@ class Tei:
         by the TEI Header.
         """
         return next(chain.from_iterable(
-            title_stmt.findall('tei:title[@type="main"]', namespaces=NS)
+            XPATH_MAINTITLE(title_stmt)
             for title_stmt in self.xpath(XPATH_TIT)
         )).text
 
@@ -283,7 +290,7 @@ class Tei:
         return [
             subtitle.text
             for subtitle in chain.from_iterable(
-                    title_stmt.findall('tei:title[@type="sub"]', namespaces=NS)
+                    XPATH_SUBTITLE(title_stmt)
                     for title_stmt in self.xpath(XPATH_TIT)
             )
         ]
@@ -299,7 +306,7 @@ class Tei:
                 title_stmt.findall('tei:author', namespaces=NS)
                 for title_stmt in self.xpath(XPATH_TIT)
         ):
-            authors.append(", ".join(author.xpath('descendant-or-self::*/text()')))
+            authors.append(", ".join(XPATH_RECURSIVE_TEXT(author)))
         return authors
 
     @property
@@ -308,7 +315,7 @@ class Tei:
         Return the level of publication ('monographic' vs. 'analytic')
         """
         return next(chain.from_iterable(
-            title_stmt.findall('tei:title[@type="main"]', namespaces=NS)
+            XPATH_MAINTITLE(title_stmt)
             for title_stmt in self.xpath(XPATH_BIBLFULL_TIT)
         )).get("level")
 
@@ -466,7 +473,7 @@ class Tei:
         return [
             shelfmark.text
             for shelfmark in chain.from_iterable(
-                    ident.findall('tei:idno/tei:idno[@type="shelfmark"]', namespaces=NS)
+                    XPATH_IDNO_SHELF(ident)
                     for ident in self.xpath(XPATH_ID)
             )
         ]
@@ -478,7 +485,7 @@ class Tei:
         """
         try:
             purl = next(chain.from_iterable(
-                ident.findall('tei:idno/tei:idno[@type="PURL"]', namespaces=NS)
+                XPATH_IDNO_PURL(ident)
                 for ident in self.xpath(XPATH_ID)
             ))
             return purl.text
@@ -492,7 +499,7 @@ class Tei:
         """
         try:
             urn = next(chain.from_iterable(
-                ident.findall('tei:idno/tei:idno[@type="URN"]', namespaces=NS)
+                XPATH_IDNO_URN(ident)
                 for ident in self.xpath(XPATH_ID)
             ))
             return urn.text
@@ -506,7 +513,7 @@ class Tei:
         """
         try:
             vd_id = next(chain.from_iterable(
-                ident.findall('tei:idno/tei:idno[@type="VD"]', namespaces=NS)
+                XPATH_IDNO_VDID(ident)
                 for ident in self.xpath(XPATH_ID)
             ))
             return vd_id.text
@@ -554,7 +561,7 @@ class Tei:
         Set the main title of the tei:titleStmt.
         """
         for node in chain.from_iterable(
-                title_stmt.findall('tei:title[@type="main"]', namespaces=NS)
+                XPATH_MAINTITLE(title_stmt)
                 for title_stmt in self.xpath(XPATH_TIT)
         ):
             node.text = string
@@ -1037,7 +1044,7 @@ class Tei:
                         pb.set("corresp", self.purl + "/" + pageid[1:])
                     img_url = mets.get_img(struct_link)
                     if img_url:
-                        facsimile = self.xpath(XPATH_FAC)[0]
+                        facsimile = self.xpath(XPATH_FACS)[0]
                         # facsimile.set("base", ...common url_prefix...)
                         # todo: DTABf seems to use "graphic" directly, but other dialects wrap them inside a "surface"
                         graphic = etree.SubElement(facsimile, f"{PX['tei']}graphic")
