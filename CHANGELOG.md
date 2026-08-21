@@ -5,7 +5,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-- update test infrastructure
+
+## [0.2.0] - 2026-08-22
+### Fixed
+- tei: remove double init of members, ht @rettinghaus #81
+- mets: cope with missing physical structMap, ht @rettinghaus #90
+- overall code quality via ruff check and ruff format, #87
+
+### Changed
+- update test infrastructure, ht @rettinghaus #82
+- :fire: drop Python 3.8 and 3.9, #82
+- update CI, add dependabot, ht @rettinghaus #89
+- modernize packaging, ht @rettinghaus #88
+- :fire: do not add page refs by default
+- :fire: only insert a `tei:facsimile` w/ page or line refs
+- :fire: performance optimization, ht @rettinghaus #92 #93
+
+### Added
+- extended coverage for ALTO, METS and TEI classes, ht @rettinghaus #91
 
 ## [0.1.6] - 2025-09-25
 ### Added
@@ -105,7 +122,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Get rid of code artifacts carried over from `tocrify`
 
 <!-- link-labels -->
-[unreleased]: ../../compare/v0.1.5...master
+[unreleased]: ../../compare/v0.2.0...master
+[0.2.0]: ../../compare/v0.2.0...v0.1.6
+[0.1.6]: ../../compare/v0.1.5...v0.1.6
 [0.1.5]: ../../compare/v0.1.4...v0.1.5
 [0.1.4]: ../../compare/v0.1.3...v0.1.4
 [0.1.3]: ../../compare/v0.1.2...v0.1.3
