@@ -97,6 +97,10 @@ class Tei:
 
     def xpath(self, pattern):
         if pattern not in self._cache:
+            if pattern is XPATH_FAC:
+                # fill only when needed
+                facsimile = etree.Element(f"{PX['tei']}facsimile")
+                self.tree.getroot().insert(1, facsimile)
             self._cache[pattern] = pattern(self.tree)
             self.logger.debug("adding cache entry for %s", pattern)
         return self._cache[pattern]
@@ -1033,7 +1037,7 @@ class Tei:
                         pb.set("corresp", self.purl + "/" + pageid[1:])
                     img_url = mets.get_img(struct_link)
                     if img_url:
-                        facsimile = XPATH_FAC(self.tree)[0]
+                        facsimile = self.xpath(XPATH_FAC)[0]
                         # facsimile.set("base", ...common url_prefix...)
                         # todo: DTABf seems to use "graphic" directly, but other dialects wrap them inside a "surface"
                         graphic = etree.SubElement(facsimile, f"{PX['tei']}graphic")
