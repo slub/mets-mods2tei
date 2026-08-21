@@ -156,7 +156,13 @@ class Mets:
         if root.tag != PX['mets'] + 'mets':
             root = root.find('.//mets:mets', namespaces=NS)
         self.mets = parse_mets(etree.tostring(root), silence=True)
-        self.mods = parse_mods(self.mets.get_dmdSec()[0].get_mdWrap().get_xmlData().get_anytypeobjs_()[0], silence=True)
+        mods = "<mods/>"
+        if ((dmd_sec := self.mets.get_dmdSec()) and
+            (dmd_wrap := dmd_sec[0].get_mdWrap()) and
+            (dmd_data := dmd_wrap.get_xmlData()) and
+            (dmd_objs := dmd_data.get_anytypeobjs_())):
+            mods = dmd_objs[0]
+        self.mods = parse_mods(mods, silence=True)
         self.__spur()
 
     def __spur(self) -> None:
@@ -386,8 +392,12 @@ class Mets:
         # dv FIXME: replace with generated code as soon as schema is available
         owner = None
         license_node = None
-        if (amdsec := self.mets.get_amdSec()) and (rightsmd := amdsec[0].get_rightsMD()):
-            dv = etree.fromstring(rightsmd[0].get_mdWrap().get_xmlData().get_anytypeobjs_()[0])
+        if ((amd_sec := self.mets.get_amdSec()) and
+            (rightsmd := amd_sec[0].get_rightsMD()) and
+            (rightsmd_wrap := rightsmd[0].get_mdWrap()) and
+            (rightsmd_data := rightsmd_wrap.get_xmlData()) and
+            (rightsmd_objs := rightsmd_data.get_anytypeobjs_())):
+            dv = etree.fromstring(rightsmd_objs[0])
             owner = dv.find('dv:owner', namespaces=NS)
             license_node = dv.find('dv:license', namespaces=NS)
 
